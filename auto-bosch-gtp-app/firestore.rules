@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public read for appointments (for calendar display)
+    match /appointments/{appointmentId} {
+      allow read: if true;
+      allow create: if validateAppointment(resource.data);
+      allow delete: if request.auth != null;
+    }
+    
+    // Admin only for settings
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+  
+  function validateAppointment(data) {
+    return data.keys().hasAll(['customerInfo', 'vehicleInfo', 'appointmentDateTime']) &&
+           data.customerInfo.keys().hasAll(['registrationPlate', 'phoneNumber', 'email']) &&
+           data.vehicleInfo.keys().hasAll(['serviceType']);
+  }
+}
