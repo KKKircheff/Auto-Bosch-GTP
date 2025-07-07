@@ -1,27 +1,37 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import CalendarPicker from './CalendarPicker';
 import TimeSlotPicker from './TimeSlotPicker';
 import { getNextAvailableDate } from '../../utils/dateHelpers';
+import { useBookingContext } from '../../contexts/BookingContext';
 import { TEXTS } from '../../utils/constants';
 
 interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
-    existingBookings?: Record<string, string[]>; // date -> array of booked times
-    appointmentCounts?: Record<string, number>; // date -> count of appointments
 }
 
-const BookingCalendar = ({
-    onDateTimeSelect,
-    existingBookings = {},
-    appointmentCounts = {}
-}: BookingCalendarProps) => {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(getNextAvailableDate());
-    const [selectedTime, setSelectedTime] = useState<string>('');
+const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
+    const {
+        selectedDate,
+        selectedTime,
+        setSelectedDate,
+        setSelectedTime,
+        timeSlots,
+        timeSlotsLoading,
+        timeSlotsError,
+        appointmentCounts,
+        refreshTimeSlots,
+    } = useBookingContext();
+
+    // Set initial date if none selected
+    useEffect(() => {
+        if (!selectedDate) {
+            setSelectedDate(getNextAvailableDate());
+        }
+    }, [selectedDate, setSelectedDate]);
 
     const handleDateSelect = (date: Date) => {
         setSelectedDate(date);
-        setSelectedTime(''); // Reset time when date changes
     };
 
     const handleTimeSelect = (time: string) => {
@@ -31,12 +41,13 @@ const BookingCalendar = ({
         }
     };
 
-    // Get existing bookings for selected date
-    const selectedDateKey = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
-    const existingBookingsForDate = existingBookings[selectedDateKey] || [];
+    // Get existing bookings for selected date from time slots
+    const existingBookings = timeSlots
+        .filter(slot => !slot.available)
+        .map(slot => slot.time);
 
     return (
-        <Container maxWidth="xl" sx={{ py: 2 }}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
             <Box mb={4} textAlign="center">
                 <Typography variant="h4" component="h2" gutterBottom>
                     {TEXTS.selectDate}
@@ -46,8 +57,7 @@ const BookingCalendar = ({
                 </Typography>
             </Box>
 
-            <Stack
-                direction={'column'}
+            <Stack direction='column'
                 gap={4}
                 alignItems="start"
             >
@@ -61,9 +71,12 @@ const BookingCalendar = ({
                 {/* Time slots */}
                 <TimeSlotPicker
                     selectedDate={selectedDate}
-                    selectedTime={selectedTime}
+                    selectedTime={selectedTime || undefined}
                     onTimeSelect={handleTimeSelect}
-                    existingBookings={existingBookingsForDate}
+                    existingBookings={existingBookings}
+                    loading={timeSlotsLoading}
+                // error={timeSlotsError}
+                // onRefresh={refreshTimeSlots}
                 />
             </Stack>
 

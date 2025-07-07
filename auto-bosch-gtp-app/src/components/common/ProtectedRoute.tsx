@@ -1,7 +1,8 @@
-import { Navigate } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
-import type { ReactNode } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+// src/components/common/ProtectedRoute.tsx (Updated)
+import { type ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 interface ProtectedRouteProps {
     children: ReactNode;
@@ -9,22 +10,35 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const { user, loading } = useAuth();
+    const location = useLocation();
 
     if (loading) {
         return (
             <Box
                 display="flex"
+                flexDirection="column"
                 justifyContent="center"
                 alignItems="center"
-                minHeight="50vh"
+                minHeight="60vh"
+                gap={2}
             >
-                <CircularProgress />
+                <CircularProgress size={40} />
+                <Typography variant="body1" color="text.secondary">
+                    Проверка на достъпа...
+                </Typography>
             </Box>
         );
     }
 
     if (!user) {
-        return <Navigate to="/admin/login" replace />;
+        // Redirect to login with return path
+        return (
+            <Navigate
+                to="/admin/login"
+                state={{ from: location }}
+                replace
+            />
+        );
     }
 
     return <>{children}</>;

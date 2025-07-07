@@ -1,5 +1,4 @@
-// src/components/booking/TimeSlotPicker.tsx
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
     Box,
     Paper,
@@ -10,8 +9,8 @@ import {
     Alert,
     Chip,
 } from '@mui/material';
-import { AccessTime, CheckCircle } from '@mui/icons-material';
-import { formatDateBulgarian, generateTimeSlots, isBookableDate } from '../../utils/dateHelpers';
+import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
+import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
 import { TEXTS } from '../../utils/constants';
 import type { TimeSlot } from '../../types/booking';
 
@@ -21,6 +20,8 @@ interface TimeSlotPickerProps {
     onTimeSelect: (time: string) => void;
     existingBookings?: string[];
     loading?: boolean;
+    error?: string;
+    onRefresh?: () => void;
     className?: string;
 }
 
@@ -30,18 +31,19 @@ const TimeSlotPicker = ({
     onTimeSelect,
     existingBookings = [],
     loading = false,
+    error,
+    onRefresh,
     className,
 }: TimeSlotPickerProps) => {
-    const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-
-    // Generate time slots when date changes
-    useEffect(() => {
-        if (selectedDate && isBookableDate(selectedDate)) {
-            const slots = generateTimeSlots(selectedDate, existingBookings);
-            setTimeSlots(slots);
-        } else {
-            setTimeSlots([]);
+    // Generate time slots based on existing bookings
+    const timeSlots = useMemo((): TimeSlot[] => {
+        if (!selectedDate || !isBookableDate(selectedDate)) {
+            return [];
         }
+
+        // Import and use the generateTimeSlots function
+        const { generateTimeSlots } = require('../../utils/dateHelpers');
+        return generateTimeSlots(selectedDate, existingBookings);
     }, [selectedDate, existingBookings]);
 
     // Group time slots by morning/afternoon
@@ -85,6 +87,30 @@ const TimeSlotPicker = ({
                 <Alert severity="info">
                     Избраната дата не е работен ден или е в миналото.
                     Моля изберете друга дата (понеделник - петък).
+                </Alert>
+            </Paper>
+        );
+    }
+
+    if (error) {
+        return (
+            <Paper elevation={2} sx={{ p: 3 }} className={className}>
+                <Alert
+                    severity="error"
+                    action={
+                        onRefresh && (
+                            <Button
+                                color="inherit"
+                                size="small"
+                                onClick={onRefresh}
+                                startIcon={<Refresh />}
+                            >
+                                Опитай отново
+                            </Button>
+                        )
+                    }
+                >
+                    {error}
                 </Alert>
             </Paper>
         );
@@ -189,9 +215,22 @@ const TimeSlotPicker = ({
         <Paper elevation={2} sx={{ p: 3 }} className={className}>
             {/* Header */}
             <Box mb={3}>
-                <Typography variant="h6" gutterBottom>
-                    {TEXTS.availableTimes}
-                </Typography>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Typography variant="h6">
+                        {TEXTS.availableTimes}
+                    </Typography>
+                    {onRefresh && (
+                        <Button
+                            size="small"
+                            onClick={onRefresh}
+                            startIcon={<Refresh />}
+                            disabled={loading}
+                        >
+                            Обнови
+                        </Button>
+                    )}
+                </Box>
+
                 <Typography variant="body2" color="text.secondary" mb={2}>
                     {formatDateBulgarian(selectedDate, 'EEEE, dd MMMM yyyy')}
                 </Typography>
