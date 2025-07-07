@@ -52,18 +52,18 @@ export const CarBrandSelect: React.FC<CarBrandSelectProps> = ({
             control={control}
             render={({ field }) => (
                 <FormControl fullWidth error={!!errors.brand}>
-                    <InputLabel id="brand-label">Brand</InputLabel>
+                    <InputLabel id="brand-label">Марка</InputLabel>
                     <Select
                         {...field}
                         labelId="brand-label"
-                        label="Brand"
+                        label="Марка"
                         disabled={loading}
                         value={field.value || ''}
                     >
                         {loading ? (
                             <MenuItem disabled>
                                 <CircularProgress size={20} />
-                                <span style={{ marginLeft: 8 }}>Loading brands...</span>
+                                <span style={{ marginLeft: 8 }}>Зареждане на марки...</span>
                             </MenuItem>
                         ) : (
                             brandOptions.map((option) => (

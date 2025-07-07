@@ -51,8 +51,8 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             const slots = await getAvailableSlots(startDate, endDate);
             setTimeSlots(slots);
         } catch (err) {
-            setError('Failed to load available time slots');
-            console.error('Error loading time slots:', err);
+            setError('Неуспешно зареждане на свободните часове');
+            console.error('Грешка при зареждане на часове:', err);
         } finally {
             setLoading(false);
         }
@@ -98,7 +98,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                     onClick={handlePreviousWeek}
                     disabled={isBefore(addWeeks(currentWeek, -1), startOfDay(new Date()))}
                 >
-                    Previous Week
+                    Предишна седмица
                 </Button>
 
                 <Typography variant="h6">
@@ -106,7 +106,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                 </Typography>
 
                 <Button onClick={handleNextWeek}>
-                    Next Week
+                    Следваща седмица
                 </Button>
             </Box>
 
@@ -138,7 +138,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                                     <Box display="flex" flexDirection="column" gap={0.5}>
                                         {availableSlots.length === 0 ? (
                                             <Chip
-                                                label="No slots"
+                                                label="Няма свободни часове"
                                                 size="small"
                                                 variant="outlined"
                                                 disabled

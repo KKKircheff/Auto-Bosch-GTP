@@ -34,7 +34,7 @@ export const ConfirmationPage: React.FC = () => {
     useEffect(() => {
         const loadAppointment = async () => {
             if (!appointmentId) {
-                setError('Invalid appointment ID');
+                setError('Невалиден номер на резервацията');
                 setLoading(false);
                 return;
             }
@@ -42,13 +42,13 @@ export const ConfirmationPage: React.FC = () => {
             try {
                 const apt = await getAppointmentById(appointmentId);
                 if (!apt) {
-                    setError('Appointment not found');
+                    setError('Резервацията не е намерена');
                 } else {
                     setAppointment(apt);
                 }
             } catch (err) {
-                setError('Failed to load appointment details');
-                console.error('Error loading appointment:', err);
+                setError('Грешка при зареждане на детайлите за резервацията');
+                console.error('Грешка при зареждане на резервацията:', err);
             } finally {
                 setLoading(false);
             }
@@ -75,7 +75,7 @@ export const ConfirmationPage: React.FC = () => {
         return (
             <Container maxWidth="md" sx={{ py: 4 }}>
                 <Alert severity="error">
-                    {error || 'Appointment not found'}
+                    {error || 'Резервацията не е намерена'}
                 </Alert>
                 <Box mt={2}>
                     <Button
@@ -84,7 +84,7 @@ export const ConfirmationPage: React.FC = () => {
                         startIcon={<ArrowBack />}
                         variant="contained"
                     >
-                        Back to Booking
+                        Назад към резервации
                     </Button>
                 </Box>
             </Container>
@@ -97,27 +97,27 @@ export const ConfirmationPage: React.FC = () => {
                 <Box textAlign="center" mb={3}>
                     <CheckCircle color="success" sx={{ fontSize: 60, mb: 2 }} />
                     <Typography variant="h4" component="h1" gutterBottom>
-                        Booking Confirmed!
+                        Резервацията е потвърдена!
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                        Your appointment has been successfully scheduled.
+                        Вашият час е успешно резервиран.
                     </Typography>
                 </Box>
 
                 <Divider sx={{ my: 3 }} />
 
                 <Grid container spacing={3}>
-                    {/* Appointment Details */}
+                    {/* Детайли за резервацията */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Box mb={3}>
                             <Typography variant="h6" gutterBottom>
                                 <CalendarToday sx={{ mr: 1, verticalAlign: 'middle' }} />
-                                Appointment Details
+                                Детайли за резервацията
                             </Typography>
 
                             <Box mb={2}>
                                 <Typography variant="body2" color="text.secondary">
-                                    Date & Time
+                                    Дата и час
                                 </Typography>
                                 <Typography variant="body1" fontWeight="medium">
                                     {formatDateTime(appointment.appointmentDateTime)}
@@ -126,7 +126,7 @@ export const ConfirmationPage: React.FC = () => {
 
                             <Box mb={2}>
                                 <Typography variant="body2" color="text.secondary">
-                                    Service Type
+                                    Тип услуга
                                 </Typography>
                                 <Chip
                                     label={getServiceTypeLabel(appointment.vehicleInfo.serviceType)}
@@ -137,7 +137,7 @@ export const ConfirmationPage: React.FC = () => {
 
                             <Box mb={2}>
                                 <Typography variant="body2" color="text.secondary">
-                                    Price
+                                    Цена
                                 </Typography>
                                 <Typography variant="h6" color="primary">
                                     {appointment.price} BGN
@@ -146,17 +146,17 @@ export const ConfirmationPage: React.FC = () => {
                         </Box>
                     </Grid>
 
-                    {/* Vehicle & Contact Info */}
+                    {/* Информация за автомобила и контакт */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Box mb={3}>
                             <Typography variant="h6" gutterBottom>
                                 <DirectionsCar sx={{ mr: 1, verticalAlign: 'middle' }} />
-                                Vehicle Information
+                                Информация за автомобила
                             </Typography>
 
                             <Box mb={2}>
                                 <Typography variant="body2" color="text.secondary">
-                                    Registration Plate
+                                    Регистрационен номер
                                 </Typography>
                                 <Typography variant="body1" fontWeight="medium">
                                     {appointment.customerInfo.registrationPlate}
@@ -166,7 +166,7 @@ export const ConfirmationPage: React.FC = () => {
                             {appointment.vehicleInfo.brand && (
                                 <Box mb={2}>
                                     <Typography variant="body2" color="text.secondary">
-                                        Brand {appointment.vehicleInfo.model && '& Model'}
+                                        Марка {appointment.vehicleInfo.model && 'и модел'}
                                     </Typography>
                                     <Typography variant="body1">
                                         {appointment.vehicleInfo.brand}
@@ -184,7 +184,7 @@ export const ConfirmationPage: React.FC = () => {
 
                         <Box>
                             <Typography variant="h6" gutterBottom>
-                                Contact Information
+                                Информация за контакт
                             </Typography>
 
                             <Box mb={1}>
@@ -212,8 +212,8 @@ export const ConfirmationPage: React.FC = () => {
 
                 <Alert severity="info" sx={{ mb: 3 }}>
                     <Typography variant="body2">
-                        <strong>Important:</strong> Please arrive 10 minutes before your scheduled time.
-                        A confirmation email has been sent to your email address with all the details.
+                        <strong>Важно:</strong> Моля, пристигнете 10 минути преди уречения час.
+                        На имейл адреса Ви е изпратен имейл за потвърждение с всички подробности.
                     </Typography>
                 </Alert>
 
@@ -225,7 +225,7 @@ export const ConfirmationPage: React.FC = () => {
                         size="large"
                         startIcon={<ArrowBack />}
                     >
-                        Book Another Appointment
+                        Резервирай друг час
                     </Button>
                 </Box>
             </Paper>

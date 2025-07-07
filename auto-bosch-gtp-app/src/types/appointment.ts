@@ -23,14 +23,14 @@ const bulgarianPhoneRegex = /^(\+359|0)[87-9]\d{8}$/;
 // Zod validation schemas
 export const registrationPlateSchema = z
     .string()
-    .min(5, 'Registration plate is too short')
-    .max(8, 'Registration plate is too long')
-    .regex(bulgarianPlateRegex, 'Invalid Bulgarian registration plate format')
+    .min(5, 'Регистрационният номер е твърде къс')
+    .max(8, 'Регистрационният номер е твърде дълъг')
+    .regex(bulgarianPlateRegex, 'Невалиден формат на български регистрационен номер')
     .transform((val) => val.toUpperCase());
 
-export const phoneNumberSchema = z.string().regex(bulgarianPhoneRegex, 'Invalid Bulgarian phone number');
+export const phoneNumberSchema = z.string().regex(bulgarianPhoneRegex, 'Невалиден български телефонен номер');
 
-export const emailSchema = z.string().email('Invalid email address');
+export const emailSchema = z.string().email('Невалиден имейл адрес');
 
 export const serviceTypeSchema = z.enum([
     ServiceType.CAR,
@@ -78,15 +78,15 @@ export type Appointment = z.infer<typeof appointmentDbSchema>;
 
 // Form data type for the booking form
 export const bookingFormSchema = z.object({
-    registrationPlate: z.string().min(1, 'Registration plate is required'),
-    phoneNumber: z.string().min(1, 'Phone number is required'),
-    email: z.string().min(1, 'Email is required'),
+    registrationPlate: z.string().min(1, 'Регистрационният номер е задължителен'),
+    phoneNumber: z.string().min(1, 'Телефонният номер е задължителен'),
+    email: z.string().min(1, 'Имейлът е задължителен'),
     serviceType: serviceTypeSchema,
     brand: z.string().optional(),
     model: z.string().optional(),
     is4x4: z.boolean().default(false),
     appointmentDateTime: z.date({
-        required_error: 'Please select appointment date and time',
+        required_error: 'Моля, изберете дата и час на резервацията',
     }),
 });
 
@@ -110,7 +110,7 @@ export const garageSettingsSchema = z.object({
         start: z.string(), // "09:00"
         end: z.string(), // "17:00"
     }),
-    workingDays: z.array(z.number().min(0).max(6)), // 0-6 for Sunday-Saturday
+    workingDays: z.array(z.number().min(0).max(6)),
     pricing: z.object({
         car: z.number(),
         bus: z.number(),
@@ -134,15 +134,15 @@ export type TimeSlot = z.infer<typeof timeSlotSchema>;
 
 // Constants for form options
 export const SERVICE_TYPE_OPTIONS = [
-    {value: ServiceType.CAR, label: 'Car'},
-    {value: ServiceType.BUS, label: 'Bus'},
-    {value: ServiceType.MOTORCYCLE, label: 'Motorcycle'},
-    {value: ServiceType.TAXI, label: 'Taxi'},
-    {value: ServiceType.CARAVAN, label: 'Caravan'},
-    {value: ServiceType.HANGER, label: 'Hanger'},
-    {value: ServiceType.LPG, label: 'LPG Installation Check'},
+    {value: ServiceType.CAR, label: 'Лек автомобил'},
+    {value: ServiceType.BUS, label: 'Автобус'},
+    {value: ServiceType.MOTORCYCLE, label: 'Мотоциклет'},
+    {value: ServiceType.TAXI, label: 'Такси'},
+    {value: ServiceType.CARAVAN, label: 'Каравана'},
+    {value: ServiceType.HANGER, label: 'Ремарке'},
+    {value: ServiceType.LPG, label: 'Проверка на газова уредба'},
 ] as const;
 
 // Temporary arrays for bus and motorcycle brands
-export const BUS_BRANDS = ['Other'] as const;
-export const MOTORCYCLE_BRANDS = ['Other'] as const;
+export const BUS_BRANDS = ['Друга'] as const;
+export const MOTORCYCLE_BRANDS = ['Друга'] as const;

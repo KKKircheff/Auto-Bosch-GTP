@@ -25,11 +25,11 @@ export const VehicleTypeSelect: React.FC<VehicleTypeSelectProps> = ({
             control={control}
             render={({ field }) => (
                 <FormControl fullWidth error={!!errors.serviceType}>
-                    <InputLabel id="service-type-label">Service Type</InputLabel>
+                    <InputLabel id="service-type-label">Тип на услугата</InputLabel>
                     <Select
                         {...field}
                         labelId="service-type-label"
-                        label="Service Type"
+                        label="Тип на услугата"
                     >
                         {SERVICE_TYPE_OPTIONS.map((option) => (
                             <MenuItem key={option.value} value={option.value}>

@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
                 <Grid container spacing={3}>
                     <Grid size={{ xs: 12, sm: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            Contact Info
+                            Информация за контакт
                         </Typography>
                         <Box display="flex" alignItems="center" mb={1}>
                             <Phone fontSize="small" sx={{ mr: 1 }} />
@@ -35,41 +35,41 @@ export const Footer: React.FC = () => {
                         </Box>
                         <Box display="flex" alignItems="center">
                             <LocationOn fontSize="small" sx={{ mr: 1 }} />
-                            <Typography variant="body2">Sofia, Bulgaria</Typography>
+                            <Typography variant="body2">София, България</Typography>
                         </Box>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            Working Hours
+                            Работно време
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                            Monday - Friday: 09:00 - 17:00
+                            Понеделник - Петък: 09:00 - 17:00
                         </Typography>
                         <Typography variant="body2">
-                            Saturday - Sunday: Closed
+                            Събота - Неделя: Почивни дни
                         </Typography>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            Services
+                            Услуги
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                            • Vehicle Technical Inspections
+                            • Технически прегледи на автомобили
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                            • LPG Installation Checks
+                            • Проверки на газови уредби
                         </Typography>
                         <Typography variant="body2">
-                            • All Vehicle Types Welcome
+                            • Всички видове превозни средства са добре дошли
                         </Typography>
                     </Grid>
                 </Grid>
 
                 <Box textAlign="center" pt={3} borderTop={1} borderColor="divider" mt={3}>
                     <Typography variant="body2" color="text.secondary">
-                        © 2025 Car Garage. All rights reserved.
+                        © 2025 Автосервиз. Всички права запазени.
                     </Typography>
                 </Box>
             </Container>

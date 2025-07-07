@@ -10,7 +10,7 @@ import {
     Paper,
     Alert,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useForm, Controller } from 'react-hook-form';
@@ -24,6 +24,7 @@ import { createAppointment } from '../../services/appointmentService';
 import { getBookingDateRange } from '../../utils/helpers';
 import { bookingFormSchema } from '../../types/appointment';
 import type { BookingFormData } from '../../types/appointment';
+import { SLOT_DURATION_MINUTES } from '../../utils/constants';
 
 interface BookingFormProps {
     onBookingSuccess: (appointmentId: string) => void;
@@ -70,7 +71,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             onBookingSuccess(appointmentId);
             reset();
         } catch (error) {
-            setSubmitError(error instanceof Error ? error.message : 'Failed to create appointment');
+            setSubmitError(error instanceof Error ? error.message : 'Неуспешно създаване на резервация');
         } finally {
             setIsSubmitting(false);
         }
@@ -80,7 +81,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
                 <Typography variant="h5" component="h2" gutterBottom>
-                    Book Your Vehicle Check
+                    Резервирайте Вашия технически преглед
                 </Typography>
 
                 {submitError && (
@@ -91,12 +92,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
                 <Box component="form" onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={3}>
-                        {/* Registration Plate */}
+                        {/* Регистрационен номер */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <RegistrationPlateInput control={control} errors={errors} />
                         </Grid>
 
-                        {/* Phone Number */}
+                        {/* Телефонен номер */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <Controller
                                 name="phoneNumber"
@@ -104,7 +105,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        label="Phone Number"
+                                        label="Телефонен номер"
                                         placeholder="+359888123456"
                                         fullWidth
                                         error={!!errors.phoneNumber}
@@ -114,7 +115,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                             />
                         </Grid>
 
-                        {/* Email */}
+                        {/* Имейл */}
                         <Grid size={{ xs: 12 }}>
                             <Controller
                                 name="email"
@@ -122,7 +123,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        label="Email"
+                                        label="Имейл"
                                         type="email"
                                         placeholder="your.email@example.com"
                                         fullWidth
@@ -133,12 +134,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                             />
                         </Grid>
 
-                        {/* Service Type */}
+                        {/* Тип на услугата */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <VehicleTypeSelect control={control} errors={errors} />
                         </Grid>
 
-                        {/* Brand Select - Conditional */}
+                        {/* Избор на марка - Условно */}
                         {showBrandSelect && (
                             <Grid size={{ xs: 12, sm: 6 }}>
                                 <CarBrandSelect
@@ -149,7 +150,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                             </Grid>
                         )}
 
-                        {/* Model Input - Conditional */}
+                        {/* Поле за модел - Условно */}
                         {showModelInput && (
                             <Grid size={{ xs: 12, sm: 6 }}>
                                 <Controller
@@ -158,8 +159,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
-                                            label="Model"
-                                            placeholder="e.g., Golf, Corolla"
+                                            label="Модел"
+                                            placeholder="напр. Golf, Corolla"
                                             fullWidth
                                             error={!!errors.model}
                                             helperText={errors.model?.message}
@@ -170,39 +171,38 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                             </Grid>
                         )}
 
-                        {/* 4x4 Checkbox - Conditional */}
-                        {show4x4Checkbox && (
-                            <Grid size={{ xs: 12 }}>
-                                <Controller
-                                    name="is4x4"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    {...field}
-                                                    checked={field.value || false}
-                                                />
-                                            }
-                                            label="4x4 / All-wheel drive"
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                        )}
+                        {/* Квадратче за 4x4 - Условно */}
+                        <Grid size={{ xs: 12 }} sx={{ display: show4x4Checkbox ? 'block' : 'none' }}>
+                            <Controller
+                                name="is4x4"
+                                control={control}
+                                render={({ field }) => (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                {...field}
+                                                checked={field.value || false}
+                                            />
+                                        }
+                                        label="4x4 / Задвижване на всички колела"
+                                    />
+                                )}
+                            />
+                        </Grid>
 
-                        {/* Date Time Picker */}
+                        {/* Избор на дата и час */}
                         <Grid size={{ xs: 12 }}>
                             <Controller
                                 name="appointmentDateTime"
                                 control={control}
                                 render={({ field }) => (
-                                    <DateTimePicker
+                                    <StaticDateTimePicker
                                         {...field}
-                                        label="Appointment Date & Time"
+                                        ampm={false}
+                                        label="Дата и час на резервацията"
                                         minDateTime={dayjs(startDate)}
                                         maxDateTime={dayjs(endDate)}
-                                        minutesStep={15}
+                                        minutesStep={SLOT_DURATION_MINUTES}
                                         shouldDisableTime={(timeValue, clockType) => {
                                             if (clockType === 'hours') {
                                                 const hour = timeValue.hour();
@@ -210,7 +210,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                             }
                                             if (clockType === 'minutes') {
                                                 const minute = timeValue.minute();
-                                                return minute % 15 !== 0;
+                                                return minute % SLOT_DURATION_MINUTES !== 0;
                                             }
                                             return false;
                                         }}
@@ -218,19 +218,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                             const day = date.day();
                                             return day === 0 || day === 6; // Disable weekends
                                         }}
-                                        slotProps={{
-                                            textField: {
-                                                fullWidth: true,
-                                                error: !!errors.appointmentDateTime,
-                                                helperText: errors.appointmentDateTime?.message,
-                                            },
-                                        }}
+                                    // slotProps={{
+                                    //     textField: {
+                                    //         fullWidth: true,
+                                    //         error: !!errors.appointmentDateTime,
+                                    //         helperText: errors.appointmentDateTime?.message,
+                                    //     },
+                                    // }}
                                     />
                                 )}
                             />
                         </Grid>
 
-                        {/* Submit Button */}
+                        {/* Бутон за изпращане */}
                         <Grid size={{ xs: 12 }}>
                             <Button
                                 type="submit"
@@ -240,7 +240,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                                 disabled={isSubmitting}
                                 sx={{ mt: 2 }}
                             >
-                                {isSubmitting ? 'Booking...' : 'Book Appointment'}
+                                {isSubmitting ? 'Резервиране...' : 'Резервирай час'}
                             </Button>
                         </Grid>
                     </Grid>

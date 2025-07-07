@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { BookingForm } from '../components/BookingForm/BookingForm';
 import { AppointmentCalendar } from '../components/Calendar/AppointmentCalendar';
+import { BUSINESS_HOURS, MAX_BOOKING_WEEKS, SLOT_DURATION_MINUTES } from '../utils/constants';
 
 export const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -27,40 +28,40 @@ export const HomePage: React.FC = () => {
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box mb={4}>
                 <Typography variant="h3" component="h1" textAlign="center" gutterBottom>
-                    Vehicle Check Booking
+                    Резервирай час за преглед
                 </Typography>
-                <Typography
+                {/* <Typography
                     variant="h6"
                     textAlign="center"
                     color="text.secondary"
                     sx={{ mb: 2 }}
                 >
-                    Professional vehicle inspections in Sofia, Bulgaria
-                </Typography>
+                    Професионални технически прегледи на автомобили
+                </Typography> */}
 
                 <Alert severity="info" sx={{ mt: 2 }}>
                     <Typography variant="body2">
-                        <strong>Operating Hours:</strong> Monday to Friday, 09:00 - 17:00 |
-                        <strong> Booking Window:</strong> Up to 8 weeks in advance |
-                        <strong> Time Slots:</strong> 15-minute intervals
+                        <strong>Работно време:</strong> Понеделник - Петък, {BUSINESS_HOURS.START} - {BUSINESS_HOURS.END} |
+                        <strong> Дати резервация:</strong> До {MAX_BOOKING_WEEKS} седмици предварително |
+                        <strong> Слот за преглед:</strong> {SLOT_DURATION_MINUTES} минутни
                     </Typography>
                 </Alert>
             </Box>
 
             <Grid container spacing={4}>
-                {/* Booking Form */}
+                {/* Форма за резервация */}
                 <Grid size={{ xs: 12, lg: 6 }}>
                     <BookingForm onBookingSuccess={handleBookingSuccess} />
                 </Grid>
 
-                {/* Calendar */}
+                {/* Календар */}
                 <Grid size={{ xs: 12, lg: 6 }}>
                     <Paper elevation={2} sx={{ p: 3 }}>
                         <Typography variant="h5" component="h2" gutterBottom>
-                            Available Time Slots
+                            Свободни часове
                         </Typography>
                         <Typography variant="body2" color="text.secondary" mb={3}>
-                            Select a time slot from the calendar below, then fill out the booking form.
+                            Изберете времеви интервал от календара по-долу, след което попълнете формата за резервация.
                         </Typography>
 
                         <AppointmentCalendar

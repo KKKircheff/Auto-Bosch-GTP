@@ -1,46 +1,41 @@
 import { useState, useEffect } from 'react';
-import { getAppointments } from '../services/appointmentService';
-import type { Appointment } from '../types/appointment';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { Appointment } from '../types/appointment';
 
-export const useAppointments = (autoRefresh = false) => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export const useAppointments = (date: Date) => {
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  const loadAppointments = async () => {
-    setLoading(true);
-    setError(null);
+    useEffect(() => {
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
 
-    try {
-      const data = await getAppointments(new Date());
-      setAppointments(data);
-    } catch (err) {
-      setError('Failed to load appointments');
-      console.error('Error loading appointments:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
 
-  useEffect(() => {
-    loadAppointments();
-  }, []);
+        const appointmentsCol = collection(db, 'appointments');
+        const q = query(
+            appointmentsCol,
+            where('appointmentDateTime', '>=', startOfDay),
+            where('appointmentDateTime', '<', endOfDay)
+        );
 
-  // Auto refresh every 30 seconds if enabled
-  useEffect(() => {
-    if (!autoRefresh) return;
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const fetchedAppointments: Appointment[] = [];
+            querySnapshot.forEach((doc) => {
+                fetchedAppointments.push({ id: doc.id, ...doc.data() } as Appointment);
+            });
+            setAppointments(fetchedAppointments);
+            setIsLoading(false);
+        }, (err) => {
+            setError('Failed to fetch appointments');
+            setIsLoading(false);
+        });
 
-    const interval = setInterval(() => {
-      loadAppointments();
-    }, 30000);
+        return () => unsubscribe();
+    }, [date]);
 
-    return () => clearInterval(interval);
-  }, [autoRefresh]);
-
-  return {
-    appointments,
-    loading,
-    error,
-    refetch: loadAppointments,
-  };
+    return { appointments, isLoading, error };
 };

@@ -14,8 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../hooks/useAuth';
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email('Невалиден имейл адрес'),
+  password: z.string().min(6, 'Паролата трябва да е поне 6 символа'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -44,7 +44,7 @@ export const LoginForm: React.FC = () => {
     const result = await login(data.email, data.password);
     
     if (!result.success) {
-      setLoginError(result.error || 'Login failed');
+      setLoginError(result.error || 'Входът е неуспешен');
     }
     
     setIsSubmitting(false);
@@ -54,7 +54,7 @@ export const LoginForm: React.FC = () => {
     <Container maxWidth="sm" sx={{ py: 8 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" textAlign="center" gutterBottom>
-          Admin Login
+          Админ Вход
         </Typography>
         
         {loginError && (
@@ -70,7 +70,7 @@ export const LoginForm: React.FC = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Email"
+                label="Имейл"
                 type="email"
                 fullWidth
                 margin="normal"
@@ -86,7 +86,7 @@ export const LoginForm: React.FC = () => {
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Password"
+                label="Парола"
                 type="password"
                 fullWidth
                 margin="normal"
@@ -104,7 +104,7 @@ export const LoginForm: React.FC = () => {
             disabled={isSubmitting}
             sx={{ mt: 3 }}
           >
-            {isSubmitting ? 'Signing In...' : 'Sign In'}
+            {isSubmitting ? 'Влизане...' : 'Вход'}
           </Button>
         </Box>
       </Paper>

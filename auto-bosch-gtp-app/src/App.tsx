@@ -7,6 +7,8 @@ import { CssBaseline, Box } from '@mui/material';
 import { ConfirmationPage } from './pages/ConfirmationPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { HomePage } from './pages/Home.Page';
+import { Header } from './components/Layout/Header';
+import { Footer } from './components/Layout/Footer';
 
 const theme = createTheme({
     palette: {
@@ -37,16 +39,15 @@ const App: React.FC = () => {
             <CssBaseline />
             <Router>
                 <Routes>
-                    {/* Public routes with layout */}
                     <Route
                         path="/"
                         element={
                             <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                                {/* <Header /> */}
+                                <Header />
                                 <Box component="main" sx={{ flexGrow: 1 }}>
                                     <HomePage />
                                 </Box>
-                                {/* <Footer /> */}
+                                <Footer />
                             </Box>
                         }
                     />
@@ -55,11 +56,11 @@ const App: React.FC = () => {
                         path="/confirmation/:appointmentId"
                         element={
                             <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                                {/* <Header /> */}
+                                <Header />
                                 <Box component="main" sx={{ flexGrow: 1 }}>
                                     <ConfirmationPage />
                                 </Box>
-                                {/* <Footer /> */}
+                                <Footer />
                             </Box>
                         }
                     />
