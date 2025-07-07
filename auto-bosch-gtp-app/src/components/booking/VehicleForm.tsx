@@ -1,3 +1,4 @@
+// src/components/booking/VehicleForm.tsx
 import { useState, useEffect } from 'react';
 import {
     Box,
@@ -19,6 +20,7 @@ import {
 import { DirectionsCar, LocalShipping, TwoWheeler, LocalTaxi } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import {
     TEXTS,
     VEHICLE_TYPES,
@@ -27,7 +29,50 @@ import {
     shouldShowBrands,
     calculatePrice,
 } from '../../utils/constants';
-import { bookingFormSchema, type BookingFormSchema, type VehicleType } from '../../types/booking';
+import { type BookingFormSchema, type VehicleType } from '../../types/booking';
+
+// Create a partial schema for the vehicle form
+const vehicleFormSchema = z.object({
+    customerName: z
+        .string()
+        .min(2, 'Името трябва да бъде поне 2 символа')
+        .max(50, 'Името не може да бъде повече от 50 символа')
+        .optional(),
+
+    email: z
+        .string()
+        .email('Невалиден имейл адрес')
+        .optional()
+        .or(z.literal('')),
+
+    phone: z
+        .string()
+        .min(1, 'Телефонният номер е задължителен')
+        .regex(
+            /^(\+359|0)[0-9]{8,9}$/,
+            'Невалиден телефонен номер (използвайте формат +359XXXXXXXXX или 0XXXXXXXXX)'
+        )
+        .optional(),
+
+    registrationPlate: z
+        .string()
+        .min(1, 'Регистрационният номер е задължителен')
+        .regex(
+            /^[A-Za-z0-9\-]+$/,
+            'Регистрационният номер може да съдържа само букви, цифри и тирета'
+        )
+        .optional(),
+
+    vehicleType: z.enum(['car', 'bus', 'motorcycle', 'taxi', 'caravan', 'trailer', 'lpg']).optional(),
+
+    vehicleBrand: z.string().optional(),
+
+    is4x4: z.boolean().optional(),
+
+    notes: z.string().max(500, 'Бележките не могат да бъдат повече от 500 символа').optional(),
+});
+
+type VehicleFormData = z.infer<typeof vehicleFormSchema>;
 
 interface VehicleFormProps {
     onFormChange?: (data: Partial<BookingFormSchema>) => void;
@@ -42,18 +87,18 @@ const VehicleForm = ({
     initialData,
     className,
 }: VehicleFormProps) => {
-    const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | ''>('');
+    const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>('car');
     const [priceInfo, setPriceInfo] = useState<{ basePrice: number; discount: number; finalPrice: number } | null>(null);
 
     // Form setup with validation
     const {
         control,
         watch,
-        formState: { errors, isValid },
+        formState: { errors },
         setValue,
         trigger,
-    } = useForm<BookingFormSchema>({
-        resolver: zodResolver(bookingFormSchema.partial()),
+    } = useForm<VehicleFormData>({
+        resolver: zodResolver(vehicleFormSchema),
         mode: 'onChange',
         defaultValues: {
             customerName: initialData?.customerName || '',
@@ -70,6 +115,20 @@ const VehicleForm = ({
     // Watch form changes
     const watchedValues = watch();
     const vehicleType = watch('vehicleType');
+
+    // Custom validation for required fields
+    const isFormValid = () => {
+        const requiredFieldsValid = !!(
+            watchedValues.customerName &&
+            watchedValues.phone &&
+            watchedValues.registrationPlate &&
+            watchedValues.vehicleType
+        );
+
+        const noErrors = Object.keys(errors).length === 0;
+
+        return requiredFieldsValid && noErrors;
+    };
 
     // Update vehicle type state and reset dependent fields
     useEffect(() => {
@@ -91,7 +150,7 @@ const VehicleForm = ({
             // Trigger validation
             trigger();
         } else {
-            setSelectedVehicleType('');
+            setSelectedVehicleType('car');
             setPriceInfo(null);
         }
     }, [vehicleType, setValue, trigger]);
@@ -99,16 +158,27 @@ const VehicleForm = ({
     // Notify parent of form changes
     useEffect(() => {
         if (onFormChange) {
-            onFormChange(watchedValues);
+            // Convert to BookingFormSchema format
+            const formattedData: Partial<BookingFormSchema> = {
+                customerName: watchedValues.customerName || '',
+                email: watchedValues.email || '',
+                phone: watchedValues.phone || '',
+                registrationPlate: watchedValues.registrationPlate || '',
+                vehicleType: watchedValues.vehicleType,
+                vehicleBrand: watchedValues.vehicleBrand || '',
+                is4x4: watchedValues.is4x4 || false,
+                notes: watchedValues.notes || '',
+            };
+            onFormChange(formattedData);
         }
     }, [watchedValues, onFormChange]);
 
     // Notify parent of validation changes
     useEffect(() => {
         if (onValidationChange) {
-            onValidationChange(isValid);
+            onValidationChange(isFormValid());
         }
-    }, [isValid, onValidationChange]);
+    }, [watchedValues, errors, onValidationChange]);
 
     // Get vehicle icon
     const getVehicleIcon = (type: VehicleType) => {
@@ -142,26 +212,6 @@ const VehicleForm = ({
                     </Typography>
 
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <Controller
-                                name="registrationPlate"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        fullWidth
-                                        label={TEXTS.registrationPlate}
-                                        required
-                                        error={!!errors.registrationPlate}
-                                        helperText={errors.registrationPlate?.message}
-                                        placeholder="A1234AB"
-                                        // sx={{ textTransform: 'uppercase' }}
-                                        onChange={(e) => field.onChange(e.target.value.toUpperCase())}
-                                    />
-                                )}
-                            />
-                        </Grid>
-
                         <Grid size={{ xs: 12, md: 6 }}>
                             <Controller
                                 name="customerName"
@@ -216,6 +266,25 @@ const VehicleForm = ({
                             />
                         </Grid>
 
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Controller
+                                name="registrationPlate"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        fullWidth
+                                        label={TEXTS.registrationPlate}
+                                        required
+                                        error={!!errors.registrationPlate}
+                                        helperText={errors.registrationPlate?.message}
+                                        placeholder="CA1234AB"
+                                        sx={{ textTransform: 'uppercase' }}
+                                        onChange={(e) => field.onChange(e.target.value.toUpperCase())}
+                                    />
+                                )}
+                            />
+                        </Grid>
                     </Grid>
                 </Box>
 

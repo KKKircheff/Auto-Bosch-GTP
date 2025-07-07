@@ -1,6 +1,6 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { createContext, useContext, type ReactNode, useState, useEffect } from 'react';
 import { onAuthStateChange, signInAdmin, signOutAdmin } from '../services/auth';
-import type { AdminUser, LoginCredentials, ApiResponse } from '../types';
+import type { AdminUser, LoginCredentials, ApiResponse } from '../types/booking';
 
 interface AuthContextType {
     user: AdminUser | null;

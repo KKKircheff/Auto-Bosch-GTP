@@ -8,7 +8,7 @@ export type BookingStatus = 'confirmed' | 'cancelled';
 export interface BookingFormData {
     // Customer information
     customerName: string;
-    email: string;
+    email?: string; // Made optional to match the schema
     phone: string;
     registrationPlate: string;
 
@@ -25,8 +25,9 @@ export interface BookingFormData {
     notes?: string;
 }
 
-export interface Booking extends BookingFormData {
+export interface Booking extends Omit<BookingFormData, 'email'> {
     id: string;
+    email: string; // Always required in saved booking
     price: number;
     status: BookingStatus;
     createdAt: Date;
