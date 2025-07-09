@@ -83,7 +83,7 @@ export const TEXTS = {
     // Booking confirmation
     confirmBooking: 'Потвърди записването',
     bookingConfirmed: 'Записването е потвърдено!',
-    bookingDetails: 'Детайли',
+    bookingDetails: 'Прегледай и потвърди',
     totalPrice: 'Обща цена',
     onlineDiscount: 'Отстъпка при онлайн записване',
     finalPrice: 'Крайна цена',

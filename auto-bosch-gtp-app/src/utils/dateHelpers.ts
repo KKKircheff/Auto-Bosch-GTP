@@ -10,15 +10,17 @@ import {
     isSameMonth,
     isToday,
     isBefore,
+    isAfter,
     addMonths,
     addDays,
+    addWeeks,
     getDay,
     setHours,
     setMinutes,
     differenceInMinutes,
     parse,
 } from 'date-fns';
-import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, TEXTS} from './constants';
+import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, MAX_BOOKING_WEEKS, TEXTS} from './constants';
 import type {CalendarDay, CalendarWeek, DaySchedule, TimeSlot} from '../types/booking';
 
 // Bulgarian month names
@@ -50,6 +52,30 @@ export const BULGARIAN_DAYS_FULL = [
     TEXTS.days.friday,
     TEXTS.days.saturday,
 ];
+
+/**
+ * Get maximum allowed booking date based on MAX_BOOKING_WEEKS
+ */
+export const getMaxBookingDate = (): Date => {
+    const today = new Date();
+    return addWeeks(today, MAX_BOOKING_WEEKS);
+};
+
+/**
+ * Check if date is within the allowed booking window
+ */
+export const isWithinBookingWindow = (date: Date): boolean => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    const maxDate = getMaxBookingDate();
+    maxDate.setHours(23, 59, 59, 999); // End of max day
+
+    return !isBefore(checkDate, today) && !isAfter(checkDate, maxDate);
+};
 
 /**
  * Format date in Bulgarian
@@ -95,10 +121,10 @@ export const isPastDate = (date: Date): boolean => {
 };
 
 /**
- * Check if date can be booked (working day and not in past)
+ * Check if date can be booked (working day, not in past, and within booking window)
  */
 export const isBookableDate = (date: Date): boolean => {
-    return isWorkingDay(date) && !isPastDate(date);
+    return isWorkingDay(date) && !isPastDate(date) && isWithinBookingWindow(date);
 };
 
 /**
@@ -210,25 +236,51 @@ export const getNextAvailableDate = (): Date => {
         date = addDays(date, 1);
     }
 
-    // Find next working day
+    // Find next working day within booking window
     while (!isBookableDate(date)) {
         date = addDays(date, 1);
+
+        // Safety check to prevent infinite loop
+        if (!isWithinBookingWindow(date)) {
+            break;
+        }
     }
 
     return date;
 };
 
 /**
- * Get available months for booking (current and next month)
+ * Get available months for booking with respect to the booking window
  */
-export const getAvailableMonths = (): {current: Date; next: Date} => {
+export const getAvailableMonths = (): {current: Date; next: Date; maxDate: Date} => {
     const now = new Date();
+    const maxDate = getMaxBookingDate();
+
     return {
         current: now,
         next: addMonths(now, 1),
+        maxDate,
     };
 };
 
+/**
+ * Check if a month should be available for navigation
+ */
+export const isMonthWithinBookingWindow = (monthDate: Date): boolean => {
+    const maxDate = getMaxBookingDate();
+    const monthStart = startOfMonth(monthDate);
+    const monthEnd = endOfMonth(monthDate);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return !isBefore(monthEnd, today) && !isAfter(monthStart, maxDate);
+};
+
+export const shouldShowSecondMonth = (currentMonth: Date): boolean => {
+    const nextMonth = addMonths(currentMonth, 1);
+    return isMonthWithinBookingWindow(nextMonth);
+};
 /**
  * Format time slot for display
  */
@@ -285,4 +337,12 @@ export const getTimeUntilAppointment = (appointmentDate: Date, appointmentTime: 
         const days = Math.floor(diffMinutes / 1440);
         return `${days} дни`;
     }
+};
+
+/**
+ * Get a user-friendly description of the booking window
+ */
+export const getBookingWindowDescription = (): string => {
+    const maxDate = getMaxBookingDate();
+    return `до ${formatDateBulgarian(maxDate, 'dd MMMM yyyy')} (${MAX_BOOKING_WEEKS} седмици напред)`;
 };

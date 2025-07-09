@@ -1,6 +1,8 @@
 import { Box, Container, Stack, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useBookingContext } from '../../contexts/BookingContext';
 import { TEXTS } from '../../utils/constants';
+import { getNextAvailableDate } from '../../utils/dateHelpers';
 import TimeSlotPicker from './TimeSlotPicker';
 import CalendarPicker from './CalendarPicker';
 
@@ -8,7 +10,9 @@ interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
 }
 
-const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
+const BookingCalendar = ({
+    onDateTimeSelect,
+}: BookingCalendarProps) => {
     const {
         selectedDate,
         selectedTime,
@@ -21,7 +25,15 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
         refreshTimeSlots,
     } = useBookingContext();
 
-
+    // Auto-select next available date if none is selected
+    useEffect(() => {
+        if (!selectedDate) {
+            const nextAvailable = getNextAvailableDate();
+            if (nextAvailable) {
+                setSelectedDate(nextAvailable);
+            }
+        }
+    }, [selectedDate, setSelectedDate]);
 
     const handleDateSelect = (date: Date) => {
         setSelectedDate(date);
@@ -56,7 +68,7 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
                     appointmentCounts={appointmentCounts}
                 />
 
-                {/* Time slots */}
+                {/* Time slots - Always show, will auto-select available date */}
                 <TimeSlotPicker
                     selectedDate={selectedDate}
                     selectedTime={selectedTime || undefined}

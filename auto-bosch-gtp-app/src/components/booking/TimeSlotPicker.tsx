@@ -59,15 +59,13 @@ const TimeSlotPicker = ({
     const availableCount = timeSlots.filter(slot => slot.available).length;
     const totalCount = timeSlots.length;
 
+    // Show loading state while date is being auto-selected
     if (!selectedDate) {
         return (
             <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }} className={className}>
-                <AccessTime sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }} />
-                <Typography variant="h6" color="text.secondary">
-                    {TEXTS.selectDate}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" mt={1}>
-                    Моля изберете дата, за да видите свободните часове
+                <CircularProgress size={40} sx={{ mb: 2 }} />
+                <Typography variant="body1" color="text.secondary">
+                    Търсене на първата свободна дата...
                 </Typography>
             </Paper>
         );
@@ -251,6 +249,7 @@ const TimeSlotPicker = ({
             {timeSlots.length === 0 ? (
                 <Alert severity="warning">
                     Няма налични часове за избраната дата.
+                    Моля изберете друга дата от календара.
                 </Alert>
             ) : (
                 <Box>
