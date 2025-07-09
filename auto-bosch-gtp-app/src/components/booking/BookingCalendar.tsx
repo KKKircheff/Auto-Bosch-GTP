@@ -23,6 +23,7 @@ const BookingCalendar = ({
         timeSlotsError,
         appointmentCounts,
         refreshTimeSlots,
+        refreshAppointmentCounts, // Add this from context
     } = useBookingContext();
 
     // Auto-select next available date if none is selected
@@ -77,6 +78,7 @@ const BookingCalendar = ({
                     loading={timeSlotsLoading}
                     error={timeSlotsError}
                     onRefresh={refreshTimeSlots}
+                    onRefreshAppointmentCounts={refreshAppointmentCounts} // Pass the function
                 />
             </Stack>
         </Container>

@@ -31,6 +31,7 @@ interface TimeSlotPickerProps {
     loading?: boolean;
     error?: string;
     onRefresh?: () => void;
+    onRefreshAppointmentCounts?: () => void;
     className?: string;
 }
 
@@ -42,6 +43,7 @@ const TimeSlotPicker = ({
     loading = false,
     error,
     onRefresh,
+    onRefreshAppointmentCounts,
     className,
 }: TimeSlotPickerProps) => {
     const { user } = useAuth();
@@ -89,9 +91,12 @@ const TimeSlotPicker = ({
 
             if (result.success) {
                 showSuccess('Записването е успешно изтрито');
-                // Refresh the time slots to show updated availability
+                // Refresh both time slots and appointment counts to update calendar dots
                 if (onRefresh) {
                     onRefresh();
+                }
+                if (onRefreshAppointmentCounts) {
+                    onRefreshAppointmentCounts();
                 }
             } else {
                 showError(result.error || 'Възникна грешка при изтриване на записването');
@@ -188,7 +193,7 @@ const TimeSlotPicker = ({
                     }}
                 >
                     <Typography variant="body2" color="error.dark" fontWeight={600} gutterBottom>
-                        {slot.time} - Резервиран
+                        {slot.time} - Зает
                     </Typography>
 
                     <Typography variant="caption" color="text.secondary" display="block">
