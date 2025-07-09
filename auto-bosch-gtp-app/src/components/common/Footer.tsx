@@ -6,7 +6,7 @@ const Footer = () => {
         <Box
             component="footer"
             sx={{
-                bgcolor: 'grey.100',
+                bgcolor: 'grey.300',
                 py: 3,
                 mt: 'auto',
                 borderTop: 1,

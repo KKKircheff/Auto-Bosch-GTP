@@ -11,6 +11,7 @@ import {
     Alert,
     Card,
     CardContent,
+    alpha,
 } from '@mui/material';
 import {
     Event,
@@ -25,6 +26,7 @@ import {
 import { formatDateBulgarian } from '../../utils/dateHelpers';
 import { TEXTS, VEHICLE_TYPES, calculatePrice, CONTACT_INFO } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
+import { theme } from '../../theme/theme';
 
 interface BookingConfirmationProps {
     formData: BookingFormSchema;
@@ -58,7 +60,7 @@ const BookingConfirmation = ({
             <Stack spacing={3}>
                 {/* Header */}
                 <Box textAlign="center">
-                    <CheckCircle sx={{ fontSize: 64, color: 'success.main', mb: 2 }} />
+                    {/* <CheckCircle sx={{ fontSize: 64, color: 'success.main', mb: 2 }} /> */}
                     <Typography variant="h4" gutterBottom>
                         {TEXTS.bookingDetails}
                     </Typography>
@@ -252,7 +254,7 @@ const BookingConfirmation = ({
 
                 {/* Price Summary */}
                 {priceInfo && (
-                    <Card elevation={2} sx={{ bgcolor: 'primary.light' }}>
+                    <Card elevation={2} sx={{ bgcolor: alpha(theme.palette.primary.light, 0.2) }}>
                         <CardContent>
                             <Stack spacing={2}>
                                 <Box display="flex" alignItems="center" gap={1}>
@@ -298,7 +300,7 @@ const BookingConfirmation = ({
                 )}
 
                 {/* Important Information */}
-                <Alert severity="info">
+                <Alert severity="warning" sx={{ bgcolor: theme.palette.warning.light }}>
                     <Typography variant="subtitle2" gutterBottom>
                         Важна информация:
                     </Typography>

@@ -74,29 +74,6 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
                     onRefresh={refreshTimeSlots}
                 />
             </Stack>
-
-            {/* Selection summary */}
-            {selectedDate && selectedTime && (
-                <Box
-                    mt={4}
-                    p={3}
-                    bgcolor="success.light"
-                    borderRadius={2}
-                    textAlign="center"
-                >
-                    <Typography variant="h6" color="success.dark" gutterBottom>
-                        ✓ Избрана дата и час
-                    </Typography>
-                    <Typography variant="body1" color="success.dark">
-                        {selectedDate.toLocaleDateString('bg-BG', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })} в {selectedTime}
-                    </Typography>
-                </Box>
-            )}
         </Container>
     );
 };

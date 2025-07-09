@@ -47,8 +47,8 @@ export type VehicleType = keyof typeof VEHICLE_TYPES;
 // Bulgarian text constants
 export const TEXTS = {
     // Header
-    siteName: 'AutoCare Бургас',
-    siteTagline: 'Професионален технически преглед на МПС',
+    siteName: 'Ауто Бош Серви - Бургас',
+    siteTagline: 'Годишни технически прегледи',
 
     // Navigation
     services: 'Услуги',
@@ -83,7 +83,7 @@ export const TEXTS = {
     // Booking confirmation
     confirmBooking: 'Потвърди записването',
     bookingConfirmed: 'Записването е потвърдено!',
-    bookingDetails: 'Детайли на записването',
+    bookingDetails: 'Детайли',
     totalPrice: 'Обща цена',
     onlineDiscount: 'Отстъпка при онлайн записване',
     finalPrice: 'Крайна цена',

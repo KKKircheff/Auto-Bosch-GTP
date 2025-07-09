@@ -8,11 +8,13 @@ import {
     CircularProgress,
     Alert,
     Chip,
+    alpha,
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
 import { TEXTS } from '../../utils/constants';
 import type { TimeSlot } from '../../types/booking';
+import { theme } from '../../theme/theme';
 
 interface TimeSlotPickerProps {
     selectedDate: Date | null;
@@ -124,7 +126,7 @@ const TimeSlotPicker = ({
 
         return (
             <Button
-                variant={isSelected ? 'contained' : isAvailable ? 'outlined' : 'text'}
+                variant={'contained'}
                 onClick={() => isAvailable && onTimeSelect(slot.time)}
                 disabled={!isAvailable}
                 fullWidth
@@ -140,7 +142,7 @@ const TimeSlotPicker = ({
                             : 'text.disabled',
                     bgcolor: isSelected
                         ? 'primary.main'
-                        : 'transparent',
+                        : alpha(theme.palette.primary.light, 0.3),
                     '&:hover': {
                         bgcolor: isSelected
                             ? 'primary.dark'
@@ -252,13 +254,13 @@ const TimeSlotPicker = ({
                     <TimeSlotGroup
                         title="Сутрешни часове"
                         slots={groupedSlots.morning}
-                        icon={<AccessTime sx={{ color: 'warning.main' }} />}
+                        icon={<AccessTime sx={{ color: 'primary.main' }} />}
                     />
 
                     <TimeSlotGroup
                         title="Следобедни часове"
                         slots={groupedSlots.afternoon}
-                        icon={<AccessTime sx={{ color: 'info.main' }} />}
+                        icon={<AccessTime sx={{ color: 'primary.main' }} />}
                     />
                 </Box>
             )}
@@ -297,7 +299,7 @@ const TimeSlotPicker = ({
                 <Box
                     mt={3}
                     p={2}
-                    bgcolor="primary.light"
+                    bgcolor={alpha(theme.palette.primary.light, .3)}
                     borderRadius={1}
                     textAlign="center"
                 >

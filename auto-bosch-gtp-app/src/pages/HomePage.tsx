@@ -8,7 +8,7 @@ const HomePage = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             {/* Hero Section */}
-            <Box textAlign="center" mb={6}>
+            <Box textAlign="center" mb={6} >
                 <Typography variant="h2" component="h1" gutterBottom color="primary">
                     {TEXTS.siteName}
                 </Typography>

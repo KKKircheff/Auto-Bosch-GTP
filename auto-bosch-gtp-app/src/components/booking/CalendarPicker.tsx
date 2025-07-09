@@ -97,13 +97,13 @@ const CalendarPicker = ({
                         ? isSelected
                             ? 'white'
                             : isToday
-                                ? 'primary.main'
+                                ? 'text.secondary'
                                 : 'text.primary'
                         : 'text.disabled',
                     bgcolor: isSelected
                         ? 'primary.main'
                         : isToday
-                            ? 'primary.light'
+                            ? 'white'
                             : 'transparent',
                     border: isToday && !isSelected ? 2 : 0,
                     borderColor: 'primary.main',

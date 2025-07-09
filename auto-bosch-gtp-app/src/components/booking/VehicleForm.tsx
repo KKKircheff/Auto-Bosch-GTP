@@ -16,6 +16,7 @@ import {
     Chip,
     Alert,
     Autocomplete,
+    alpha,
 } from '@mui/material';
 import { DirectionsCar, LocalShipping, TwoWheeler, LocalTaxi } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,6 +31,7 @@ import {
     calculatePrice,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
+import { theme } from '../../theme/theme';
 
 // Create a partial schema for the vehicle form
 const vehicleFormSchema = z.object({
@@ -220,6 +222,7 @@ const VehicleForm = ({
                                     <TextField
                                         {...field}
                                         fullWidth
+                                        color='info'
                                         label={TEXTS.customerName}
                                         required
                                         error={!!errors.customerName}
@@ -238,6 +241,7 @@ const VehicleForm = ({
                                     <TextField
                                         {...field}
                                         fullWidth
+                                        color='info'
                                         label={TEXTS.phoneNumber}
                                         required
                                         error={!!errors.phone}
@@ -255,6 +259,7 @@ const VehicleForm = ({
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
+                                        color='info'
                                         fullWidth
                                         label={TEXTS.emailOptional}
                                         type="email"
@@ -273,7 +278,7 @@ const VehicleForm = ({
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        fullWidth
+                                        color='info'
                                         label={TEXTS.registrationPlate}
                                         required
                                         error={!!errors.registrationPlate}
@@ -301,9 +306,10 @@ const VehicleForm = ({
                             control={control}
                             render={({ field }) => (
                                 <FormControl fullWidth required error={!!errors.vehicleType}>
-                                    <InputLabel>{TEXTS.vehicleType}</InputLabel>
+                                    <InputLabel color='info'>{TEXTS.vehicleType}</InputLabel>
                                     <Select
                                         {...field}
+                                        color='info'
                                         label={TEXTS.vehicleType}
                                         value={field.value || ''}
                                     >
@@ -339,6 +345,7 @@ const VehicleForm = ({
                                         freeSolo
                                         renderInput={(params) => (
                                             <TextField
+                                                color='info'
                                                 {...params}
                                                 label={TEXTS.vehicleBrandOptional}
                                                 placeholder="Изберете или въведете марка"
@@ -381,6 +388,7 @@ const VehicleForm = ({
                             control={control}
                             render={({ field }) => (
                                 <TextField
+                                    color='info'
                                     {...field}
                                     fullWidth
                                     label="Бележки (по желание)"
@@ -397,7 +405,7 @@ const VehicleForm = ({
 
                 {/* Price Information */}
                 {priceInfo && (
-                    <Alert severity="info" sx={{ mt: 2 }}>
+                    <Alert severity='info' sx={{ mt: 2, bgcolor: alpha(theme.palette.warning.light, 0.3) }}>
                         <Stack spacing={1}>
                             <Typography variant="subtitle2">
                                 Информация за цената:
@@ -434,7 +442,7 @@ const VehicleForm = ({
 
                 {/* Form Status */}
                 {Object.keys(errors).length > 0 && (
-                    <Alert severity="warning">
+                    <Alert severity="error">
                         <Typography variant="subtitle2" gutterBottom>
                             Моля поправете следните грешки:
                         </Typography>

@@ -40,8 +40,8 @@ const Header = () => {
     const isActive = (path: string) => location.pathname === path;
 
     return (
-        <AppBar position="static" elevation={2}>
-            <Toolbar>
+        <AppBar position="static" elevation={2} sx={{ bgcolor: 'secondary.main', px: 0, }}>
+            <Toolbar sx={{ px: 0 }}>
                 {/* Logo */}
                 <IconButton
                     edge="start"
