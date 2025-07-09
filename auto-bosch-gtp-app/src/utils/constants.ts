@@ -1,5 +1,8 @@
-export const shadow1 =
+export const shadow2 =
     'rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px';
+
+export const shadow3 = 'rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px';
+export const shadow1 = 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px';
 
 // Business hours and scheduling
 export const BUSINESS_HOURS = {
@@ -47,7 +50,7 @@ export type VehicleType = keyof typeof VEHICLE_TYPES;
 // Bulgarian text constants
 export const TEXTS = {
     // Header
-    siteName: 'Ауто Бош Серви - Бургас',
+    siteName: 'Ауто Бош Сервиз Бургас',
     siteTagline: 'ГОДИШНИ ТЕХНИЧЕСКИ ПРЕГЛЕДИ',
 
     // Navigation

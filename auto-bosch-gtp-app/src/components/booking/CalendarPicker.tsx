@@ -130,8 +130,8 @@ const CalendarPicker = ({
                 onClick={() => handleDayClick(day)}
                 disabled={!isClickable}
                 sx={{
-                    minWidth: { xs: 36, sm: 44 },
-                    height: { xs: 36, sm: 44 },
+                    minWidth: { xs: 30, sm: 44 },
+                    height: { xs: 30, sm: 44 },
                     borderRadius: '50%',
                     p: 0,
                     fontSize: { xs: '0.75rem', sm: '0.875rem' },
@@ -195,7 +195,7 @@ const CalendarPicker = ({
                 boxShadow: shadow1,
                 p: { xs: 2, sm: 3 },
                 borderRadius: 2,
-                minHeight: { xs: 300, sm: 350 }
+                minHeight: { xs: 250, sm: 350 }
             }}
         >
             {/* Month header */}

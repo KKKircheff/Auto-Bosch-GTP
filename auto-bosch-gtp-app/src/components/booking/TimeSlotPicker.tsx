@@ -179,7 +179,7 @@ const TimeSlotPicker = ({
         const isDeleting = deletingSlot === slot.time;
         const isAdmin = !!user;
 
-        if (!isAvailable && slot.booking) {
+        if (!isAvailable && slot.booking && user) {
             // Unavailable slot with booking info - show with delete button for admin
             return (
                 <Box
@@ -193,7 +193,7 @@ const TimeSlotPicker = ({
                     }}
                 >
                     <Typography variant="body2" color="error.dark" fontWeight={600} gutterBottom>
-                        {slot.time} - Зает
+                        {slot.time} - Запазен час
                     </Typography>
 
                     <Typography variant="caption" color="text.secondary" display="block">

@@ -165,7 +165,7 @@ const DeleteBookingDialog: React.FC<DeleteBookingDialogProps> = ({
                                         label={booking.registrationPlate}
                                         size="small"
                                         variant="outlined"
-                                        sx={{ mt: 0.5 }}
+                                        sx={{ mt: 0.5, borderRadius: 0.7 }}
                                     />
                                 </Box>
                             </Box>
@@ -206,7 +206,7 @@ const DeleteBookingDialog: React.FC<DeleteBookingDialogProps> = ({
                     size="large"
                     startIcon={loading ? undefined : <Warning />}
                 >
-                    {loading ? 'Изтриване...' : 'Изтрий записването'}
+                    {loading ? 'Изтриване...' : 'Изтрий'}
                 </Button>
             </DialogActions>
         </Dialog>

@@ -19,7 +19,7 @@ const HomePage = () => {
                     variant="contained"
                     size="large"
                     onClick={() => navigate('/booking')}
-                    sx={{ px: 4, py: 2, maxWidth: 200 }}
+                    sx={{ px: 4, py: 2, width: 250 }}
                 >
                     {TEXTS.bookAppointment}
                 </Button>

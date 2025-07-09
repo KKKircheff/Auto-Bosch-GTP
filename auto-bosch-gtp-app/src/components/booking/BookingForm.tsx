@@ -166,7 +166,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                     formData.vehicleType
                 );
             case 2:
-                return true;
+                return step !== 2;
             default:
                 return false;
         }
@@ -266,7 +266,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             Назад
                         </Button>
 
-                        <Box textAlign="center">
+                        <Box textAlign="center" sx={{ display: { xs: 'none', sm: 'block' } }}>
                             <Typography variant="body2" color="text.secondary">
                                 Стъпка {activeStep + 1} от {steps.length}
                             </Typography>
