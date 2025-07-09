@@ -10,7 +10,7 @@ import {
     Chip,
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
-import { formatDateBulgarian, isBookableDate, generateTimeSlots } from '../../utils/dateHelpers';
+import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
 import { TEXTS } from '../../utils/constants';
 import type { TimeSlot } from '../../types/booking';
 
@@ -18,7 +18,7 @@ interface TimeSlotPickerProps {
     selectedDate: Date | null;
     selectedTime?: string;
     onTimeSelect: (time: string) => void;
-    existingBookings?: string[];
+    timeSlots: TimeSlot[];
     loading?: boolean;
     error?: string;
     onRefresh?: () => void;
@@ -29,20 +29,12 @@ const TimeSlotPicker = ({
     selectedDate,
     selectedTime,
     onTimeSelect,
-    existingBookings = [],
+    timeSlots = [],
     loading = false,
     error,
     onRefresh,
     className,
 }: TimeSlotPickerProps) => {
-    // Generate time slots based on existing bookings
-    const timeSlots = useMemo((): TimeSlot[] => {
-        if (!selectedDate || !isBookableDate(selectedDate)) {
-            return [];
-        }
-
-        return generateTimeSlots(selectedDate, existingBookings);
-    }, [selectedDate, existingBookings]);
 
     // Group time slots by morning/afternoon
     const groupedSlots = useMemo(() => {

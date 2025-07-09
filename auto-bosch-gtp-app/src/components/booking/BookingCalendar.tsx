@@ -41,11 +41,6 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
         }
     };
 
-    // Get existing bookings for selected date from time slots
-    const existingBookings = timeSlots
-        .filter(slot => !slot.available)
-        .map(slot => slot.time);
-
     return (
         <Container maxWidth="lg" sx={{ py: 2 }}>
             <Box mb={4} textAlign="center">
@@ -73,8 +68,10 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
                     selectedDate={selectedDate}
                     selectedTime={selectedTime || undefined}
                     onTimeSelect={handleTimeSelect}
-                    existingBookings={existingBookings}
+                    timeSlots={timeSlots}
                     loading={timeSlotsLoading}
+                    error={timeSlotsError}
+                    onRefresh={refreshTimeSlots}
                 />
             </Stack>
 
