@@ -122,14 +122,14 @@ const Header = () => {
                             {TEXTS.bookAppointment}
                         </MenuItem>
                         {user ? (
-                            <>
+                            <Box>
                                 <MenuItem onClick={() => { navigate('/admin/dashboard'); handleMobileMenuClose(); }}>
                                     {TEXTS.adminDashboard}
                                 </MenuItem>
                                 <MenuItem onClick={() => { handleLogout(); handleMobileMenuClose(); }}>
                                     {TEXTS.logout}
                                 </MenuItem>
-                            </>
+                            </Box>
                         ) : (
                             <MenuItem onClick={() => { navigate('/admin/login'); handleMobileMenuClose(); }}>
                                 {TEXTS.adminLogin}

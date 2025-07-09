@@ -26,3 +26,22 @@ Your output must be a well-formatted markdown response containing two distinct s
     Plan: A numbered list of the precise steps to be taken for implementation. The final step must always be presenting the plan for approval.
 
 NOTE: If in plan mode, do not implement the plan. You are only allowed to plan. Confirmation comes from a user message.
+
+ANOTHER IMPORTANT NOTE: We use MUI 7.x so Grid component has new API. Here is example for new Grid component usage: 
+
+<Grid container spacing={2}>
+  <Grid size={{ xs: 6, md: 8 }}>
+    <Item>xs=6 md=8</Item>
+  </Grid>
+  <Grid size={{ xs: 6, md: 4 }}>
+    <Item>xs=6 md=4</Item>
+  </Grid>
+  <Grid size={{ xs: 6, md: 4 }}>
+    <Item>xs=6 md=4</Item>
+  </Grid>
+  <Grid size={{ xs: 6, md: 8 }}>
+    <Item>xs=6 md=8</Item>
+  </Grid>
+</Grid>
+
+Please stick to this syntax when you use Grid. Also alsways evaluate if MUI Stack component or MUI Grid component is better to be use for different scenarios

@@ -1,58 +1,68 @@
-import { useState } from 'react';
-import { Container, Alert, Snackbar } from '@mui/material';
+// src/pages/BookingPage.tsx
+import { useEffect } from 'react';
+import { Alert, Snackbar } from '@mui/material';
 import BookingForm from '../components/booking/BookingForm';
+import { useBookingContext } from '../contexts/BookingContext';
 import type { BookingFormSchema } from '../types/booking';
 
 const BookingPage = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState(false);
+    const {
+        createBooking,
+        bookingLoading,
+        bookingError,
+        bookingSuccess,
+        confirmationNumber,
+        clearBooking
+    } = useBookingContext();
+
+    // Clear booking state when component mounts
+    useEffect(() => {
+        clearBooking();
+    }, [clearBooking]);
 
     const handleBookingSubmit = async (data: BookingFormSchema) => {
-        setLoading(true);
-        setError('');
-
         try {
-            // Simulate API call
-            console.log('Submitting booking:', data);
+            // Convert BookingFormSchema to BookingFormData format expected by the service
+            const bookingData = {
+                customerName: data.customerName,
+                email: data.email || '', // Convert undefined to empty string
+                phone: data.phone,
+                registrationPlate: data.registrationPlate,
+                vehicleType: data.vehicleType,
+                vehicleBrand: data.vehicleBrand || '',
+                is4x4: data.is4x4 || false,
+                appointmentDate: data.appointmentDate,
+                appointmentTime: data.appointmentTime,
+                notes: data.notes || '',
+            };
 
-            // Mock delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Mock success/error
-            const isSuccess = Math.random() > 0.2; // 80% success rate for demo
-
-            if (isSuccess) {
-                setSuccess(true);
-                console.log('Booking successful!');
-                // Here you would typically redirect to a success page
-                // or show a success message
-            } else {
-                throw new Error('Възникна грешка при записването. Моля опитайте отново.');
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Неочаквана грешка');
-        } finally {
-            setLoading(false);
+            await createBooking(bookingData);
+        } catch (error) {
+            console.error('Error submitting booking:', error);
         }
     };
 
     const handleCloseSuccess = () => {
-        setSuccess(false);
+        clearBooking();
+    };
+
+    const handleCloseError = () => {
+        // Don't clear the whole booking on error, just acknowledge the error
+        // The context should handle error clearing
     };
 
     return (
         <>
             <BookingForm
                 onSubmit={handleBookingSubmit}
-                loading={loading}
-                error={error}
+                loading={bookingLoading}
+                error={bookingError}
             />
 
             {/* Success notification */}
             <Snackbar
-                open={success}
-                autoHideDuration={6000}
+                open={bookingSuccess}
+                autoHideDuration={8000}
                 onClose={handleCloseSuccess}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
@@ -61,7 +71,26 @@ const BookingPage = () => {
                     severity="success"
                     sx={{ width: '100%' }}
                 >
-                    Записването е успешно! Ще получите потвърждение на имейл.
+                    {confirmationNumber
+                        ? `Записването е успешно! Номер за потвърждение: ${confirmationNumber}`
+                        : 'Записването е успешно! Ще получите потвърждение на имейл.'
+                    }
+                </Alert>
+            </Snackbar>
+
+            {/* Error notification */}
+            <Snackbar
+                open={!!bookingError}
+                autoHideDuration={6000}
+                onClose={handleCloseError}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: '100%' }}
+                >
+                    {bookingError || 'Възникна грешка при записването. Моля опитайте отново.'}
                 </Alert>
             </Snackbar>
         </>

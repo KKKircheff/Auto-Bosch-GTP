@@ -1,37 +1,17 @@
-// src/services/auth.ts
 import {signInWithEmailAndPassword, signOut, onAuthStateChanged, type User, type AuthError} from 'firebase/auth';
-import {doc, getDoc, setDoc} from 'firebase/firestore';
-import {auth, db} from './firebase';
+import {auth} from './firebase';
 import type {LoginCredentials, AdminUser, ApiResponse} from '../types/booking';
 
-const ADMIN_USERS_COLLECTION = 'admin-users';
-
 /**
- * Convert Firebase User to AdminUser
+ * Convert Firebase User to AdminUser (simplified - no Firestore check)
  */
-const toAdminUser = async (firebaseUser: User): Promise<AdminUser | null> => {
-    try {
-        // Get admin user document from Firestore
-        const adminDocRef = doc(db, ADMIN_USERS_COLLECTION, firebaseUser.uid);
-        const adminDoc = await getDoc(adminDocRef);
-
-        if (!adminDoc.exists()) {
-            console.warn('User is authenticated but not found in admin collection');
-            return null;
-        }
-
-        const adminData = adminDoc.data();
-
-        return {
-            id: firebaseUser.uid,
-            email: firebaseUser.email || '',
-            role: adminData.role || 'admin',
-            createdAt: adminData.createdAt?.toDate() || new Date(),
-        };
-    } catch (error) {
-        console.error('Error converting Firebase user to AdminUser:', error);
-        return null;
-    }
+const toAdminUser = (firebaseUser: User): AdminUser => {
+    return {
+        id: firebaseUser.uid,
+        email: firebaseUser.email || '',
+        role: 'admin', // Since there's only one admin, always admin
+        createdAt: new Date(), // Use current date if we don't track it
+    };
 };
 
 /**
@@ -53,33 +33,35 @@ const getAuthErrorMessage = (error: AuthError): string => {
             return 'Мрежова грешка. Проверете интернет връзката си.';
         case 'auth/invalid-credential':
             return 'Невалидни данни за вход.';
+        case 'auth/invalid-login-credentials':
+            return 'Невалидни данни за вход.';
         default:
+            console.error('Unhandled auth error:', error.code, error.message);
             return 'Възникна грешка при влизане. Моля опитайте отново.';
     }
 };
 
 /**
- * Sign in admin user
+ * Sign in admin user (simplified)
  */
 export const signInAdmin = async (credentials: LoginCredentials): Promise<ApiResponse<AdminUser>> => {
     try {
         const {email, password} = credentials;
 
-        // Sign in with Firebase Auth
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const firebaseUser = userCredential.user;
-
-        // Convert to AdminUser and verify admin status
-        const adminUser = await toAdminUser(firebaseUser);
-
-        if (!adminUser) {
-            // Sign out if not an admin
-            await signOut(auth);
+        // Validate input
+        if (!email || !password) {
             return {
                 success: false,
-                error: 'Нямате права за достъп до администраторския панел.',
+                error: 'Моля въведете имейл и парола.',
             };
         }
+
+        // Sign in with Firebase Auth
+        const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+        const firebaseUser = userCredential.user;
+
+        // Convert to AdminUser (no Firestore check needed)
+        const adminUser = toAdminUser(firebaseUser);
 
         return {
             success: true,
@@ -133,48 +115,12 @@ export const getCurrentAdmin = async (): Promise<AdminUser | null> => {
 };
 
 /**
- * Create admin user in Firestore (for initial setup)
- */
-export const createAdminUser = async (uid: string, email: string): Promise<ApiResponse<void>> => {
-    try {
-        const adminDocRef = doc(db, ADMIN_USERS_COLLECTION, uid);
-
-        // Check if admin user already exists
-        const existingDoc = await getDoc(adminDocRef);
-        if (existingDoc.exists()) {
-            return {
-                success: true,
-                message: 'Администраторът вече съществува.',
-            };
-        }
-
-        // Create admin user document
-        await setDoc(adminDocRef, {
-            email,
-            role: 'admin',
-            createdAt: new Date(),
-        });
-
-        return {
-            success: true,
-            message: 'Администраторският профил е създаден успешно.',
-        };
-    } catch (error) {
-        console.error('Error creating admin user:', error);
-        return {
-            success: false,
-            error: 'Възникна грешка при създаване на администраторския профил.',
-        };
-    }
-};
-
-/**
- * Auth state change listener
+ * Auth state change listener (simplified)
  */
 export const onAuthStateChange = (callback: (user: AdminUser | null) => void) => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
-            const adminUser = await toAdminUser(firebaseUser);
+            const adminUser = toAdminUser(firebaseUser);
             callback(adminUser);
         } else {
             callback(null);
@@ -190,20 +136,13 @@ export const isAuthenticated = (): boolean => {
 };
 
 /**
- * Validate admin credentials (for initial setup check)
+ * Wait for auth to initialize
  */
-export const validateAdminSetup = async (): Promise<boolean> => {
-    try {
-        // Check if the environment admin email exists in auth users
-        const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
-        if (!adminEmail) {
-            return false;
-        }
-
-        // This is a simple check - in production you might want more sophisticated validation
-        return true;
-    } catch (error) {
-        console.error('Error validating admin setup:', error);
-        return false;
-    }
+export const waitForAuthInit = (): Promise<User | null> => {
+    return new Promise((resolve) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe();
+            resolve(user);
+        });
+    });
 };

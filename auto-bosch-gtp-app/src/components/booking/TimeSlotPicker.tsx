@@ -10,7 +10,7 @@ import {
     Chip,
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
-import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
+import { formatDateBulgarian, isBookableDate, generateTimeSlots } from '../../utils/dateHelpers';
 import { TEXTS } from '../../utils/constants';
 import type { TimeSlot } from '../../types/booking';
 
@@ -41,8 +41,6 @@ const TimeSlotPicker = ({
             return [];
         }
 
-        // Import and use the generateTimeSlots function
-        const { generateTimeSlots } = require('../../utils/dateHelpers');
         return generateTimeSlots(selectedDate, existingBookings);
     }, [selectedDate, existingBookings]);
 
@@ -137,6 +135,7 @@ const TimeSlotPicker = ({
                 variant={isSelected ? 'contained' : isAvailable ? 'outlined' : 'text'}
                 onClick={() => isAvailable && onTimeSelect(slot.time)}
                 disabled={!isAvailable}
+                fullWidth
                 sx={{
                     minHeight: 48,
                     fontSize: '0.9rem',
@@ -169,7 +168,6 @@ const TimeSlotPicker = ({
         );
     };
 
-    // Time slot group component
     const TimeSlotGroup = ({
         title,
         slots,

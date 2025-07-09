@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Box,
     Container,
@@ -14,9 +14,10 @@ import {
 import { ArrowBack, ArrowForward, Check } from '@mui/icons-material';
 import BookingCalendar from './BookingCalendar';
 import VehicleForm from './VehicleForm';
-import { TEXTS } from '../../utils/constants';
-import type { BookingFormSchema } from '../..//types/booking';
 import BookingConfirmation from './BookingConfirmation';
+import { useBookingContext } from '../../contexts/BookingContext';
+import { TEXTS } from '../../utils/constants';
+import type { BookingFormSchema } from '../../types/booking';
 
 interface BookingFormProps {
     onSubmit?: (data: BookingFormSchema) => void;
@@ -29,58 +30,132 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     const [formData, setFormData] = useState<Partial<BookingFormSchema>>({});
     const [isFormValid, setIsFormValid] = useState(false);
 
+    const {
+        selectedDate,
+        selectedTime,
+        bookingSuccess,
+        clearBooking
+    } = useBookingContext();
+
+    // Use refs to prevent unnecessary effect triggers
+    const hasResetRef = useRef(false);
+    const prevBookingSuccessRef = useRef(bookingSuccess);
+
     const steps = [
         'Изберете дата и час',
         'Данни за превозното средство',
         'Потвърждение',
     ];
 
-    // Handle step navigation
-    const handleNext = () => {
+    // Reset form when booking is successful - but only once
+    useEffect(() => {
+        if (bookingSuccess && !prevBookingSuccessRef.current && !hasResetRef.current) {
+            hasResetRef.current = true;
+            handleReset();
+        }
+
+        // Reset the flag when booking success changes to false
+        if (!bookingSuccess && prevBookingSuccessRef.current) {
+            hasResetRef.current = false;
+        }
+
+        prevBookingSuccessRef.current = bookingSuccess;
+    }, [bookingSuccess]);
+
+    // Update form data when date/time changes from context - but prevent loops
+    useEffect(() => {
+        if (selectedDate && selectedTime) {
+            setFormData(prev => {
+                // Only update if values actually changed
+                if (prev.appointmentDate?.getTime() !== selectedDate.getTime() ||
+                    prev.appointmentTime !== selectedTime) {
+                    return {
+                        ...prev,
+                        appointmentDate: selectedDate,
+                        appointmentTime: selectedTime,
+                    };
+                }
+                return prev;
+            });
+        }
+    }, [selectedDate, selectedTime]);
+
+    // Memoized handlers to prevent recreation
+    const handleNext = useCallback(() => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+    }, []);
 
-    const handleBack = () => {
+    const handleBack = useCallback(() => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+    }, []);
 
-    const handleReset = () => {
+    const handleReset = useCallback(() => {
         setActiveStep(0);
         setFormData({});
         setIsFormValid(false);
-    };
+    }, []);
+
+    // Handle step navigation with edit functionality
+    const handleEditStep = useCallback((step: number) => {
+        setActiveStep(step);
+    }, []);
 
     // Handle date/time selection
-    const handleDateTimeSelect = (date: Date, time: string) => {
+    const handleDateTimeSelect = useCallback((date: Date, time: string) => {
         setFormData(prev => ({
             ...prev,
             appointmentDate: date,
             appointmentTime: time,
         }));
-    };
+    }, []);
 
-    // Handle vehicle form changes
-    const handleVehicleFormChange = (data: Partial<BookingFormSchema>) => {
-        setFormData(prev => ({
-            ...prev,
-            ...data,
-        }));
-    };
+    // Handle vehicle form changes - prevent unnecessary updates
+    const handleVehicleFormChange = useCallback((data: Partial<BookingFormSchema>) => {
+        setFormData(prev => {
+            // Deep compare to prevent unnecessary updates
+            const hasChanges = Object.keys(data).some(key => {
+                const typedKey = key as keyof BookingFormSchema;
+                return prev[typedKey] !== data[typedKey];
+            });
+
+            if (hasChanges) {
+                return { ...prev, ...data };
+            }
+            return prev;
+        });
+    }, []);
 
     // Handle form validation
-    const handleValidationChange = (isValid: boolean) => {
-        setIsFormValid(isValid);
-    };
+    const handleValidationChange = useCallback((isValid: boolean) => {
+        setIsFormValid(prevValid => {
+            if (prevValid !== isValid) {
+                return isValid;
+            }
+            return prevValid;
+        });
+    }, []);
 
     // Handle final submission
-    const handleSubmit = () => {
-        if (onSubmit && formData as BookingFormSchema) {
+    const handleSubmit = useCallback(() => {
+        if (onSubmit && isCompleteFormData(formData)) {
             onSubmit(formData as BookingFormSchema);
         }
-    };
+    }, [onSubmit, formData]);
+
+    // Type guard to check if form data is complete
+    const isCompleteFormData = useCallback((data: Partial<BookingFormSchema>): data is BookingFormSchema => {
+        return !!(
+            data.customerName &&
+            data.phone &&
+            data.registrationPlate &&
+            data.vehicleType &&
+            data.appointmentDate &&
+            data.appointmentTime
+        );
+    }, []);
 
     // Check if current step is completed
-    const isStepCompleted = (step: number) => {
+    const isStepCompleted = useCallback((step: number) => {
         switch (step) {
             case 0:
                 return !!(formData.appointmentDate && formData.appointmentTime);
@@ -96,32 +171,16 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             default:
                 return false;
         }
-    };
+    }, [formData, isFormValid]);
 
     const canProceed = isStepCompleted(activeStep);
 
-    // Mock data for calendar
-    const mockExistingBookings = {
-        '2025-07-08': ['09:00', '10:30', '14:00'],
-        '2025-07-09': ['11:00', '15:30'],
-        '2025-07-10': ['08:30', '13:00', '16:30'],
-    };
-
-    const mockAppointmentCounts = {
-        '2025-07-08': 3,
-        '2025-07-09': 2,
-        '2025-07-10': 3,
-        '2025-07-11': 1,
-    };
-
-    const renderStepContent = (step: number) => {
+    const renderStepContent = useCallback((step: number) => {
         switch (step) {
             case 0:
                 return (
                     <BookingCalendar
                         onDateTimeSelect={handleDateTimeSelect}
-                        existingBookings={mockExistingBookings}
-                        appointmentCounts={mockAppointmentCounts}
                     />
                 );
             case 1:
@@ -137,17 +196,24 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             case 2:
                 return (
                     <Container maxWidth="md">
-                        <BookingConfirmation
-                            formData={formData as BookingFormSchema}
-                            onSubmit={handleSubmit}
-                            loading={loading}
-                        />
+                        {isCompleteFormData(formData) ? (
+                            <BookingConfirmation
+                                formData={formData as BookingFormSchema}
+                                onSubmit={handleSubmit}
+                                onEdit={handleEditStep}
+                                loading={loading}
+                            />
+                        ) : (
+                            <Alert severity="error">
+                                Липсват данни за потвърждение. Моля върнете се назад и попълнете всички полета.
+                            </Alert>
+                        )}
                     </Container>
                 );
             default:
                 return <div>Неизвестна стъпка</div>;
         }
-    };
+    }, [handleDateTimeSelect, handleVehicleFormChange, handleValidationChange, formData, handleSubmit, handleEditStep, loading, isCompleteFormData]);
 
     return (
         <Box sx={{ width: '100%', py: 4 }}>
@@ -211,7 +277,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             <Button
                                 variant="contained"
                                 onClick={handleSubmit}
-                                disabled={!canProceed || loading}
+                                disabled={!canProceed || loading || !isCompleteFormData(formData)}
                                 startIcon={<Check />}
                                 size="large"
                             >
@@ -248,10 +314,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             Debug Info:
                         </Typography>
                         <Typography variant="caption" component="pre" sx={{ fontSize: '0.7rem' }}>
-                            {JSON.stringify(formData, null, 2)}
-                        </Typography>
-                        <Typography variant="caption" display="block" mt={1}>
-                            Step {activeStep + 1} completed: {isStepCompleted(activeStep) ? 'Yes' : 'No'}
+                            Step: {activeStep + 1}, Valid: {isFormValid ? 'Yes' : 'No'}, CanProceed: {canProceed ? 'Yes' : 'No'}
                         </Typography>
                     </Paper>
                 </Container>

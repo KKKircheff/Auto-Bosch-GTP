@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import CalendarPicker from './CalendarPicker';
-import TimeSlotPicker from './TimeSlotPicker';
 import { getNextAvailableDate } from '../../utils/dateHelpers';
 import { useBookingContext } from '../../contexts/BookingContext';
 import { TEXTS } from '../../utils/constants';
+import TimeSlotPicker from './TimeSlotPicker';
 
 interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
@@ -75,8 +75,6 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
                     onTimeSelect={handleTimeSelect}
                     existingBookings={existingBookings}
                     loading={timeSlotsLoading}
-                // error={timeSlotsError}
-                // onRefresh={refreshTimeSlots}
                 />
             </Stack>
 
