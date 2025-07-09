@@ -271,11 +271,11 @@ const CalendarPicker = ({
             </Box>
 
             {/* Booking window info */}
-            <Box textAlign="center" mb={2}>
+            {/* <Box textAlign="center" mb={2}>
                 <Typography variant="caption" color="text.secondary">
                     Можете да записвате {getBookingWindowDescription()}
                 </Typography>
-            </Box>
+            </Box> */}
 
             {/* Calendar content */}
             {isMobile ? (
@@ -295,11 +295,11 @@ const CalendarPicker = ({
                     />
 
                     {/* Mobile navigation hint */}
-                    <Box display="flex" justifyContent="center" alignItems="center" mt={2} gap={1}>
+                    {/* <Box display="flex" justifyContent="center" alignItems="center" mt={2} gap={1}>
                         <Typography variant="caption" color="text.secondary">
                             Използвайте стрелките или плъзнете за навигация
                         </Typography>
-                    </Box>
+                    </Box> */}
                 </Box>
             ) : (
                 // Desktop: Two months side by side (always show both for consistency)

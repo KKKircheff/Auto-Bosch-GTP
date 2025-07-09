@@ -41,8 +41,8 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     const prevBookingSuccessRef = useRef(bookingSuccess);
 
     const steps = [
-        'Изберете дата и час',
-        'Данни за превозното средство',
+        'Дата и час',
+        'МПС',
         'Потвърждение',
     ];
 
@@ -276,11 +276,11 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             <Button
                                 variant="contained"
                                 onClick={handleSubmit}
-                                disabled={!canProceed || loading || !isCompleteFormData(formData)}
+                                disabled={canProceed || loading || !isCompleteFormData(formData)}
                                 startIcon={<Check />}
                                 size="large"
                             >
-                                {loading ? 'Запазване...' : 'Потвърди записването'}
+                                {loading ? 'Запазване...' : 'Потвърди'}
                             </Button>
                         ) : (
                             <Button
