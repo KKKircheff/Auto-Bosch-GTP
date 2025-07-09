@@ -33,8 +33,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     const {
         selectedDate,
         selectedTime,
-        bookingSuccess,
-        clearBooking
+        bookingSuccess
     } = useBookingContext();
 
     // Use refs to prevent unnecessary effect triggers

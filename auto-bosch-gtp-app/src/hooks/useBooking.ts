@@ -6,7 +6,7 @@ import {
     getAppointmentCounts,
     validateBookingSlot,
 } from '../services/appointments';
-import type {BookingFormData, TimeSlot, ApiResponse, CreateBookingResponse} from '../types/booking';
+import type {BookingFormData, TimeSlot} from '../types/booking';
 
 // Hook for creating bookings with enhanced validation
 export const useCreateBooking = () => {

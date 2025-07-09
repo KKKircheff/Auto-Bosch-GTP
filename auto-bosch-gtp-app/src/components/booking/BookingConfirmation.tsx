@@ -1,7 +1,6 @@
 // src/components/booking/BookingConfirmation.tsx
 import {
     Box,
-    Paper,
     Typography,
     Button,
     Stack,

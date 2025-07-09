@@ -12,7 +12,6 @@ import {
     runTransaction,
     Transaction,
     getDoc,
-    setDoc,
 } from 'firebase/firestore';
 import {format} from 'date-fns';
 import {db} from './firebase';

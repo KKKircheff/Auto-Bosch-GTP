@@ -2,7 +2,6 @@
 import { useState, useMemo, useRef } from 'react';
 import {
     Box,
-    Paper,
     Typography,
     IconButton,
     useTheme,
@@ -185,7 +184,6 @@ const CalendarPicker = ({
 
     const CalendarMonth = ({
         weeks,
-        monthDate,
         title
     }: {
         weeks: CalendarWeek[];
