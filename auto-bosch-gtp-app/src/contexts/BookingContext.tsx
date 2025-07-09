@@ -2,6 +2,7 @@ import { createContext, useContext, type ReactNode, useState, useCallback, useMe
 import { useCreateBooking, useAppointmentCounts, useTimeSlots } from '../hooks/useBooking';
 import { isTimeSlotAvailable } from '../services/appointments'; // Import the correct function
 import type { BookingFormSchema, BookingFormData, TimeSlot } from '../types/booking';
+import { getNextAvailableDate } from '../utils/dateHelpers';
 
 interface BookingContextType {
     // Current booking state
@@ -47,10 +48,13 @@ interface BookingProviderProps {
     children: ReactNode;
 }
 
+
+// ...
+
 export const BookingProvider = ({ children }: BookingProviderProps) => {
     // Local state
     const [currentBooking, setCurrentBooking] = useState<Partial<BookingFormSchema> | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(getNextAvailableDate());
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isValidatingSlot, setIsValidatingSlot] = useState(false);
 

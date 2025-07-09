@@ -164,7 +164,6 @@ const CalendarPicker = ({
                 </Typography>
             </Box>
 
-            {/* Days of week header */}
             <Stack direction='row' spacing={1} mb={1} width={'100%'} justifyContent={'space-around'}>
                 {BULGARIAN_DAYS_SHORT.map((day) => (
                     <Typography
@@ -180,15 +179,15 @@ const CalendarPicker = ({
             </Stack>
 
             {/* Calendar grid */}
-            <Box>
+            <Stack direction={'column'} width={'100%'}>
                 {weeks.map((week, weekIndex) => (
-                    <Stack direction={'row'} spacing={1} key={weekIndex} mb={0.5}>
+                    <Stack key={weekIndex} direction='row' width={'100%'} justifyContent={'space-around'}>
                         {week.days.map((day, dayIndex) => (
                             <DayCell day={day} key={dayIndex} />
                         ))}
                     </Stack>
                 ))}
-            </Box>
+            </Stack>
         </Stack>
     );
 

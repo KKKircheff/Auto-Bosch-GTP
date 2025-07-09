@@ -121,7 +121,7 @@ export const bookingFormSchema = z.object({
     registrationPlate: z
         .string()
         .min(1, 'Регистрационният номер е задължителен')
-        .regex(/^[A-Za-z0-9\-]+$/, 'Регистрационният номер може да съдържа само букви, цифри и тирета'),
+        .regex(/^[A-Za-z\u0400-\u04FF0-9\-]+$/, 'Регистрационният номер може да съдържа само букви, цифри и тирета'),
 
     vehicleType: z.enum(['car', 'bus', 'motorcycle', 'taxi', 'caravan', 'trailer', 'lpg']),
 

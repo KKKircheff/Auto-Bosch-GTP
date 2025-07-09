@@ -1,10 +1,8 @@
-import { useEffect } from 'react';
 import { Box, Container, Stack, Typography } from '@mui/material';
-import CalendarPicker from './CalendarPicker';
-import { getNextAvailableDate } from '../../utils/dateHelpers';
 import { useBookingContext } from '../../contexts/BookingContext';
 import { TEXTS } from '../../utils/constants';
 import TimeSlotPicker from './TimeSlotPicker';
+import CalendarPicker from './CalendarPicker';
 
 interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
@@ -23,12 +21,7 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
         refreshTimeSlots,
     } = useBookingContext();
 
-    // Set initial date if none selected
-    useEffect(() => {
-        if (!selectedDate) {
-            setSelectedDate(getNextAvailableDate());
-        }
-    }, [selectedDate, setSelectedDate]);
+
 
     const handleDateSelect = (date: Date) => {
         setSelectedDate(date);
