@@ -1,7 +1,9 @@
 import { Box, Container, Typography, Divider } from '@mui/material';
 import { TEXTS, CONTACT_INFO } from '../../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
+    const navigate = useNavigate();
     return (
         <Box
             component="footer"
@@ -50,7 +52,7 @@ const Footer = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="body2" color="text.secondary" textAlign="center">
+                <Typography variant="body2" color="text.secondary" textAlign="center" onClick={() => navigate('/admin/login')} sx={{ cursor: 'default' }}>
                     © {new Date().getFullYear()} {TEXTS.siteName}. Всички права запазени.
                 </Typography>
             </Container>

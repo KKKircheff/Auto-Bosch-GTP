@@ -18,7 +18,7 @@ import {
     Autocomplete,
     alpha,
 } from '@mui/material';
-import { DirectionsCar, LocalShipping, TwoWheeler, LocalTaxi } from '@mui/icons-material';
+import { DirectionsCar, LocalShipping, TwoWheeler, LocalTaxi, DirectionsBusFilled, LocalGasStation, AirportShuttle, RvHookup, Propane } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -29,6 +29,7 @@ import {
     shouldShow4x4,
     shouldShowBrands,
     calculatePrice,
+    shadow1,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
 import { theme } from '../../theme/theme';
@@ -186,12 +187,19 @@ const VehicleForm = ({
     const getVehicleIcon = (type: VehicleType) => {
         switch (type) {
             case 'car':
-            case 'taxi':
                 return <DirectionsCar />;
+            case 'taxi':
+                return <LocalTaxi />;
             case 'bus':
                 return <LocalShipping />;
             case 'motorcycle':
                 return <TwoWheeler />;
+            case 'caravan':
+                return <AirportShuttle />;
+            case 'lpg':
+                return <Propane />;
+            case 'trailer':
+                return <RvHookup />;
             default:
                 return <DirectionsCar />;
         }
@@ -201,7 +209,7 @@ const VehicleForm = ({
     const availableBrands = selectedVehicleType ? getVehicleBrands(selectedVehicleType) : [];
 
     return (
-        <Paper elevation={2} sx={{ p: 3 }} className={className}>
+        <Paper sx={{ p: 3, boxShadow: shadow1 }} className={className}>
             <Typography variant="h6" gutterBottom>
                 Информация за превозното средство
             </Typography>
@@ -279,11 +287,12 @@ const VehicleForm = ({
                                     <TextField
                                         {...field}
                                         color='info'
+                                        fullWidth
                                         label={TEXTS.registrationPlate}
                                         required
                                         error={!!errors.registrationPlate}
                                         helperText={errors.registrationPlate?.message}
-                                        placeholder="CA1234AB"
+                                        placeholder="A1234AB"
                                         sx={{ textTransform: 'uppercase' }}
                                         onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                                     />

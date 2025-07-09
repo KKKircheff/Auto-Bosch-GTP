@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
-import { TEXTS } from '../../utils/constants';
+import { shadow1, TEXTS } from '../../utils/constants';
 import type { TimeSlot } from '../../types/booking';
 import { theme } from '../../theme/theme';
 
@@ -204,7 +204,10 @@ const TimeSlotPicker = ({
     };
 
     return (
-        <Paper elevation={2} sx={{ p: 3 }} className={className}>
+        <Paper
+            sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}
+            className={className}
+        >
             {/* Header */}
             <Box mb={3}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>

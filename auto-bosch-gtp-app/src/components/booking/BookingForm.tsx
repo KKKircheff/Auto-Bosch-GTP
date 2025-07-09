@@ -16,7 +16,7 @@ import BookingCalendar from './BookingCalendar';
 import VehicleForm from './VehicleForm';
 import BookingConfirmation from './BookingConfirmation';
 import { useBookingContext } from '../../contexts/BookingContext';
-import { TEXTS } from '../../utils/constants';
+import { shadow1, TEXTS } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 
 interface BookingFormProps {
@@ -185,17 +185,17 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                 );
             case 1:
                 return (
-                    <Container maxWidth="md">
+                    <Container maxWidth="lg" sx={{ pb: 4 }} >
                         <VehicleForm
                             onFormChange={handleVehicleFormChange}
                             onValidationChange={handleValidationChange}
                             initialData={formData}
                         />
-                    </Container>
+                    </Container >
                 );
             case 2:
                 return (
-                    <Container maxWidth="md">
+                    <Container maxWidth="lg">
                         {isCompleteFormData(formData) ? (
                             <BookingConfirmation
                                 formData={formData as BookingFormSchema}
@@ -251,8 +251,8 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             </Box>
 
             {/* Navigation */}
-            <Container maxWidth="md">
-                <Paper elevation={1} sx={{ p: 3 }}>
+            <Container maxWidth="lg" sx={{ pb: 4 }}>
+                <Paper sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}>
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -307,7 +307,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             </Container>
 
             {/* Debug Info (remove in production) */}
-            {process.env.NODE_ENV === 'development' && (
+            {/* {process.env.NODE_ENV === 'development' && (
                 <Container maxWidth="md" sx={{ mt: 4 }}>
                     <Paper sx={{ p: 2, bgcolor: 'grey.50' }}>
                         <Typography variant="caption" display="block" gutterBottom>
@@ -318,7 +318,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                         </Typography>
                     </Paper>
                 </Container>
-            )}
+            )} */}
         </Box>
     );
 };

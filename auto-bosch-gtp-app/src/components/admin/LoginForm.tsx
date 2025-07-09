@@ -22,7 +22,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
-import { TEXTS } from '../../utils/constants';
+import { shadow1, TEXTS } from '../../utils/constants';
 import type { LoginCredentials } from '../../types/booking';
 
 // Validation schema
@@ -89,10 +89,10 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
             sx={{
                 maxWidth: 400,
                 mx: 'auto',
-                mt: { xs: 2, sm: 4 }
+                mt: { xs: 2, lg: 14 }
             }}
         >
-            <Card elevation={3}>
+            <Card sx={{ boxShadow: shadow1 }}>
                 <CardContent sx={{ p: 4 }}>
                     {/* Header */}
                     <Box textAlign="center" mb={3}>
@@ -131,6 +131,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                                 control={control}
                                 render={({ field }) => (
                                     <TextField
+                                        color='info'
                                         {...field}
                                         fullWidth
                                         label="Имейл адрес"
@@ -153,6 +154,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
+                                        color='info'
                                         fullWidth
                                         label="Парола"
                                         type={showPassword ? 'text' : 'password'}
@@ -199,7 +201,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                     </Box>
 
                     {/* Development Info */}
-                    {process.env.NODE_ENV === 'development' && (
+                    {/* {process.env.NODE_ENV === 'development' && (
                         <Alert
                             severity="info"
                             sx={{ mt: 3 }}
@@ -214,7 +216,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                                 Парола: {import.meta.env.VITE_ADMIN_PASSWORD || 'Не е зададена'}
                             </Typography>
                         </Alert>
-                    )}
+                    )} */}
                 </CardContent>
             </Card>
 

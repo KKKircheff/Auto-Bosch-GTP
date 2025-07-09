@@ -1,4 +1,4 @@
-import { Container, Typography, Box, Button } from '@mui/material';
+import { Container, Typography, Box, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TEXTS, CONTACT_INFO, VEHICLE_TYPES, PRICING } from '../utils/constants';
 
@@ -8,26 +8,26 @@ const HomePage = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             {/* Hero Section */}
-            <Box textAlign="center" mb={6} >
-                <Typography variant="h2" component="h1" gutterBottom color="primary">
+            <Stack direction={'column'} spacing={4} alignItems="center" justifyContent='center' py={8} >
+                <Typography variant="h2" component="h1" gutterBottom color="secondary.main">
                     {TEXTS.siteName}
                 </Typography>
-                <Typography variant="h5" color="text.secondary" mb={4}>
+                <Typography variant="h5" color="text.secondary" pb={4}>
                     {TEXTS.siteTagline}
                 </Typography>
                 <Button
                     variant="contained"
                     size="large"
                     onClick={() => navigate('/booking')}
-                    sx={{ px: 4, py: 2 }}
+                    sx={{ px: 4, py: 2, maxWidth: 200 }}
                 >
                     {TEXTS.bookAppointment}
                 </Button>
-            </Box>
+            </Stack>
 
             {/* Services & Pricing Section */}
-            <Box mb={6}>
-                <Typography variant="h4" component="h2" gutterBottom textAlign="center">
+            <Box pb={6}>
+                <Typography variant="h4" component="h2" gutterBottom textAlign="center" pb={4}>
                     {TEXTS.services} и {TEXTS.pricing}
                 </Typography>
                 <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={2} mt={3}>
@@ -38,13 +38,13 @@ const HomePage = () => {
                         </Box>
                     ))}
                 </Box>
-                <Typography variant="body2" color="primary" mt={2} textAlign="center">
+                <Typography variant="body2" color="primary" pt={6} textAlign="center">
                     При онлайн записване {PRICING.onlineDiscount} лв отстъпка от посочените цени
                 </Typography>
             </Box>
 
             {/* Contact Section */}
-            <Box textAlign="center">
+            <Box textAlign="center" pb={4}>
                 <Typography variant="h4" component="h2" gutterBottom>
                     {TEXTS.contact}
                 </Typography>

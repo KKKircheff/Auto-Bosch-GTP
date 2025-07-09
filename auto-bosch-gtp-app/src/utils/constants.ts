@@ -1,4 +1,5 @@
-// src/utils/constants.ts
+export const shadow1 =
+    'rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px';
 
 // Business hours and scheduling
 export const BUSINESS_HOURS = {
@@ -12,9 +13,9 @@ export const MAX_BOOKING_WEEKS = 8;
 
 // Contact information for the garage in Bourgas
 export const CONTACT_INFO = {
-    email: 'autocare@bourgas.bg',
-    phone: '+359888123456',
-    address: 'Бургас, ул. Автосервизна 15',
+    email: 'auto-bosch-service@abv.bg',
+    phone: '+359 88 856 5188',
+    address: '8001 Burgas',
     city: 'Бургас',
     country: 'България',
 } as const;
@@ -27,7 +28,7 @@ export const PRICING = {
     taxi: 60, // Такси
     caravan: 60, // Каравана
     trailer: 60, // Ремарке (renamed from hanger)
-    lpg: 100, // Преглед оразполагаем газ (updated price)
+    lpg: 100,
     onlineDiscount: 10, // При онлайн записване 10 лв отстъпка
 } as const;
 
@@ -39,16 +40,15 @@ export const VEHICLE_TYPES = {
     taxi: 'Такси',
     caravan: 'Каравана',
     trailer: 'Ремарке',
-    lpg: 'Преглед оразполагаем газ',
+    lpg: 'Преглед газова инсталация',
 } as const;
 
 export type VehicleType = keyof typeof VEHICLE_TYPES;
-
 // Bulgarian text constants
 export const TEXTS = {
     // Header
     siteName: 'Ауто Бош Серви - Бургас',
-    siteTagline: 'Годишни технически прегледи',
+    siteTagline: 'ГОДИШНИ ТЕХНИЧЕСКИ ПРЕГЛЕДИ',
 
     // Navigation
     services: 'Услуги',
@@ -89,7 +89,7 @@ export const TEXTS = {
     finalPrice: 'Крайна цена',
 
     // Admin
-    adminLogin: 'Вход за администратор',
+    adminLogin: 'Вход',
     adminDashboard: 'Администраторски панел',
     appointments: 'Записвания',
     login: 'Вход',

@@ -12,6 +12,7 @@ import {
     Card,
     CardContent,
     alpha,
+    Container,
 } from '@mui/material';
 import {
     Event,
@@ -24,7 +25,7 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { TEXTS, VEHICLE_TYPES, calculatePrice, CONTACT_INFO } from '../../utils/constants';
+import { TEXTS, VEHICLE_TYPES, calculatePrice, CONTACT_INFO, shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
 
@@ -45,7 +46,7 @@ const BookingConfirmation = ({
 
     // Format vehicle details
     const formatVehicleDetails = () => {
-        const parts = [VEHICLE_TYPES[formData.vehicleType]];
+        const parts: string[] = [VEHICLE_TYPES[formData.vehicleType]];
         if (formData.vehicleBrand) {
             parts.push(formData.vehicleBrand);
         }
@@ -56,8 +57,8 @@ const BookingConfirmation = ({
     };
 
     return (
-        <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-            <Stack spacing={3}>
+        <Container maxWidth='xl'>
+            <Stack spacing={6} width={'100%'}>
                 {/* Header */}
                 <Box textAlign="center">
                     {/* <CheckCircle sx={{ fontSize: 64, color: 'success.main', mb: 2 }} /> */}
@@ -70,7 +71,7 @@ const BookingConfirmation = ({
                 </Box>
 
                 {/* Appointment Details */}
-                <Card elevation={2}>
+                <Card sx={{ boxShadow: shadow1 }}>
                     <CardContent>
                         <Stack spacing={3}>
                             <Box display="flex" alignItems="center" gap={1}>
@@ -123,7 +124,7 @@ const BookingConfirmation = ({
                 </Card>
 
                 {/* Customer Details */}
-                <Card elevation={2}>
+                <Card sx={{ boxShadow: shadow1 }}>
                     <CardContent>
                         <Stack spacing={3}>
                             <Box display="flex" alignItems="center" gap={1}>
@@ -192,7 +193,7 @@ const BookingConfirmation = ({
                 </Card>
 
                 {/* Vehicle Details */}
-                <Card elevation={2}>
+                <Card sx={{ boxShadow: shadow1 }}>
                     <CardContent>
                         <Stack spacing={3}>
                             <Box display="flex" alignItems="center" gap={1}>
@@ -254,7 +255,7 @@ const BookingConfirmation = ({
 
                 {/* Price Summary */}
                 {priceInfo && (
-                    <Card elevation={2} sx={{ bgcolor: alpha(theme.palette.primary.light, 0.2) }}>
+                    <Card sx={{ bgcolor: alpha(theme.palette.primary.light, 0.2), boxShadow: shadow1 }}>
                         <CardContent>
                             <Stack spacing={2}>
                                 <Box display="flex" alignItems="center" gap={1}>
@@ -300,7 +301,7 @@ const BookingConfirmation = ({
                 )}
 
                 {/* Important Information */}
-                <Alert severity="warning" sx={{ bgcolor: theme.palette.warning.light }}>
+                <Alert severity="warning" sx={{ bgcolor: theme.palette.warning.light, boxShadow: shadow1 }}>
                     <Typography variant="subtitle2" gutterBottom>
                         Важна информация:
                     </Typography>
@@ -313,7 +314,7 @@ const BookingConfirmation = ({
                 </Alert>
 
                 {/* Contact Information */}
-                <Card elevation={1} sx={{ bgcolor: 'grey.50' }}>
+                <Card sx={{ bgcolor: 'grey.50', boxShadow: shadow1 }}>
                     <CardContent>
                         <Typography variant="h6" gutterBottom>
                             Контакти за връзка
@@ -384,7 +385,7 @@ const BookingConfirmation = ({
                     </Typography>
                 </Box>
             </Stack>
-        </Box>
+        </Container>
     );
 };
 

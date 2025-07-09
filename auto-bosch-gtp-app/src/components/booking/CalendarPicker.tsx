@@ -21,6 +21,7 @@ import {
     BULGARIAN_DAYS_SHORT,
 } from '../../utils/dateHelpers';
 import { type CalendarDay, type CalendarWeek } from '../../types/booking'
+import { shadow1 } from '../../utils/constants';
 
 interface CalendarPickerProps {
     selectedDate?: Date;
@@ -148,9 +149,9 @@ const CalendarPicker = ({
         monthDate: Date;
         title: string;
     }) => (
-        <Paper
-            elevation={2}
+        <Stack
             sx={{
+                boxShadow: shadow1,
                 p: { xs: 2, sm: 3 },
                 borderRadius: 2,
                 minHeight: { xs: 300, sm: 350 }
@@ -188,7 +189,7 @@ const CalendarPicker = ({
                     </Stack>
                 ))}
             </Box>
-        </Paper>
+        </Stack>
     );
 
     return (
@@ -238,7 +239,8 @@ const CalendarPicker = ({
                 <Box
                     display="grid"
                     gridTemplateColumns="1fr 1fr"
-                    gap={3}
+                    gap={6}
+                    py={2}
                     sx={{
                         '@media (max-width: 900px)': {
                             gridTemplateColumns: '1fr',
@@ -260,7 +262,7 @@ const CalendarPicker = ({
             )}
 
             {/* Legend */}
-            <Box mt={3} display="flex" justifyContent="center" flexWrap="wrap" gap={2}>
+            <Box py={6} display="flex" justifyContent="center" flexWrap="wrap" gap={2}>
                 <Box display="flex" alignItems="center" gap={1}>
                     <Box
                         sx={{

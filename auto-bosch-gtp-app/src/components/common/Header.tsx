@@ -47,7 +47,7 @@ const Header = () => {
                     edge="start"
                     color="inherit"
                     onClick={() => navigate('/')}
-                    sx={{ mr: 2 }}
+                    sx={{ pr: 3, pl: 3 }}
                 >
                     <DirectionsCar />
                 </IconButton>
@@ -79,26 +79,11 @@ const Header = () => {
                     </Button>
 
                     {user ? (
-                        <>
-                            <Button
-                                color="inherit"
-                                onClick={() => navigate('/admin/dashboard')}
-                                sx={{ fontWeight: isActive('/admin/dashboard') ? 'bold' : 'normal' }}
-                            >
-                                {TEXTS.adminDashboard}
-                            </Button>
-                            <Button color="inherit" onClick={handleLogout}>
-                                {TEXTS.logout}
-                            </Button>
-                        </>
-                    ) : (
-                        <Button
-                            color="inherit"
-                            onClick={() => navigate('/admin/login')}
-                            sx={{ fontWeight: isActive('/admin/login') ? 'bold' : 'normal' }}
-                        >
-                            {TEXTS.adminLogin}
+                        <Button color="inherit" onClick={handleLogout}>
+                            {TEXTS.logout}
                         </Button>
+                    ) : (
+                        <></>
                     )}
                 </Box>
 
@@ -121,7 +106,7 @@ const Header = () => {
                         <MenuItem onClick={() => { navigate('/booking'); handleMobileMenuClose(); }}>
                             {TEXTS.bookAppointment}
                         </MenuItem>
-                        {user ? (
+                        {/* {user ? (
                             <Box>
                                 <MenuItem onClick={() => { navigate('/admin/dashboard'); handleMobileMenuClose(); }}>
                                     {TEXTS.adminDashboard}
@@ -134,7 +119,7 @@ const Header = () => {
                             <MenuItem onClick={() => { navigate('/admin/login'); handleMobileMenuClose(); }}>
                                 {TEXTS.adminLogin}
                             </MenuItem>
-                        )}
+                        )} */}
                     </Menu>
                 </Box>
             </Toolbar>

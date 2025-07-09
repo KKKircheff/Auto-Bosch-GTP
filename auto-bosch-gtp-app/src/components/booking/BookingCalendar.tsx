@@ -53,8 +53,8 @@ const BookingCalendar = ({ onDateTimeSelect }: BookingCalendarProps) => {
             </Box>
 
             <Stack direction='column'
-                gap={4}
-                alignItems="start"
+                spacing={4}
+                pb={2}
             >
                 {/* Calendar */}
                 <CalendarPicker
