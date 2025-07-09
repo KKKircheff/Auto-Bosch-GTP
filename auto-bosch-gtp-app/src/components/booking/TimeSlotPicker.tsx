@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     Box,
     Paper,
@@ -9,10 +9,17 @@ import {
     Alert,
     Chip,
     alpha,
+    IconButton,
+    Tooltip,
+    Snackbar,
 } from '@mui/material';
-import { AccessTime, CheckCircle, Refresh } from '@mui/icons-material';
+import { AccessTime, CheckCircle, Refresh, Delete } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
-import { shadow1, TEXTS } from '../../utils/constants';
+import { shadow1, TEXTS, VEHICLE_TYPES } from '../../utils/constants';
+import { deleteBooking } from '../../services/appointments';
+import { useAuth } from '../../hooks/useAuth';
+import { useSnackbar } from '../../hooks/useSnackbar';
+import DeleteBookingDialog from './DeleteBookingDialog';
 import type { TimeSlot } from '../../types/booking';
 import { theme } from '../../theme/theme';
 
@@ -37,6 +44,13 @@ const TimeSlotPicker = ({
     onRefresh,
     className,
 }: TimeSlotPickerProps) => {
+    const { user } = useAuth();
+    const { snackbar, hideSnackbar, showSuccess, showError } = useSnackbar();
+    const [deleteDialog, setDeleteDialog] = useState<{
+        open: boolean;
+        timeSlot: TimeSlot | null;
+    }>({ open: false, timeSlot: null });
+    const [deletingSlot, setDeletingSlot] = useState<string | null>(null);
 
     // Group time slots by morning/afternoon
     const groupedSlots = useMemo(() => {
@@ -58,6 +72,42 @@ const TimeSlotPicker = ({
     // Count available slots
     const availableCount = timeSlots.filter(slot => slot.available).length;
     const totalCount = timeSlots.length;
+
+    // Handle delete booking
+    const handleDeleteClick = (timeSlot: TimeSlot) => {
+        setDeleteDialog({ open: true, timeSlot });
+    };
+
+    const handleDeleteConfirm = async () => {
+        const { timeSlot } = deleteDialog;
+        if (!timeSlot?.bookingId) return;
+
+        setDeletingSlot(timeSlot.time);
+
+        try {
+            const result = await deleteBooking(timeSlot.bookingId);
+
+            if (result.success) {
+                showSuccess('Записването е успешно изтрито');
+                // Refresh the time slots to show updated availability
+                if (onRefresh) {
+                    onRefresh();
+                }
+            } else {
+                showError(result.error || 'Възникна грешка при изтриване на записването');
+            }
+        } catch (err) {
+            console.error('Delete booking error:', err);
+            showError('Възникна неочаквана грешка при изтриване на записването');
+        } finally {
+            setDeletingSlot(null);
+            setDeleteDialog({ open: false, timeSlot: null });
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialog({ open: false, timeSlot: null });
+    };
 
     // Show loading state while date is being auto-selected
     if (!selectedDate) {
@@ -121,7 +171,69 @@ const TimeSlotPicker = ({
     const TimeSlotButton = ({ slot }: { slot: TimeSlot }) => {
         const isSelected = selectedTime === slot.time;
         const isAvailable = slot.available;
+        const isDeleting = deletingSlot === slot.time;
+        const isAdmin = !!user;
 
+        if (!isAvailable && slot.booking) {
+            // Unavailable slot with booking info - show with delete button for admin
+            return (
+                <Box
+                    sx={{
+                        position: 'relative',
+                        border: 1,
+                        borderColor: 'error.light',
+                        borderRadius: 1,
+                        p: 1.5,
+                        bgcolor: alpha(theme.palette.error.light, 0.1),
+                    }}
+                >
+                    <Typography variant="body2" color="error.dark" fontWeight={600} gutterBottom>
+                        {slot.time} - Резервиран
+                    </Typography>
+
+                    <Typography variant="caption" color="text.secondary" display="block">
+                        {slot.booking.customerName}
+                    </Typography>
+
+                    <Typography variant="caption" color="text.secondary" display="block">
+                        {slot.booking.registrationPlate}
+                    </Typography>
+
+                    <Typography variant="caption" color="text.secondary" display="block">
+                        {VEHICLE_TYPES[slot.booking.vehicleType]}
+                    </Typography>
+
+                    {isAdmin && (
+                        <Tooltip title="Изтрий записването">
+                            <IconButton
+                                size="small"
+                                onClick={() => handleDeleteClick(slot)}
+                                disabled={isDeleting}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 4,
+                                    right: 4,
+                                    bgcolor: 'background.paper',
+                                    boxShadow: 1,
+                                    '&:hover': {
+                                        bgcolor: 'error.light',
+                                        color: 'white',
+                                    },
+                                }}
+                            >
+                                {isDeleting ? (
+                                    <CircularProgress size={16} />
+                                ) : (
+                                    <Delete fontSize="small" />
+                                )}
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                </Box>
+            );
+        }
+
+        // Available slot - regular button
         return (
             <Button
                 variant={'contained'}
@@ -202,115 +314,162 @@ const TimeSlotPicker = ({
     };
 
     return (
-        <Paper
-            sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}
-            className={className}
-        >
-            {/* Header */}
-            <Box mb={3}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                    <Typography variant="h6">
-                        {TEXTS.availableTimes}
+        <>
+            <Paper
+                sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}
+                className={className}
+            >
+                {/* Header */}
+                <Box mb={3}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="h6">
+                            {TEXTS.availableTimes}
+                        </Typography>
+                        {onRefresh && (
+                            <Button
+                                size="small"
+                                onClick={onRefresh}
+                                startIcon={<Refresh />}
+                                disabled={loading}
+                            >
+                                Обнови
+                            </Button>
+                        )}
+                    </Box>
+
+                    <Typography variant="body2" color="text.secondary" mb={2}>
+                        {formatDateBulgarian(selectedDate, 'EEEE, dd MMMM yyyy')}
                     </Typography>
-                    {onRefresh && (
-                        <Button
-                            size="small"
-                            onClick={onRefresh}
-                            startIcon={<Refresh />}
-                            disabled={loading}
-                        >
-                            Обнови
-                        </Button>
+
+                    {/* Availability summary */}
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="body2" color="text.secondary">
+                            {availableCount} от {totalCount} часа са свободни
+                        </Typography>
+
+                        {selectedTime && (
+                            <Chip
+                                label={`Избран час: ${selectedTime}`}
+                                color="primary"
+                                size="small"
+                                icon={<CheckCircle />}
+                            />
+                        )}
+                    </Box>
+
+                    {/* Admin indicator */}
+                    {user && (
+                        <Alert severity="info" sx={{ mt: 2 }}>
+                            <Typography variant="body2">
+                                Администраторски режим: Можете да изтривате записвания с иконата за изтриване
+                            </Typography>
+                        </Alert>
                     )}
                 </Box>
 
-                <Typography variant="body2" color="text.secondary" mb={2}>
-                    {formatDateBulgarian(selectedDate, 'EEEE, dd MMMM yyyy')}
-                </Typography>
-
-                {/* Availability summary */}
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body2" color="text.secondary">
-                        {availableCount} от {totalCount} часа са свободни
-                    </Typography>
-
-                    {selectedTime && (
-                        <Chip
-                            label={`Избран час: ${selectedTime}`}
-                            color="primary"
-                            size="small"
-                            icon={<CheckCircle />}
+                {/* Time slots */}
+                {timeSlots.length === 0 ? (
+                    <Alert severity="warning">
+                        Няма налични часове за избраната дата.
+                        Моля изберете друга дата от календара.
+                    </Alert>
+                ) : (
+                    <Box>
+                        <TimeSlotGroup
+                            title="Сутрешни часове"
+                            slots={groupedSlots.morning}
+                            icon={<AccessTime sx={{ color: 'primary.main' }} />}
                         />
-                    )}
-                </Box>
-            </Box>
 
-            {/* Time slots */}
-            {timeSlots.length === 0 ? (
-                <Alert severity="warning">
-                    Няма налични часове за избраната дата.
-                    Моля изберете друга дата от календара.
-                </Alert>
-            ) : (
-                <Box>
-                    <TimeSlotGroup
-                        title="Сутрешни часове"
-                        slots={groupedSlots.morning}
-                        icon={<AccessTime sx={{ color: 'primary.main' }} />}
-                    />
-
-                    <TimeSlotGroup
-                        title="Следобедни часове"
-                        slots={groupedSlots.afternoon}
-                        icon={<AccessTime sx={{ color: 'primary.main' }} />}
-                    />
-                </Box>
-            )}
-
-            {/* Legend */}
-            <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                <Typography variant="caption" color="text.secondary" display="block" mb={1}>
-                    Легенда:
-                </Typography>
-                <Box display="flex" flexWrap="wrap" gap={2}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <CheckCircle sx={{ fontSize: 16, color: 'primary.main' }} />
-                        <Typography variant="caption" color="text.secondary">
-                            Избран час
-                        </Typography>
+                        <TimeSlotGroup
+                            title="Следобедни часове"
+                            slots={groupedSlots.afternoon}
+                            icon={<AccessTime sx={{ color: 'primary.main' }} />}
+                        />
                     </Box>
+                )}
 
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <AccessTime sx={{ fontSize: 16, color: 'primary.main' }} />
-                        <Typography variant="caption" color="text.secondary">
-                            Свободен час
-                        </Typography>
-                    </Box>
-
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <AccessTime sx={{ fontSize: 16, color: 'text.disabled' }} />
-                        <Typography variant="caption" color="text.secondary">
-                            Зает час
-                        </Typography>
-                    </Box>
-                </Box>
-            </Box>
-
-            {/* Selected time confirmation */}
-            {selectedTime && (
-                <Box
-                    mt={3}
-                    p={2}
-                    bgcolor={alpha(theme.palette.primary.light, .3)}
-                    borderRadius={1}
-                    textAlign="center"
-                >
-                    <Typography variant="subtitle2" color="primary.dark">
-                        ✓ Избрахте час: {selectedTime} на {formatDateBulgarian(selectedDate, 'dd.MM.yyyy')}
+                {/* Legend */}
+                <Box mt={3} pt={2} borderTop={1} borderColor="divider">
+                    <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                        Легенда:
                     </Typography>
+                    <Box display="flex" flexWrap="wrap" gap={2}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <CheckCircle sx={{ fontSize: 16, color: 'primary.main' }} />
+                            <Typography variant="caption" color="text.secondary">
+                                Избран час
+                            </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <AccessTime sx={{ fontSize: 16, color: 'primary.main' }} />
+                            <Typography variant="caption" color="text.secondary">
+                                Свободен час
+                            </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <AccessTime sx={{ fontSize: 16, color: 'text.disabled' }} />
+                            <Typography variant="caption" color="text.secondary">
+                                Зает час
+                            </Typography>
+                        </Box>
+
+                        {user && (
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Delete sx={{ fontSize: 16, color: 'error.main' }} />
+                                <Typography variant="caption" color="text.secondary">
+                                    Изтрий записването (админ)
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
                 </Box>
-            )}
-        </Paper>
+
+                {/* Selected time confirmation */}
+                {selectedTime && (
+                    <Box
+                        mt={3}
+                        p={2}
+                        bgcolor={alpha(theme.palette.primary.light, .3)}
+                        borderRadius={1}
+                        textAlign="center"
+                    >
+                        <Typography variant="subtitle2" color="primary.dark">
+                            ✓ Избрахте час: {selectedTime} на {formatDateBulgarian(selectedDate, 'dd.MM.yyyy')}
+                        </Typography>
+                    </Box>
+                )}
+            </Paper>
+
+            {/* Delete Confirmation Dialog */}
+            <DeleteBookingDialog
+                open={deleteDialog.open}
+                onClose={handleDeleteCancel}
+                onConfirm={handleDeleteConfirm}
+                timeSlot={deleteDialog.timeSlot}
+                selectedDate={selectedDate}
+                loading={!!deletingSlot}
+            />
+
+            {/* Snackbar for notifications */}
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={hideSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={hideSnackbar}
+                    severity={snackbar.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 

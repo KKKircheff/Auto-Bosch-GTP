@@ -57,6 +57,14 @@ export interface TimeSlot {
     time: string;
     available: boolean;
     bookingId?: string;
+    booking?: {
+        customerName: string;
+        phone: string;
+        registrationPlate: string;
+        vehicleType: VehicleType;
+        vehicleBrand?: string;
+        price: number;
+    };
 }
 
 export interface DaySchedule {

@@ -25,7 +25,7 @@ import type {
     ApiResponse,
     CreateBookingResponse,
 } from '../types/booking';
-import {calculatePrice} from '../utils/constants';
+import {calculatePrice, type VehicleType} from '../utils/constants';
 
 const APPOINTMENTS_COLLECTION = 'appointments';
 
@@ -52,7 +52,7 @@ const toFirestoreDocument = (formData: BookingFormData): Omit<BookingDocument, '
         vehicleBrand: formData.vehicleBrand || '',
         is4x4: formData.is4x4 || false,
         appointmentDate: Timestamp.fromDate(formData.appointmentDate),
-                appointmentTime: formData.appointmentTime,
+        appointmentTime: formData.appointmentTime,
         price: priceInfo.finalPrice,
         status: 'confirmed' as BookingStatus,
         notes: formData.notes || '',
@@ -191,6 +191,9 @@ export const createBooking = async (formData: BookingFormData): Promise<ApiRespo
 /**
  * Get available time slots. This logic remains largely the same, as it doesn't need to be transactional.
  */
+/**
+ * Get available time slots with booking details for unavailable slots
+ */
 export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<TimeSlot[]>> => {
     try {
         const {generateTimeSlots} = await import('../utils/dateHelpers');
@@ -209,19 +212,57 @@ export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<Tim
 
         const querySnapshot = await getDocs(q);
 
-        const bookedTimes = new Set<string>();
+        // Create map of booked times with booking details
+        const bookedSlots = new Map<
+            string,
+            {
+                bookingId: string;
+                booking: {
+                    customerName: string;
+                    phone: string;
+                    registrationPlate: string;
+                    vehicleType: VehicleType;
+                    vehicleBrand?: string;
+                    price: number;
+                };
+            }
+        >();
+
         querySnapshot.forEach((doc) => {
             const booking = doc.data() as BookingDocument;
-            // Only consider confirmed bookings for availability
+
+            // Only process confirmed bookings (filter client-side to avoid index requirement)
             if (booking.status === 'confirmed') {
-                bookedTimes.add(booking.appointmentTime);
+                const bookingId = generateAppointmentId(date, booking.appointmentTime);
+
+                bookedSlots.set(booking.appointmentTime, {
+                    bookingId,
+                    booking: {
+                        customerName: booking.customerName,
+                        phone: booking.phone,
+                        registrationPlate: booking.registrationPlate,
+                        vehicleType: booking.vehicleType,
+                        vehicleBrand: booking.vehicleBrand,
+                        price: booking.price,
+                    },
+                });
             }
         });
 
-        const availableSlots = allSlots.map((slot) => ({
-            ...slot,
-            available: slot.available && !bookedTimes.has(slot.time),
-        }));
+        const availableSlots = allSlots.map((slot) => {
+            const bookedSlot = bookedSlots.get(slot.time);
+
+            if (bookedSlot) {
+                return {
+                    ...slot,
+                    available: false,
+                    bookingId: bookedSlot.bookingId,
+                    booking: bookedSlot.booking,
+                };
+            }
+
+            return slot;
+        });
 
         return {
             success: true,
@@ -236,7 +277,6 @@ export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<Tim
         };
     }
 };
-
 /**
  * Pre-booking validation.
  */
@@ -280,7 +320,7 @@ export const getBookings = async (
 
         // Filter client-side by status if provided
         if (status) {
-            bookings = bookings.filter(booking => booking.status === status);
+            bookings = bookings.filter((booking) => booking.status === status);
         }
 
         bookings.sort((a, b) => {
