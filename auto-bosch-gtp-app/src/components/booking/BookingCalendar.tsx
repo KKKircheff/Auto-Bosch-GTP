@@ -1,18 +1,19 @@
+import { useEffect, useRef } from 'react';
 import { Box, Container, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import CalendarPicker from './CalendarPicker';
+import { getNextAvailableDate } from '../../utils/dateHelpers';
 import { useBookingContext } from '../../contexts/BookingContext';
 import { TEXTS } from '../../utils/constants';
-import { getNextAvailableDate } from '../../utils/dateHelpers';
 import TimeSlotPicker from './TimeSlotPicker';
-import CalendarPicker from './CalendarPicker';
 
 interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
+    onTimeSlotSelect?: () => void; // New prop for scroll callback
 }
 
-const BookingCalendar = ({
-    onDateTimeSelect,
-}: BookingCalendarProps) => {
+const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendarProps) => {
+    const timeSlotRef = useRef<HTMLDivElement>(null);
+
     const {
         selectedDate,
         selectedTime,
@@ -23,27 +24,38 @@ const BookingCalendar = ({
         timeSlotsError,
         appointmentCounts,
         refreshTimeSlots,
-        refreshAppointmentCounts, // Add this from context
     } = useBookingContext();
 
-    // Auto-select next available date if none is selected
+    // Set initial date if none selected
     useEffect(() => {
         if (!selectedDate) {
-            const nextAvailable = getNextAvailableDate();
-            if (nextAvailable) {
-                setSelectedDate(nextAvailable);
-            }
+            setSelectedDate(getNextAvailableDate());
         }
     }, [selectedDate, setSelectedDate]);
 
     const handleDateSelect = (date: Date) => {
         setSelectedDate(date);
+
+        // Scroll to time slots immediately
+        setTimeout(() => {
+            timeSlotRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }, 100);
     };
 
     const handleTimeSelect = (time: string) => {
         setSelectedTime(time);
+
+        // Call the original callback
         if (selectedDate && onDateTimeSelect) {
             onDateTimeSelect(selectedDate, time);
+        }
+
+        // Scroll to navigation after time selection
+        if (onTimeSlotSelect) {
+            onTimeSlotSelect();
         }
     };
 
@@ -59,8 +71,9 @@ const BookingCalendar = ({
             </Box>
 
             <Stack direction='column'
-                spacing={4}
-                pb={2}
+                gap={4}
+                alignItems="start"
+                width={'100%'}
             >
                 {/* Calendar */}
                 <CalendarPicker
@@ -69,18 +82,42 @@ const BookingCalendar = ({
                     appointmentCounts={appointmentCounts}
                 />
 
-                {/* Time slots - Always show, will auto-select available date */}
-                <TimeSlotPicker
-                    selectedDate={selectedDate}
-                    selectedTime={selectedTime || undefined}
-                    onTimeSelect={handleTimeSelect}
-                    timeSlots={timeSlots}
-                    loading={timeSlotsLoading}
-                    error={timeSlotsError}
-                    onRefresh={refreshTimeSlots}
-                    onRefreshAppointmentCounts={refreshAppointmentCounts} // Pass the function
-                />
+                {/* Time slots */}
+                <Box ref={timeSlotRef} minWidth={'100%'}>
+                    <TimeSlotPicker
+                        selectedDate={selectedDate}
+                        selectedTime={selectedTime || undefined}
+                        onTimeSelect={handleTimeSelect}
+                        timeSlots={timeSlots}
+                        loading={timeSlotsLoading}
+                        error={timeSlotsError}
+                        onRefresh={refreshTimeSlots}
+                    />
+                </Box>
             </Stack>
+
+            {/* Selection summary */}
+            {/* {selectedDate && selectedTime && (
+                <Box
+                    mt={4}
+                    p={3}
+                    bgcolor="success.light"
+                    borderRadius={2}
+                    textAlign="center"
+                >
+                    <Typography variant="h6" color="success.dark" gutterBottom>
+                        ✓ Избрана дата и час
+                    </Typography>
+                    <Typography variant="body1" color="success.dark">
+                        {selectedDate.toLocaleDateString('bg-BG', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })} в {selectedTime}
+                    </Typography>
+                </Box>
+            )} */}
         </Container>
     );
 };

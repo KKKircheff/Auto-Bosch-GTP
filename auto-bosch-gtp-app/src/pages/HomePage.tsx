@@ -9,10 +9,10 @@ const HomePage = () => {
         <Container maxWidth="lg" sx={{ py: 4 }}>
             {/* Hero Section */}
             <Stack direction={'column'} spacing={4} alignItems="center" justifyContent='center' py={8} >
-                <Typography variant="h2" component="h1" gutterBottom color="secondary.main">
+                <Typography variant="h2" component="h1" gutterBottom color="secondary.main" textAlign={{ xs: 'center' }}>
                     {TEXTS.siteName}
                 </Typography>
-                <Typography variant="h5" color="text.secondary" pb={4}>
+                <Typography variant="h5" color="text.secondary" pb={4} textAlign={{ xs: 'center' }}>
                     {TEXTS.siteTagline}
                 </Typography>
                 <Button

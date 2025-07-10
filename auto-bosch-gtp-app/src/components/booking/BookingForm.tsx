@@ -29,11 +29,12 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     const [activeStep, setActiveStep] = useState(0);
     const [formData, setFormData] = useState<Partial<BookingFormSchema>>({});
     const [isFormValid, setIsFormValid] = useState(false);
+    const navigationRef = useRef<HTMLDivElement>(null);
 
     const {
         selectedDate,
         selectedTime,
-        bookingSuccess
+        bookingSuccess,
     } = useBookingContext();
 
     // Use refs to prevent unnecessary effect triggers
@@ -42,7 +43,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
 
     const steps = [
         'Дата и час',
-        'МПС',
+        'Данни и МПС',
         'Потвърждение',
     ];
 
@@ -78,6 +79,16 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             });
         }
     }, [selectedDate, selectedTime]);
+
+    // Scroll to navigation callback
+    const scrollToNavigation = useCallback(() => {
+        setTimeout(() => {
+            navigationRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }, 100);
+    }, []);
 
     // Memoized handlers to prevent recreation
     const handleNext = useCallback(() => {
@@ -180,17 +191,18 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                 return (
                     <BookingCalendar
                         onDateTimeSelect={handleDateTimeSelect}
+                        onTimeSlotSelect={scrollToNavigation}
                     />
                 );
             case 1:
                 return (
-                    <Container maxWidth="lg" sx={{ pb: 4 }} >
+                    <Container maxWidth="lg">
                         <VehicleForm
                             onFormChange={handleVehicleFormChange}
                             onValidationChange={handleValidationChange}
                             initialData={formData}
                         />
-                    </Container >
+                    </Container>
                 );
             case 2:
                 return (
@@ -212,7 +224,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             default:
                 return <div>Неизвестна стъпка</div>;
         }
-    }, [handleDateTimeSelect, handleVehicleFormChange, handleValidationChange, formData, handleSubmit, handleEditStep, loading, isCompleteFormData]);
+    }, [handleDateTimeSelect, scrollToNavigation, handleVehicleFormChange, handleValidationChange, formData, handleSubmit, handleEditStep, loading, isCompleteFormData]);
 
     return (
         <Box sx={{ width: '100%', py: 4 }}>
@@ -227,7 +239,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             </Container>
 
             {/* Progress Stepper */}
-            <Container maxWidth="md" sx={{ mb: 4 }}>
+            <Container maxWidth="lg" sx={{ mb: 4 }}>
                 <Stepper activeStep={activeStep} alternativeLabel>
                     {steps.map((label, index) => (
                         <Step key={label} completed={isStepCompleted(index)}>
@@ -239,7 +251,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
 
             {/* Error Display */}
             {error && (
-                <Container maxWidth="md" sx={{ mb: 3 }}>
+                <Container maxWidth="lg" sx={{ mb: 3 }}>
                     <Alert severity="error">{error}</Alert>
                 </Container>
             )}
@@ -250,59 +262,61 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             </Box>
 
             {/* Navigation */}
-            <Container maxWidth="lg" sx={{ pb: 4 }}>
-                <Paper sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}>
-                    <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
-                        <Button
-                            disabled={activeStep === 0 || loading}
-                            onClick={handleBack}
-                            startIcon={<ArrowBack />}
-                            size="large"
+            <Container maxWidth="lg">
+                <div ref={navigationRef}>
+                    <Paper elevation={1} sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}>
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
                         >
-                            Назад
-                        </Button>
-
-                        <Box textAlign="center" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Стъпка {activeStep + 1} от {steps.length}
-                            </Typography>
-                        </Box>
-
-                        {activeStep === steps.length - 1 ? (
                             <Button
-                                variant="contained"
-                                onClick={handleSubmit}
-                                disabled={canProceed || loading || !isCompleteFormData(formData)}
-                                startIcon={<Check />}
+                                disabled={activeStep === 0 || loading}
+                                onClick={handleBack}
+                                startIcon={<ArrowBack />}
                                 size="large"
                             >
-                                {loading ? 'Запазване...' : 'Потвърди'}
+                                Назад
                             </Button>
-                        ) : (
-                            <Button
-                                variant="contained"
-                                onClick={handleNext}
-                                disabled={!canProceed || loading}
-                                endIcon={<ArrowForward />}
-                                size="large"
-                            >
-                                Напред
-                            </Button>
+
+                            <Box textAlign="center" display={{ xs: 'none', sm: 'block' }}>
+                                <Typography variant="body2" color="text.secondary">
+                                    Стъпка {activeStep + 1} от {steps.length}
+                                </Typography>
+                            </Box>
+
+                            {activeStep === steps.length - 1 ? (
+                                <Button
+                                    variant="contained"
+                                    onClick={handleSubmit}
+                                    disabled={canProceed || loading || !isCompleteFormData(formData)}
+                                    startIcon={<Check />}
+                                    size="large"
+                                >
+                                    {loading ? 'Запазване...' : 'Потвърди'}
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    onClick={handleNext}
+                                    disabled={!canProceed || loading}
+                                    endIcon={<ArrowForward />}
+                                    size="large"
+                                >
+                                    Напред
+                                </Button>
+                            )}
+                        </Stack>
+
+                        {/* Step completion indicator */}
+                        {!canProceed && activeStep < steps.length - 1 && (
+                            <Alert severity="info" sx={{ mt: 2 }}>
+                                {activeStep === 0 && 'Моля изберете дата и час за да продължите.'}
+                                {activeStep === 1 && 'Моля попълнете всички задължителни полета за да продължите.'}
+                            </Alert>
                         )}
-                    </Stack>
-
-                    {/* Step completion indicator */}
-                    {!canProceed && activeStep < steps.length - 1 && (
-                        <Alert severity="info" sx={{ mt: 2 }}>
-                            {activeStep === 0 && 'Моля изберете дата и час за да продължите.'}
-                            {activeStep === 1 && 'Моля попълнете всички задължителни полета за да продължите.'}
-                        </Alert>
-                    )}
-                </Paper>
+                    </Paper>
+                </div>
             </Container>
 
             {/* Debug Info (remove in production) */}

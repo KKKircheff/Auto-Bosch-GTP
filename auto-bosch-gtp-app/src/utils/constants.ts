@@ -143,10 +143,6 @@ export const TEXTS = {
 
 // Vehicle brands arrays (keeping existing brands from original file)
 export const VEHICLE_BRANDS = [
-    'BAIC',
-    'BAW',
-    'BMW',
-    'BYD',
     'AC',
     'Abarth',
     'Acura',
@@ -162,6 +158,10 @@ export const VEHICLE_BRANDS = [
     'Bertone',
     'Brilliance',
     'Buick',
+    'BAIC',
+    'BAW',
+    'BMW',
+    'BYD',
     'Cadillac',
     'Carbodies',
     'Changan',
@@ -183,7 +183,6 @@ export const VEHICLE_BRANDS = [
     'Dkw',
     'Dodge',
     'Dr',
-    'Други',
     'Ferrari',
     'Fiat',
     'Ford',
@@ -274,6 +273,7 @@ export const VEHICLE_BRANDS = [
     'Wartburg',
     'Wey',
     'Zaz',
+    'Други',
 ] as const;
 
 export const MOTORCYCLE_BRANDS = [
@@ -401,7 +401,6 @@ export const MOTORCYCLE_BRANDS = [
     'Zontes',
     'Zundapp',
     'iO Scooter',
-    'Други',
     'Днепр',
     'Иж',
     'Карпати',
@@ -410,6 +409,7 @@ export const MOTORCYCLE_BRANDS = [
     'Минск',
     'Поръчкови',
     'Рига',
+    'Други',
 ] as const;
 
 export const BUS_BRANDS = [
@@ -457,6 +457,7 @@ export const BUS_BRANDS = [
     'Solaris',
     'Suzuki',
     'VW',
+    'Други',
 ] as const;
 
 // Helper functions

@@ -203,14 +203,14 @@ const BookingConfirmation = ({
                             <Grid container spacing={2}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <Box>
-                                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                                        <Typography variant="body2" color="text.secondary" pb={1.5}>
                                             Регистрационен номер
                                         </Typography>
                                         <Chip
                                             label={formData.registrationPlate}
                                             variant="outlined"
                                             size="medium"
-                                            sx={{ fontWeight: 'bold', fontSize: '1rem' }}
+                                            sx={{ fontWeight: 'bold', fontSize: '1rem', borderRadius: 1, }}
                                         />
                                     </Box>
                                 </Grid>

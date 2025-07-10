@@ -12,6 +12,8 @@ import {
     IconButton,
     Tooltip,
     Snackbar,
+    Container,
+    Stack,
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh, Delete } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
@@ -163,7 +165,7 @@ const TimeSlotPicker = ({
 
     if (loading) {
         return (
-            <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }} className={className}>
+            <Paper elevation={2} sx={{ p: 3, textAlign: 'center', boxShadow: shadow1, borderRadius: 2, minWidth: '100%', minHeight: '60vh' }} className={className}>
                 <CircularProgress size={40} sx={{ mb: 2 }} />
                 <Typography variant="body1" color="text.secondary">
                     Зареждане на свободни часове...
@@ -292,7 +294,7 @@ const TimeSlotPicker = ({
 
         return (
             <Box mb={3}>
-                <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="center" justifyContent="space-between" mb={2}>
                     <Box display="flex" alignItems="center" gap={1}>
                         {icon}
                         <Typography variant="subtitle1" fontWeight="600">
@@ -305,7 +307,7 @@ const TimeSlotPicker = ({
                         color={availableInGroup > 0 ? 'success' : 'default'}
                         variant="outlined"
                     />
-                </Box>
+                </Stack>
 
                 <Grid container spacing={1.5}>
                     {slots.map((slot) => (
@@ -347,7 +349,7 @@ const TimeSlotPicker = ({
                     </Typography>
 
                     {/* Availability summary */}
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} justifyContent="space-between" alignItems="center">
                         <Typography variant="body2" color="text.secondary">
                             {availableCount} от {totalCount} часа са свободни
                         </Typography>
@@ -360,7 +362,7 @@ const TimeSlotPicker = ({
                                 icon={<CheckCircle />}
                             />
                         )}
-                    </Box>
+                    </Stack>
 
                     {/* Admin indicator */}
                     {user && (
