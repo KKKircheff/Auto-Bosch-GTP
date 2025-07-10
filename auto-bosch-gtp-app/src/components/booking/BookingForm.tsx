@@ -310,9 +310,9 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
 
                         {/* Step completion indicator */}
                         {!canProceed && activeStep < steps.length - 1 && (
-                            <Alert severity="info" sx={{ mt: 2 }}>
-                                {activeStep === 0 && 'Моля изберете дата и час за да продължите.'}
-                                {activeStep === 1 && 'Моля попълнете всички задължителни полета за да продължите.'}
+                            <Alert severity="warning" sx={{ mt: 2 }}>
+                                {activeStep === 0 && 'Моля изберете дата и час, за да продължите.'}
+                                {activeStep === 1 && 'Моля попълнете всички задължителни полета, за да продължите.'}
                             </Alert>
                         )}
                     </Paper>

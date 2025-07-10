@@ -154,8 +154,8 @@ const VehicleForm = ({
             const pricing = calculatePrice(vehicleType, true);
             setPriceInfo(pricing);
 
-            // Trigger validation
-            trigger();
+            // Trigger validation for the vehicle type only
+            trigger('vehicleType');
         } else {
             setSelectedVehicleType('car');
             setPriceInfo(null);
