@@ -18,7 +18,6 @@ import {
     getAvailableMonths,
     isBookableDate,
     getMaxBookingDate,
-    getBookingWindowDescription,
     BULGARIAN_DAYS_SHORT,
     isMonthWithinBookingWindow,
 } from '../../utils/dateHelpers';
