@@ -30,6 +30,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     const [formData, setFormData] = useState<Partial<BookingFormSchema>>({});
     const [isFormValid, setIsFormValid] = useState(false);
     const navigationRef = useRef<HTMLDivElement>(null);
+    const formRef = useRef<HTMLDivElement>(null);
 
     const {
         selectedDate,
@@ -80,6 +81,12 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
         }
     }, [selectedDate, selectedTime]);
 
+    const scrollToTop = useCallback(() => {
+        setTimeout(() => {
+            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }, []);
+
     // Scroll to navigation callback
     const scrollToNavigation = useCallback(() => {
         setTimeout(() => {
@@ -93,11 +100,13 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     // Memoized handlers to prevent recreation
     const handleNext = useCallback(() => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }, []);
+        scrollToTop();
+    }, [scrollToTop]);
 
     const handleBack = useCallback(() => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    }, []);
+        scrollToTop();
+    }, [scrollToTop]);
 
     const handleReset = useCallback(() => {
         setActiveStep(0);
@@ -227,7 +236,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
     }, [handleDateTimeSelect, scrollToNavigation, handleVehicleFormChange, handleValidationChange, formData, handleSubmit, handleEditStep, loading, isCompleteFormData]);
 
     return (
-        <Box sx={{ width: '100%', py: 4 }}>
+        <Box sx={{ width: '100%', py: 4 }} ref={formRef}>
             {/* Header */}
             <Container maxWidth="lg" sx={{ mb: 4 }}>
                 <Typography variant="h3" component="h1" textAlign="center" gutterBottom>
