@@ -16,8 +16,8 @@ export const MAX_BOOKING_WEEKS = 8;
 
 // Contact information for the garage in Bourgas
 export const CONTACT_INFO = {
-    email: 'auto-bosch-service@abv.bg',
-    phone: '+359 88 856 5188',
+    email: 'auto.bosch.gtp@gmail.com',
+    phone: '+359 87 855 9905',
     address: '8001 Burgas',
     city: 'Бургас',
     country: 'България',
