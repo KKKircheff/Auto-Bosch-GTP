@@ -32,7 +32,16 @@ const HomePage = () => {
                 </Typography>
                 <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={2} mt={3}>
                     {Object.entries(VEHICLE_TYPES).map(([key, label]) => (
-                        <Box key={key} display="flex" justifyContent="space-between" p={2} border={1} borderColor="grey.300" borderRadius={1}>
+                        <Box
+                            key={key}
+                            display="flex"
+                            justifyContent="space-between"
+                            p={2} border={1}
+                            borderColor="grey.300"
+                            borderRadius={1}
+                            onClick={() => navigate(`/booking?vehicleType=${key}`)}
+                            sx={{ cursor: 'pointer' }}
+                        >
                             <Typography>{label}</Typography>
                             <Typography fontWeight="bold">{PRICING[key as keyof typeof PRICING]} лв</Typography>
                         </Box>

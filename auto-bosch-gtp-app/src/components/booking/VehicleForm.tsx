@@ -1,5 +1,6 @@
 // src/components/booking/VehicleForm.tsx
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
     Box,
     Paper,
@@ -90,7 +91,10 @@ const VehicleForm = ({
     initialData,
     className,
 }: VehicleFormProps) => {
-    const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>('car');
+    const [searchParams] = useSearchParams();
+    const vehicleTypeFromUrl = searchParams.get('vehicleType') as VehicleType | null;
+
+    const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>(vehicleTypeFromUrl || 'car');
     const [priceInfo, setPriceInfo] = useState<{ basePrice: number; discount: number; finalPrice: number } | null>(null);
 
     // Form setup with validation
@@ -108,7 +112,7 @@ const VehicleForm = ({
             email: initialData?.email || '',
             phone: initialData?.phone || '',
             registrationPlate: initialData?.registrationPlate || '',
-            vehicleType: initialData?.vehicleType || undefined,
+            vehicleType: vehicleTypeFromUrl || initialData?.vehicleType || undefined,
             vehicleBrand: initialData?.vehicleBrand || '',
             is4x4: initialData?.is4x4 || false,
             notes: initialData?.notes || '',
