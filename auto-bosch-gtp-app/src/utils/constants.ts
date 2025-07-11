@@ -1,10 +1,9 @@
+export const shadow1 = 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px';
 export const shadow2 =
     'rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px';
 
 export const shadow3 = 'rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px';
-export const shadow1 = 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px';
 
-// Business hours and scheduling
 export const BUSINESS_HOURS = {
     START: '08:30',
     END: '17:30',
@@ -14,7 +13,6 @@ export const WORKING_DAYS = [1, 2, 3, 4, 5]; // Monday to Friday
 export const SLOT_DURATION_MINUTES = 30;
 export const MAX_BOOKING_WEEKS = 8;
 
-// Contact information for the garage in Bourgas
 export const CONTACT_INFO = {
     email: 'auto.bosch.gtp@gmail.com',
     phone: '+359 87 855 9905',
@@ -23,19 +21,17 @@ export const CONTACT_INFO = {
     country: 'България',
 } as const;
 
-// Pricing in Bulgarian Leva (лв) with online discount
 export const PRICING = {
-    car: 90, // ЛЕКА КОЛА
-    bus: 110, // Микробус до 3,5т
-    motorcycle: 60, // Мотор
-    taxi: 60, // Такси
-    caravan: 60, // Каравана
-    trailer: 60, // Ремарке (renamed from hanger)
+    car: 90,
+    bus: 110,
+    motorcycle: 60,
+    taxi: 60,
+    caravan: 60,
+    trailer: 60,
     lpg: 100,
-    onlineDiscount: 10, // При онлайн записване 10 лв отстъпка
+    onlineDiscount: 10,
 } as const;
 
-// Vehicle types with Bulgarian labels
 export const VEHICLE_TYPES = {
     car: 'Лек автомобил',
     bus: 'Микробус до 3,5т',
@@ -47,7 +43,7 @@ export const VEHICLE_TYPES = {
 } as const;
 
 export type VehicleType = keyof typeof VEHICLE_TYPES;
-// Bulgarian text constants
+
 export const TEXTS = {
     // Header
     siteName: 'Ауто Бош Сервиз Бургас',
@@ -141,7 +137,6 @@ export const TEXTS = {
     },
 } as const;
 
-// Vehicle brands arrays (keeping existing brands from original file)
 export const VEHICLE_BRANDS = [
     'AC',
     'Abarth',
