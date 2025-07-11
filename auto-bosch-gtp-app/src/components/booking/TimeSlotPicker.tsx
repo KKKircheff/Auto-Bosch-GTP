@@ -209,6 +209,10 @@ const TimeSlotPicker = ({
                         {VEHICLE_TYPES[slot.booking.vehicleType]}
                     </Typography>
 
+                    <Typography variant="caption" color="text.secondary" display="block">
+                        {slot.booking.vehicleBrand}{'  '}{slot.booking.is4x4 ? 'Задвижване 4x4' : ''}
+                    </Typography>
+
                     {isAdmin && (
                         <Tooltip title="Изтрий записването">
                             <IconButton

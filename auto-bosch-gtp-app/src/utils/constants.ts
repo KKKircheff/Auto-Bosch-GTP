@@ -37,9 +37,9 @@ export const PRICING = {
 
 // Vehicle types with Bulgarian labels
 export const VEHICLE_TYPES = {
-    car: 'Лека кола',
+    car: 'Лек автомобил',
     bus: 'Микробус до 3,5т',
-    motorcycle: 'Мотор',
+    motorcycle: 'Мотоциклет',
     taxi: 'Такси',
     caravan: 'Каравана',
     trailer: 'Ремарке',
@@ -476,7 +476,7 @@ export const getVehicleBrands = (vehicleType: VehicleType) => {
 };
 
 export const shouldShow4x4 = (vehicleType: VehicleType) => {
-    return vehicleType === 'car' || vehicleType === 'taxi';
+    return vehicleType === 'car' || vehicleType === 'taxi' || vehicleType === 'bus';
 };
 
 export const shouldShowBrands = (vehicleType: VehicleType) => {

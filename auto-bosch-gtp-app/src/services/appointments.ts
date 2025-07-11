@@ -243,6 +243,7 @@ export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<Tim
                         vehicleType: booking.vehicleType,
                         vehicleBrand: booking.vehicleBrand,
                         price: booking.price,
+                        is4x4: booking.is4x4,
                     },
                 });
             }

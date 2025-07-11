@@ -64,6 +64,7 @@ export interface TimeSlot {
         vehicleType: VehicleType;
         vehicleBrand?: string;
         price: number;
+        is4x4?: boolean;
     };
 }
 
