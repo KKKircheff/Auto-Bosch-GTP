@@ -24,7 +24,7 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { TEXTS, VEHICLE_TYPES, calculatePrice, CONTACT_INFO, shadow1 } from '../../utils/constants';
+import { TEXTS, VEHICLE_TYPES, calculatePrice, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
 
@@ -41,7 +41,7 @@ const BookingConfirmation = ({
     onEdit,
     loading = false,
 }: BookingConfirmationProps) => {
-    const priceInfo = formData.vehicleType ? calculatePrice(formData.vehicleType, true) : null;
+    const priceInfo = formData.vehicleType ? calculatePriceWithCurrencies(formData.vehicleType, true) : null;
 
     // Format vehicle details
     const formatVehicleDetails = () => {
@@ -270,7 +270,7 @@ const BookingConfirmation = ({
                                             Базова цена:
                                         </Typography>
                                         <Typography variant="body1" fontWeight={600}>
-                                            {priceInfo.basePrice} лв
+                                            {priceInfo.basePriceFormatted}
                                         </Typography>
                                     </Box>
 
@@ -279,7 +279,7 @@ const BookingConfirmation = ({
                                             Отстъпка при онлайн записване:
                                         </Typography>
                                         <Typography variant="body1" color="success.dark" fontWeight={600}>
-                                            -{priceInfo.discount} лв
+                                            -{priceInfo.discountFormatted}
                                         </Typography>
                                     </Box>
 
@@ -290,7 +290,7 @@ const BookingConfirmation = ({
                                             Крайна цена:
                                         </Typography>
                                         <Typography variant="h6" color="primary.dark" fontWeight={700}>
-                                            {priceInfo.finalPrice} лв
+                                            {priceInfo.finalPriceFormatted}
                                         </Typography>
                                     </Box>
                                 </Stack>

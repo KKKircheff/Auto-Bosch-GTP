@@ -1,6 +1,6 @@
 import { Container, Typography, Box, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { TEXTS, CONTACT_INFO, VEHICLE_TYPES, PRICING } from '../utils/constants';
+import { TEXTS, CONTACT_INFO, VEHICLE_TYPES, PRICING, formatDualPrice } from '../utils/constants';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -43,12 +43,12 @@ const HomePage = () => {
                             sx={{ cursor: 'pointer' }}
                         >
                             <Typography>{label}</Typography>
-                            <Typography fontWeight="bold">{PRICING[key as keyof typeof PRICING]} лв</Typography>
+                            <Typography fontWeight="bold">{formatDualPrice(PRICING[key as keyof typeof PRICING])}</Typography>
                         </Box>
                     ))}
                 </Box>
                 <Typography variant="body2" color="primary" pt={6} textAlign="center">
-                    При онлайн записване {PRICING.onlineDiscount} лв отстъпка от посочените цени
+                    При онлайн записване {formatDualPrice(PRICING.onlineDiscount)} отстъпка от посочените цени
                 </Typography>
             </Box>
 

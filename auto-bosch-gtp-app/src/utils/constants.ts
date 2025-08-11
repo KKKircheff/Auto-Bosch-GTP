@@ -32,6 +32,14 @@ export const PRICING = {
     onlineDiscount: 10,
 } as const;
 
+// Currency conversion rate (1 EUR = 1.95583 BGN)
+export const EUR_TO_BGN_RATE = 1.95583;
+
+export const CURRENCY_SYMBOLS = {
+    BGN: 'лв',
+    EUR: '€',
+} as const;
+
 export const VEHICLE_TYPES = {
     car: 'Лек автомобил',
     bus: 'Микробус до 3,5т',
@@ -485,5 +493,40 @@ export const calculatePrice = (vehicleType: VehicleType, isOnline: boolean = tru
         basePrice,
         discount,
         finalPrice: basePrice - discount,
+    };
+};
+
+// Currency conversion utilities
+export const convertBgnToEur = (bgnAmount: number): number => {
+    return Math.round((bgnAmount / EUR_TO_BGN_RATE) * 100) / 100;
+};
+
+export const convertEurToBgn = (eurAmount: number): number => {
+    return Math.round((eurAmount * EUR_TO_BGN_RATE) * 100) / 100;
+};
+
+export const formatPrice = (amount: number, currency: 'BGN' | 'EUR' = 'BGN'): string => {
+    const symbol = CURRENCY_SYMBOLS[currency];
+    return `${amount.toFixed(2)} ${symbol}`;
+};
+
+export const formatDualPrice = (bgnAmount: number): string => {
+    const eurAmount = convertBgnToEur(bgnAmount);
+    return `${formatPrice(bgnAmount, 'BGN')} (${formatPrice(eurAmount, 'EUR')})`;
+};
+
+export const calculatePriceWithCurrencies = (vehicleType: VehicleType, isOnline: boolean = true) => {
+    const priceCalc = calculatePrice(vehicleType, isOnline);
+    
+    return {
+        basePrice: priceCalc.basePrice,
+        basePriceEur: convertBgnToEur(priceCalc.basePrice),
+        discount: priceCalc.discount,
+        discountEur: convertBgnToEur(priceCalc.discount),
+        finalPrice: priceCalc.finalPrice,
+        finalPriceEur: convertBgnToEur(priceCalc.finalPrice),
+        basePriceFormatted: formatDualPrice(priceCalc.basePrice),
+        discountFormatted: formatDualPrice(priceCalc.discount),
+        finalPriceFormatted: formatDualPrice(priceCalc.finalPrice),
     };
 };

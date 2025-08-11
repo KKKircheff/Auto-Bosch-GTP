@@ -30,6 +30,7 @@ import {
     shouldShow4x4,
     shouldShowBrands,
     calculatePrice,
+    calculatePriceWithCurrencies,
     shadow1,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
@@ -95,7 +96,7 @@ const VehicleForm = ({
     const vehicleTypeFromUrl = searchParams.get('vehicleType') as VehicleType | null;
 
     const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>(vehicleTypeFromUrl || 'car');
-    const [priceInfo, setPriceInfo] = useState<{ basePrice: number; discount: number; finalPrice: number } | null>(null);
+    const [priceInfo, setPriceInfo] = useState<ReturnType<typeof calculatePriceWithCurrencies> | null>(null);
 
     // Form setup with validation
     const {
@@ -150,8 +151,8 @@ const VehicleForm = ({
                 setValue('is4x4', false);
             }
 
-            // Calculate price
-            const pricing = calculatePrice(vehicleType, true);
+            // Calculate price with currencies
+            const pricing = calculatePriceWithCurrencies(vehicleType, true);
             setPriceInfo(pricing);
 
             // Trigger validation for the vehicle type only
@@ -428,7 +429,7 @@ const VehicleForm = ({
                                     Базова цена за {VEHICLE_TYPES[selectedVehicleType]}:
                                 </Typography>
                                 <Typography variant="body2" fontWeight={600}>
-                                    {priceInfo.basePrice} лв
+                                    {priceInfo.basePriceFormatted}
                                 </Typography>
                             </Stack>
                             <Stack direction="row" justifyContent="space-between">
@@ -436,7 +437,7 @@ const VehicleForm = ({
                                     Отстъпка при онлайн записване:
                                 </Typography>
                                 <Typography variant="body2" color="success.main" fontWeight={600}>
-                                    -{priceInfo.discount} лв
+                                    -{priceInfo.discountFormatted}
                                 </Typography>
                             </Stack>
                             <Stack direction="row" justifyContent="space-between" sx={{ pt: 1, borderTop: 1, borderColor: 'divider' }}>
@@ -444,7 +445,7 @@ const VehicleForm = ({
                                     Крайна цена:
                                 </Typography>
                                 <Chip
-                                    label={`${priceInfo.finalPrice} лв`}
+                                    label={priceInfo.finalPriceFormatted}
                                     color="primary"
                                     size="small"
                                 />
