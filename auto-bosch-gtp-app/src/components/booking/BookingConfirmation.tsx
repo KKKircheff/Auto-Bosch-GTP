@@ -24,7 +24,7 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { TEXTS, VEHICLE_TYPES, calculatePrice, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
+import { TEXTS, VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
 

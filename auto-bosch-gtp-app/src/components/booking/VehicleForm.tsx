@@ -29,7 +29,6 @@ import {
     getVehicleBrands,
     shouldShow4x4,
     shouldShowBrands,
-    calculatePrice,
     calculatePriceWithCurrencies,
     shadow1,
 } from '../../utils/constants';

@@ -223,6 +223,7 @@ export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<Tim
                     vehicleType: VehicleType;
                     vehicleBrand?: string;
                     price: number;
+                    is4x4?: boolean;
                 };
             }
         >();
