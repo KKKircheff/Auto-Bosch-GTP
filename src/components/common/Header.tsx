@@ -106,14 +106,10 @@ const Header = () => {
                         <MenuItem onClick={() => { navigate('/booking'); handleMobileMenuClose(); }}>
                             {TEXTS.bookAppointment}
                         </MenuItem>
-                        {user ? (
-                            <Box>
-                                <MenuItem onClick={() => { handleLogout(); handleMobileMenuClose(); }}>
-                                    {TEXTS.logout}
-                                </MenuItem>
-                            </Box>
-                        ) : (
-                            <></>
+                        {user && (
+                            <MenuItem onClick={() => { handleLogout(); handleMobileMenuClose(); }}>
+                                {TEXTS.logout}
+                            </MenuItem>
                         )}
                     </Menu>
                 </Box>

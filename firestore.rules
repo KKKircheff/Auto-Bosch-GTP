@@ -3,22 +3,39 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to appointments for availability checking
-    // Allow public write access for customer bookings
-    match /appointments/{document} {
+
+    // Helper function - check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // SETTINGS COLLECTION
+    // Public read (needed for booking flow to get prices/hours)
+    // Admin write only
+    match /settings/{document=**} {
       allow read: if true;
-      allow create: if true;
-      allow update, delete: if request.auth != null;
+      allow write: if isAuthenticated();
     }
-    
-    // Admin users collection - only authenticated admins can access
-    match /admin-users/{document} {
-      allow read, write: if request.auth != null;
+
+    // ANNOUNCEMENTS COLLECTION
+    // Public read (displayed on homepage)
+    // Admin write only
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated();
     }
-    
-    // Deny access to all other collections
-    match /{document=**} {
-      allow read, write: if false;
+
+    // APPOINTMENTS COLLECTION
+    // Public create (customers can book)
+    // Admin read/write (manage appointments)
+    match /appointments/{appointmentId} {
+      allow create: if true; // Anyone can create bookings
+      allow read, update, delete: if isAuthenticated(); // Only admins can view/manage
+    }
+
+    // ADMIN USERS COLLECTION
+    match /admin-users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
     }
   }
 }

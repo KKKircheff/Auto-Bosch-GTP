@@ -14,6 +14,9 @@ import HomePage from './pages/HomePage';
 import BookingPage from './pages/BookingPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import { SettingsPage } from './features/admin-panel/pages/SettingsPage';
+import { MessagesPage } from './features/admin-panel/pages/MessagesPage';
+import { AppointmentsPage } from './features/admin-panel/pages/AppointmentsPage';
 import { Box, Container } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
@@ -39,6 +42,30 @@ function App() {
                                             element={
                                                 <ProtectedRoute>
                                                     <AdminDashboardPage />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/admin/settings"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <SettingsPage />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/admin/messages"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <MessagesPage />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/admin/appointments"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <AppointmentsPage />
                                                 </ProtectedRoute>
                                             }
                                         />

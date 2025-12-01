@@ -10,14 +10,12 @@ const AdminLoginPage = () => {
 
     useEffect(() => {
         if (!loading && user) {
-            // navigate('/admin/dashboard', { replace: true });
-            navigate('/booking', { replace: true });
+            navigate('/admin/dashboard', { replace: true });
         }
     }, [user, loading, navigate]);
 
     const handleLoginSuccess = () => {
-        navigate('/booking', { replace: true });
-        // navigate('/admin/dashboard', { replace: true });
+        navigate('/admin/dashboard', { replace: true });
     };
 
     if (loading) {

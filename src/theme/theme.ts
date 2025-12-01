@@ -4,32 +4,32 @@ import {createTheme} from '@mui/material/styles';
 export const theme = createTheme({
     palette: {
         primary: {
-            main: '#57a614', // Accent color
-            light: '#7cbd49',
+            main: '#01304A', // Primary blue pallete
+            light: '#679CBC',
             dark: '#57a614',
         },
         secondary: {
-            main: '#DD0000', // Professional blue
-            light: '#ed5b3b',
-            dark: '#8e1808',
+            main: '#d21422', // Secondary Red Pallete
+            light: '#f05c67',
+            dark: '#750b13',
         },
         warning: {
-            main: '#FFD600', // Professional blue
+            main: '#FFD600',
             light: '#fff1bb',
             dark: '#FFD600',
         },
         info: {
-            main: '#666', // Accent color
-            light: '#999',
-            dark: '#333',
+            main: '#3f3f41', //Gray colors for the app
+            light: '#a5a5a7',
+            dark: '#0c0c12',
         },
         background: {
             default: '#fafafa',
             paper: '#ffffff',
         },
         text: {
-            primary: '#333333',
-            secondary: '#666666',
+            primary: '#0c0c12',
+            secondary: '#77777a',
         },
     },
     typography: {

@@ -1,12 +1,16 @@
 import { Container, Typography, Box, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TEXTS, CONTACT_INFO, VEHICLE_TYPES, PRICING, formatDualPrice } from '../utils/constants';
+import { AnnouncementBanner } from '../components/common/AnnouncementBanner';
 
 const HomePage = () => {
     const navigate = useNavigate();
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
+            {/* Announcements above hero */}
+            <AnnouncementBanner position="above-hero" />
+
             {/* Hero Section */}
             <Stack direction={'column'} spacing={4} alignItems="center" justifyContent='center' py={8} >
                 <Typography variant="h2" component="h1" gutterBottom color="secondary.main" textAlign={{ xs: 'center' }}>
@@ -51,6 +55,9 @@ const HomePage = () => {
                     При онлайн записване {formatDualPrice(PRICING.onlineDiscount)} отстъпка от посочените цени
                 </Typography>
             </Box>
+
+            {/* Announcements below hero */}
+            <AnnouncementBanner position="below-hero" />
 
             {/* Contact Section */}
             <Box textAlign="center" pb={4}>

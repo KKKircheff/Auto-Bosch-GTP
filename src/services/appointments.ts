@@ -440,6 +440,74 @@ export const updateBookingStatus = async (bookingId: string, status: BookingStat
 };
 
 /**
+ * Update a booking (admin only - for editing appointments)
+ */
+export const updateBooking = async (
+    bookingId: string,
+    updates: Partial<Omit<BookingDocument, 'createdAt' | 'updatedAt'>>
+): Promise<ApiResponse<void>> => {
+    try {
+        const bookingRef = doc(db, APPOINTMENTS_COLLECTION, bookingId);
+
+        // If date or time is being changed, validate the new slot is available
+        if (updates.appointmentDate || updates.appointmentTime) {
+            const currentDoc = await getDoc(bookingRef);
+            if (!currentDoc.exists()) {
+                return {
+                    success: false,
+                    error: 'Записването не съществува.',
+                };
+            }
+
+            const currentData = currentDoc.data() as BookingDocument;
+            const newDate = updates.appointmentDate
+                ? updates.appointmentDate instanceof Timestamp
+                    ? updates.appointmentDate.toDate()
+                    : updates.appointmentDate
+                : currentData.appointmentDate.toDate();
+            const newTime = updates.appointmentTime || currentData.appointmentTime;
+
+            // Check if we're actually changing the slot
+            const isChangingSlot =
+                format(newDate, 'yyyy-MM-dd') !== format(currentData.appointmentDate.toDate(), 'yyyy-MM-dd') ||
+                newTime !== currentData.appointmentTime;
+
+            if (isChangingSlot) {
+                const isAvailable = await isTimeSlotAvailable(newDate, newTime);
+                if (!isAvailable) {
+                    return {
+                        success: false,
+                        error: 'Избраният нов час вече е зает.',
+                    };
+                }
+            }
+        }
+
+        // Convert Date to Timestamp if needed
+        const updateData = { ...updates };
+        if (updateData.appointmentDate && !(updateData.appointmentDate instanceof Timestamp)) {
+            updateData.appointmentDate = Timestamp.fromDate(updateData.appointmentDate as Date);
+        }
+
+        await updateDoc(bookingRef, {
+            ...updateData,
+            updatedAt: Timestamp.now(),
+        });
+
+        return {
+            success: true,
+            message: 'Записването е актуализирано успешно.',
+        };
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        return {
+            success: false,
+            error: 'Възникна грешка при актуализиране на записването.',
+        };
+    }
+};
+
+/**
  * Delete a booking permanently
  */
 export const deleteBooking = async (bookingId: string): Promise<ApiResponse<void>> => {

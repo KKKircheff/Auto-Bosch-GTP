@@ -163,18 +163,20 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                                         helperText={errors.password?.message}
                                         disabled={loading}
                                         autoComplete="current-password"
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        onClick={handleTogglePasswordVisibility}
-                                                        disabled={loading}
-                                                        edge="end"
-                                                    >
-                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={handleTogglePasswordVisibility}
+                                                            disabled={loading}
+                                                            edge="end"
+                                                        >
+                                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
                                         }}
                                     />
                                 )}

@@ -6,7 +6,8 @@
       "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" remote -v)",
       "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" status)",
       "Bash(tree:*)",
-      "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" ls-files:*)"
+      "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" ls-files:*)",
+      "mcp__context7__get-library-docs"
     ],
     "deny": [],
     "ask": []
