@@ -99,3 +99,7 @@ Test admin credentials: `test@test.bg` / `test123456`
 - `/booking` - Multi-step booking flow
 - `/admin/login` - Admin authentication
 - `/admin/dashboard` - Protected admin area
+## Repository Structure
+
+This repository was restructured (December 2025) with Git root at application level.
+Design assets and parent folder structure removed from version control.
