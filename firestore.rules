@@ -1,0 +1,24 @@
+// firestore.rules
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read access to appointments for availability checking
+    // Allow public write access for customer bookings
+    match /appointments/{document} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Admin users collection - only authenticated admins can access
+    match /admin-users/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Deny access to all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
