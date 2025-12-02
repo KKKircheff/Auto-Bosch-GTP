@@ -7,9 +7,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme/theme';
 import { AuthProvider } from './contexts/AuthContext';
 import { BookingProvider } from './contexts/BookingContext';
-import Header from './components/common/Header';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import Footer from './components/common/Footer';
+import PublicLayout from './components/common/layout/PublicLayout';
 import HomePage from './pages/home/HomePage';
 import BookingPage from './pages/booking/BookingPage';
 import AdminLoginPage from './pages/admin-login/AdminLoginPage';
@@ -17,7 +16,7 @@ import AdminDashboardPage from './pages/admin-dashboard/AdminDashboardPage';
 import { SettingsPage } from './features/admin-panel/pages/SettingsPage';
 import { MessagesPage } from './features/admin-panel/pages/MessagesPage';
 import { AppointmentsPage } from './features/admin-panel/pages/AppointmentsPage';
-import { Box, Container, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 function App() {
@@ -27,64 +26,57 @@ function App() {
             <AuthProvider>
                 <BookingProvider>
                     <Router>
-                        <Box className="App" sx={{ minHeight: '100vh', bgcolor: grey[100], px: 0 }}>
-                            <Container maxWidth="xl" sx={{ px: '0px !important' }}>
-                                <Header />
-                            </Container>
-                            <Stack
-                                width='100%'
-                                mx='auto'
-                                sx={{
-                                    bgcolor: 'white',
-                                    minHeight: '80vh',
-                                    px: '0px !important',
-                                    maxWidth: { xs: '100%', xl: '1920px' },
-                                }}
-                            >
-                                <main style={{ flex: 1 }}>
-                                    <Routes>
-                                        <Route path="/" element={<HomePage />} />
-                                        <Route path="/booking" element={<BookingPage />} />
-                                        <Route path="/admin/login" element={<AdminLoginPage />} />
-                                        <Route
-                                            path="/admin/dashboard"
-                                            element={
-                                                <ProtectedRoute>
-                                                    <AdminDashboardPage />
-                                                </ProtectedRoute>
-                                            }
-                                        />
-                                        <Route
-                                            path="/admin/settings"
-                                            element={
-                                                <ProtectedRoute>
-                                                    <SettingsPage />
-                                                </ProtectedRoute>
-                                            }
-                                        />
-                                        <Route
-                                            path="/admin/messages"
-                                            element={
-                                                <ProtectedRoute>
-                                                    <MessagesPage />
-                                                </ProtectedRoute>
-                                            }
-                                        />
-                                        <Route
-                                            path="/admin/appointments"
-                                            element={
-                                                <ProtectedRoute>
-                                                    <AppointmentsPage />
-                                                </ProtectedRoute>
-                                            }
-                                        />
-                                    </Routes>
-                                </main>
-                            </Stack>
-                            <Container maxWidth="xl" sx={{ px: '0px !important' }}>
-                                <Footer />
-                            </Container>
-                        </Box>
+                        <Routes>
+                            {/* Public routes with Navbar + Footer layout */}
+                            <Route element={<PublicLayout />}>
+                                <Route path="/" element={<HomePage />} />
+                                <Route path="/booking" element={<BookingPage />} />
+                            </Route>
+
+                            {/* Admin login - standalone (no layout) */}
+                            <Route
+                                path="/admin/login"
+                                element={
+                                    <Box sx={{ minHeight: '100vh', bgcolor: grey[100] }}>
+                                        <AdminLoginPage />
+                                    </Box>
+                                }
+                            />
+
+                            {/* Protected admin routes - AdminLayout only */}
+                            <Route
+                                path="/admin/dashboard"
+                                element={
+                                    <ProtectedRoute>
+                                        <AdminDashboardPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/admin/settings"
+                                element={
+                                    <ProtectedRoute>
+                                        <SettingsPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/admin/messages"
+                                element={
+                                    <ProtectedRoute>
+                                        <MessagesPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/admin/appointments"
+                                element={
+                                    <ProtectedRoute>
+                                        <AppointmentsPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Routes>
                     </Router>
                 </BookingProvider>
             </AuthProvider>

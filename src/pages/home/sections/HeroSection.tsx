@@ -1,10 +1,15 @@
-import { Card, CardContent, Stack, Typography } from '@mui/material';
+import { Card, CardContent, Stack, Typography, Skeleton, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { BlackButton, RedButton } from '../../../components/common/buttons';
 import { shadow2 } from '../../../utils/constants';
+import TitleLight from '../../../components/common/typography/TitleLight.component';
+import MainTitle from '../../../components/common/typography/MainTitle.component';
+import { useBusinessSettings } from '../../../hooks/useBusinessSettings';
+import type { WeekDay } from '../../../features/admin-panel/types/settings.types';
 
 export const HeroSection = () => {
     const navigate = useNavigate();
+    const { settings, loading } = useBusinessSettings();
 
     const handleScrollToContact = () => {
         const contactSection = document.getElementById('contact-section');
@@ -16,62 +21,85 @@ export const HeroSection = () => {
         }
     };
 
+    // Map weekday to Bulgarian
+    const weekDayToBulgarian: Record<WeekDay, string> = {
+        monday: 'Понеделник',
+        tuesday: 'Вторник',
+        wednesday: 'Сряда',
+        thursday: 'Четвъртък',
+        friday: 'Петък',
+        saturday: 'Събота',
+        sunday: 'Неделя',
+    };
+
     return (
         <Stack
             px={{ xs: 1, sm: 2, md: 4 }}
             sx={{
                 position: 'relative',
                 width: '100%',
-                minHeight: { xs: '91dvh', md: '75vw', xl: '1300px' },
-                backgroundImage: 'url(/images/hero.webp)',
+                minHeight: { xs: '91dvh', md: '75vw', xl: '1200px' },
+                backgroundImage: 'url(/images/hero-2.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 alignItems: { xs: 'center', md: 'flex-start' },
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                justifyContent: { xs: 'center', md: 'flex-start' },
                 py: 2,
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    zIndex: 0,
+                },
             }}
         >
             <Stack
-                spacing={{ xs: 2, md: 8 }}
+                spacing={{ xs: 2, md: 4 }}
                 sx={{
-                    backgroundColor: { xs: 'rgba(255, 255, 255, 0.2)', md: 'transparent' },
-                    backdropFilter: { xs: 'blur(8px)', md: 'none' },
                     position: 'relative',
                     zIndex: 1,
                     textAlign: { xs: 'center', md: 'left' },
                     borderRadius: 2,
                     maxWidth: { xs: '100%', md: '1200px' },
-                    py: 2
+                    pb: 6
                 }}
             >
-                <Typography
-                    variant="h1"
-                    sx={{
-                        fontWeight: 800,
-                        color: 'info.main',
-                        mb: 1,
-                        fontSize: 'clamp(1rem, 11vw, 10rem)',
-                        lineHeight: 'clamp(1rem, 13vw, 10rem)',
-                    }}
-                >
-                    Ауто Бош Сервиз Бургас
-                </Typography>
+                <Stack spacing={0}>
+                    <MainTitle
+                        sx={{
+                            color: 'primary.contrastText'
+                        }}
+                    >
+                        Ауто Бош Сервиз
+                    </MainTitle>
+                    <TitleLight
+                        sx={{
+                            color: 'info.light'
+                        }}
+                    >
+                        Бургас
+                    </TitleLight>
+                </Stack>
 
                 <Typography
-                    variant="h5"
+                    variant="h4"
                     sx={{
+                        pl: 1,
                         alignSelf: { xs: 'center', md: 'flex-start' },
-                        color: 'info.main',
+                        color: 'info.contrastText',
                         fontWeight: 500,
-                        maxWidth: { xs: '300px', md: '400px' },
+                        maxWidth: { xs: '600px', md: '400px' },
                     }}
                 >
                     Годишни технически прегелди
                 </Typography>
             </Stack>
 
-            {/* Card at bottom center with buttons */}
             <Card
                 sx={{
                     position: 'relative',
@@ -80,7 +108,7 @@ export const HeroSection = () => {
                     width: '100%',
                     alignSelf: { xs: 'center', md: 'flex-end' },
                     justifySelf: 'center',
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
                     backdropFilter: 'blur(10px)',
                     boxShadow: shadow2,
                     borderRadius: 3,
@@ -119,6 +147,39 @@ export const HeroSection = () => {
                             Виж на картата
                         </BlackButton>
                     </Stack>
+
+                    <Box sx={{ mt: 3 }} textAlign={'right'}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                color: 'background.default',
+                                fontWeight: 600,
+                                mb: 1,
+                            }}
+                        >
+                            Работно време:
+                        </Typography>
+                        {loading ? (
+                            <>
+                                <Skeleton variant="text" width="80%" sx={{ mx: 'auto', bgcolor: 'rgba(0, 0, 0, 0.1)' }} />
+                                <Skeleton variant="text" width="80%" sx={{ mx: 'auto', bgcolor: 'rgba(0, 0, 0, 0.1)' }} />
+                                <Skeleton variant="text" width="80%" sx={{ mx: 'auto', bgcolor: 'rgba(0, 0, 0, 0.1)' }} />
+                            </>
+                        ) : (
+                            settings?.workingDays.map((day) => (
+                                <Typography
+                                    key={day}
+                                    variant="subtitle1"
+                                    sx={{
+                                        color: 'background.default',
+                                        fontWeight: 400,
+                                    }}
+                                >
+                                    {weekDayToBulgarian[day]}: {settings.workingHours.start} - {settings.workingHours.end}
+                                </Typography>
+                            ))
+                        )}
+                    </Box>
                 </CardContent>
             </Card>
         </Stack>

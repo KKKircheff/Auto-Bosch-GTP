@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { AnnouncementBanner } from '../../components/common/AnnouncementBanner';
 import { HeroSection, ServicesPricingSection, ContactSection } from './sections';
 
@@ -7,10 +7,10 @@ const HomePage = () => {
         <Box px={0}>
             <AnnouncementBanner position="above-hero" />
             <HeroSection />
-            <Container maxWidth='xl'>
+            <Stack px={{ xs: 1, md: 4 }} py={12}>
                 <ServicesPricingSection />
                 <ContactSection />
-            </Container>
+            </Stack>
         </Box>
     );
 };

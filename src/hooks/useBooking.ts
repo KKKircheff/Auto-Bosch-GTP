@@ -7,6 +7,7 @@ import {
     validateBookingSlot,
 } from '../services/appointments';
 import type {BookingFormData, TimeSlot} from '../types/booking';
+import {useBusinessSettings} from './useBusinessSettings';
 
 // Hook for creating bookings with enhanced validation
 export const useCreateBooking = () => {
@@ -76,11 +77,14 @@ export const useTimeSlots = (selectedDate: Date | null) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string>('');
 
+    // Fetch business settings to pass to time slot generation
+    const { settings } = useBusinessSettings();
+
     // Use ref to track the current date to avoid stale closures
     const currentDateRef = useRef<Date | null>(selectedDate);
     currentDateRef.current = selectedDate;
 
-    const fetchTimeSlots = useCallback(async (date: Date) => {
+    const fetchTimeSlots = useCallback(async (date: Date, businessSettings: typeof settings) => {
         // Check if this is still the current date (avoid race conditions)
         if (currentDateRef.current?.getTime() !== date.getTime()) {
             return;
@@ -91,7 +95,12 @@ export const useTimeSlots = (selectedDate: Date | null) => {
 
         try {
             console.log('Fetching time slots for:', date.toISOString());
-            const result = await getAvailableTimeSlots(date);
+            const result = await getAvailableTimeSlots(
+                date,
+                businessSettings?.workingHours,
+                businessSettings?.workingDays,
+                businessSettings?.bookingWindowWeeks
+            );
 
             // Double-check we're still on the same date
             if (currentDateRef.current?.getTime() === date.getTime()) {
@@ -116,23 +125,23 @@ export const useTimeSlots = (selectedDate: Date | null) => {
         }
     }, []); // Empty dependency array since we use refs
 
-    // Fetch time slots when date changes
+    // Fetch time slots when date or settings change
     useEffect(() => {
         if (selectedDate) {
-            fetchTimeSlots(selectedDate);
+            fetchTimeSlots(selectedDate, settings);
         } else {
             setTimeSlots([]);
             setError('');
             setIsLoading(false);
         }
-    }, [selectedDate, fetchTimeSlots]);
+    }, [selectedDate, settings, fetchTimeSlots]);
 
     const refetch = useCallback(() => {
         if (currentDateRef.current) {
             console.log('Manually refetching time slots...');
-            fetchTimeSlots(currentDateRef.current);
+            fetchTimeSlots(currentDateRef.current, settings);
         }
-    }, [fetchTimeSlots]);
+    }, [fetchTimeSlots, settings]);
 
     return {
         timeSlots,
@@ -299,6 +308,7 @@ export const useTimeSlotAvailability = () => {
 // Hook for booking validation with enhanced checks
 export const useBookingValidation = () => {
     const {validateTimeSlot} = useTimeSlotValidation();
+    const { settings } = useBusinessSettings();
 
     const validateBooking = useCallback(
         async (
@@ -315,10 +325,10 @@ export const useBookingValidation = () => {
                 errors.push('Датата на прегледа трябва да бъде в бъдещето.');
             }
 
-            // Check if date is a working day (Monday-Friday)
-            const dayOfWeek = data.appointmentDate.getDay();
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                errors.push('Прегледите се извършват само в работни дни (понеделник - петък).');
+            // Check if date is a working day using business settings
+            const {isWorkingDay} = await import('../utils/dateHelpers');
+            if (!isWorkingDay(data.appointmentDate, settings?.workingDays)) {
+                errors.push('Избраната дата не е работен ден.');
             }
 
             // Validate phone number format
@@ -354,7 +364,7 @@ export const useBookingValidation = () => {
                 errors,
             };
         },
-        [validateTimeSlot]
+        [validateTimeSlot, settings]
     );
 
     return {

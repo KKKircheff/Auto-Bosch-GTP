@@ -4,6 +4,7 @@ import CalendarPicker from './CalendarPicker';
 import { getNextAvailableDate } from '../../utils/dateHelpers';
 import { useBookingContext } from '../../contexts/BookingContext';
 import TimeSlotPicker from './TimeSlotPicker';
+import SectionTitle from '../common/typography/SectionTitle.component';
 
 interface BookingCalendarProps {
     onDateTimeSelect?: (date: Date, time: string) => void;
@@ -61,9 +62,9 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
     return (
         <Container maxWidth="lg" sx={{ py: 2 }}>
             <Box mb={4} textAlign="center">
-                <Typography variant="h4" component="h2" gutterBottom>
+                <SectionTitle pb={3}>
                     Изберете дата
-                </Typography>
+                </SectionTitle>
                 <Typography variant="body1" color="text.secondary">
                     Изберете дата и час за вашия технически преглед
                 </Typography>
@@ -74,14 +75,12 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
                 alignItems="start"
                 width={'100%'}
             >
-                {/* Calendar */}
                 <CalendarPicker
                     selectedDate={selectedDate || undefined}
                     onDateSelect={handleDateSelect}
                     appointmentCounts={appointmentCounts}
                 />
 
-                {/* Time slots */}
                 <Box ref={timeSlotRef} minWidth={'100%'}>
                     <TimeSlotPicker
                         selectedDate={selectedDate}
@@ -94,29 +93,6 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
                     />
                 </Box>
             </Stack>
-
-            {/* Selection summary */}
-            {/* {selectedDate && selectedTime && (
-                <Box
-                    mt={4}
-                    p={3}
-                    bgcolor="success.light"
-                    borderRadius={2}
-                    textAlign="center"
-                >
-                    <Typography variant="h6" color="success.dark" gutterBottom>
-                        ✓ Избрана дата и час
-                    </Typography>
-                    <Typography variant="body1" color="success.dark">
-                        {selectedDate.toLocaleDateString('bg-BG', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })} в {selectedTime}
-                    </Typography>
-                </Box>
-            )} */}
         </Container>
     );
 };

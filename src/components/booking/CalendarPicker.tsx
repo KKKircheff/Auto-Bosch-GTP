@@ -23,6 +23,7 @@ import {
 } from '../../utils/dateHelpers';
 import { type CalendarDay, type CalendarWeek } from '../../types/booking'
 import { shadow1 } from '../../utils/constants';
+import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 
 interface CalendarPickerProps {
     selectedDate?: Date;
@@ -39,9 +40,10 @@ const CalendarPicker = ({
 }: CalendarPickerProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { settings } = useBusinessSettings();
 
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const availableMonths = getAvailableMonths();
+    const availableMonths = getAvailableMonths(settings?.bookingWindowWeeks);
 
     // Touch handling for mobile swipe navigation
     const touchStartX = useRef<number>(0);
@@ -75,15 +77,15 @@ const CalendarPicker = ({
 
     // Generate calendar data
     const currentMonthData = useMemo(() => {
-        const days = generateCalendarDays(currentMonth, selectedDate, appointmentCounts);
+        const days = generateCalendarDays(currentMonth, selectedDate, appointmentCounts, settings?.workingDays);
         return generateCalendarWeeks(days);
-    }, [currentMonth, selectedDate, appointmentCounts]);
+    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays]);
 
     const nextMonthData = useMemo(() => {
         const nextMonth = addMonths(currentMonth, 1);
-        const days = generateCalendarDays(nextMonth, selectedDate, appointmentCounts);
+        const days = generateCalendarDays(nextMonth, selectedDate, appointmentCounts, settings?.workingDays);
         return generateCalendarWeeks(days);
-    }, [currentMonth, selectedDate, appointmentCounts]);
+    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays]);
 
     // Navigation handlers
     const handlePreviousMonth = () => {
@@ -98,7 +100,7 @@ const CalendarPicker = ({
         const nextMonth = addMonths(currentMonth, 1);
         // Allow navigation as long as the next month has some relevance to booking
         // (even if not all days are bookable)
-        const maxDate = getMaxBookingDate();
+        const maxDate = getMaxBookingDate(settings?.bookingWindowWeeks);
         const nextMonthStart = startOfMonth(nextMonth);
 
         if (!isAfter(nextMonthStart, addMonths(maxDate, 1))) {
@@ -109,17 +111,17 @@ const CalendarPicker = ({
     const canGoPrevious = startOfMonth(currentMonth) > startOfMonth(availableMonths.current);
     // Always show second month on desktop unless we're showing the very last possible month
     const nextMonth = addMonths(currentMonth, 1);
-    const canGoNext = isMonthWithinBookingWindow(nextMonth);
+    const canGoNext = isMonthWithinBookingWindow(nextMonth, settings?.bookingWindowWeeks);
 
     // Day click handler
     const handleDayClick = (day: CalendarDay) => {
-        if (isBookableDate(day.date) && day.isCurrentMonth) {
+        if (isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks) && day.isCurrentMonth) {
             onDateSelect(day.date);
         }
     };
 
     const DayCell = ({ day }: { day: CalendarDay }) => {
-        const isClickable = isBookableDate(day.date) && day.isCurrentMonth;
+        const isClickable = isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks) && day.isCurrentMonth;
         const isSelected = day.isSelected;
         const isToday = day.isToday;
 
@@ -241,32 +243,28 @@ const CalendarPicker = ({
                 mb={3}
                 px={1}
             >
-                {isMobile && (
-                    <IconButton
-                        onClick={handlePreviousMonth}
-                        disabled={!canGoPrevious}
-                        size="large"
-                    >
-                        <ChevronLeft />
-                    </IconButton>
-                )}
+                <IconButton
+                    onClick={handlePreviousMonth}
+                    disabled={!canGoPrevious}
+                    size={isMobile ? "large" : "medium"}
+                >
+                    <ChevronLeft />
+                </IconButton>
 
                 <Typography variant="h5" component="h2" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
                     {isMobile
                         ? formatDateBulgarian(currentMonth, 'MMMM yyyy')
-                        : 'Изберете дата'
+                        : formatDateBulgarian(currentMonth, 'MMMM yyyy')
                     }
                 </Typography>
 
-                {isMobile && (
-                    <IconButton
-                        onClick={handleNextMonth}
-                        disabled={!canGoNext}
-                        size="large"
-                    >
-                        <ChevronRight />
-                    </IconButton>
-                )}
+                <IconButton
+                    onClick={handleNextMonth}
+                    disabled={!canGoNext}
+                    size={isMobile ? "large" : "medium"}
+                >
+                    <ChevronRight />
+                </IconButton>
             </Box>
 
             {/* Booking window info */}

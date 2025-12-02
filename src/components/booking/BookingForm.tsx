@@ -19,6 +19,7 @@ import { useBookingContext } from '../../contexts/BookingContext';
 import { shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { BlackButton } from '../common/buttons';
+import SectionTitle from '../common/typography/SectionTitle.component';
 
 interface BookingFormProps {
     onSubmit?: (data: BookingFormSchema) => void;
@@ -206,7 +207,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                 );
             case 1:
                 return (
-                    <Container maxWidth="lg">
+                    <Container maxWidth="xl">
                         <VehicleForm
                             onFormChange={handleVehicleFormChange}
                             onValidationChange={handleValidationChange}
@@ -238,15 +239,9 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
 
     return (
         <Box sx={{ width: '100%', py: 4 }} ref={formRef}>
-            {/* Header */}
-            <Container maxWidth="lg" sx={{ mb: 4 }}>
-                <Typography variant="h3" component="h1" textAlign="center" gutterBottom>
-                    Запазете час за технически преглед
-                </Typography>
-                <Typography variant="h6" color="text.secondary" textAlign="center">
-                    Изберете дата и час, който ви устройва
-                </Typography>
-            </Container>
+            <SectionTitle>
+                Запазване час за технически преглед
+            </SectionTitle>
 
             {/* Progress Stepper */}
             <Container maxWidth="lg" sx={{ mb: 4 }}>

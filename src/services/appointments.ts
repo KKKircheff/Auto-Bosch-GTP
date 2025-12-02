@@ -193,10 +193,15 @@ export const createBooking = async (formData: BookingFormData): Promise<ApiRespo
 /**
  * Get available time slots with booking details for unavailable slots
  */
-export const getAvailableTimeSlots = async (date: Date): Promise<ApiResponse<TimeSlot[]>> => {
+export const getAvailableTimeSlots = async (
+    date: Date,
+    workingHours?: { start: string; end: string },
+    workingDays?: string[],
+    bookingWindowWeeks?: number
+): Promise<ApiResponse<TimeSlot[]>> => {
     try {
         const {generateTimeSlots} = await import('../utils/dateHelpers');
-        const allSlots = generateTimeSlots(date);
+        const allSlots = generateTimeSlots(date, [], workingHours, workingDays as any, bookingWindowWeeks);
 
         const startOfDay = new Date(date);
         startOfDay.setHours(0, 0, 0, 0);
