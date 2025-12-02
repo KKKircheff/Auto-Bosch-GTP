@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Box } from '@mui/material';
-import LoginForm from '../components/admin/LoginForm';
-import { useAuth } from '../hooks/useAuth';
+import LoginForm from '../../components/admin/LoginForm';
+import { useAuth } from '../../hooks/useAuth';
 
 const AdminLoginPage = () => {
     const navigate = useNavigate();

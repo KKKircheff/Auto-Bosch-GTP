@@ -20,23 +20,23 @@ import {
     differenceInMinutes,
     parse,
 } from 'date-fns';
-import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, MAX_BOOKING_WEEKS, TEXTS} from './constants';
+import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, MAX_BOOKING_WEEKS} from './constants';
 import type {CalendarDay, CalendarWeek, DaySchedule, TimeSlot} from '../types/booking';
 
 // Bulgarian month names
 export const BULGARIAN_MONTHS = [
-    TEXTS.months.january,
-    TEXTS.months.february,
-    TEXTS.months.march,
-    TEXTS.months.april,
-    TEXTS.months.may,
-    TEXTS.months.june,
-    TEXTS.months.july,
-    TEXTS.months.august,
-    TEXTS.months.september,
-    TEXTS.months.october,
-    TEXTS.months.november,
-    TEXTS.months.december,
+    'Януари',
+    'Февруари',
+    'Март',
+    'Април',
+    'Май',
+    'Юни',
+    'Юли',
+    'Август',
+    'Септември',
+    'Октомври',
+    'Ноември',
+    'Декември',
 ];
 
 // Bulgarian day names (short) - Week starts with Monday
@@ -44,13 +44,13 @@ export const BULGARIAN_DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'С
 
 // Bulgarian day names (full)
 export const BULGARIAN_DAYS_FULL = [
-    TEXTS.days.sunday,
-    TEXTS.days.monday,
-    TEXTS.days.tuesday,
-    TEXTS.days.wednesday,
-    TEXTS.days.thursday,
-    TEXTS.days.friday,
-    TEXTS.days.saturday,
+    'Неделя',
+    'Понеделник',
+    'Вторник',
+    'Сряда',
+    'Четвъртък',
+    'Петък',
+    'Събота',
 ];
 
 /**

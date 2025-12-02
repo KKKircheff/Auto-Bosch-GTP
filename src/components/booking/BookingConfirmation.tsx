@@ -24,7 +24,7 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { TEXTS, VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
+import { VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
 
@@ -62,7 +62,7 @@ const BookingConfirmation = ({
                 <Box textAlign="center">
                     {/* <CheckCircle sx={{ fontSize: 64, color: 'success.main', mb: 2 }} /> */}
                     <Typography variant="h4" gutterBottom>
-                        {TEXTS.bookingDetails}
+                        Прегледай и потвърди
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
                         Моля прегледайте данните преди потвърждение
@@ -376,7 +376,7 @@ const BookingConfirmation = ({
                             fontWeight: 600,
                         }}
                     >
-                        {loading ? 'Записването се обработва...' : TEXTS.confirmBooking}
+                        {loading ? 'Записването се обработва...' : 'Потвърди записването'}
                     </Button>
 
                     <Typography variant="body2" color="text.secondary" mt={2}>

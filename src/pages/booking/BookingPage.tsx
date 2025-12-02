@@ -1,9 +1,9 @@
-// src/pages/BookingPage.tsx
+// src/pages/booking/BookingPage.tsx
 import { useEffect } from 'react';
 import { Alert, Snackbar } from '@mui/material';
-import BookingForm from '../components/booking/BookingForm';
-import { useBookingContext } from '../contexts/BookingContext';
-import type { BookingFormSchema } from '../types/booking';
+import BookingForm from '../../components/booking/BookingForm';
+import { useBookingContext } from '../../contexts/BookingContext';
+import type { BookingFormSchema } from '../../types/booking';
 
 const BookingPage = () => {
     const {

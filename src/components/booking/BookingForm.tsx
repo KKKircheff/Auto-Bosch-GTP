@@ -16,8 +16,9 @@ import BookingCalendar from './BookingCalendar';
 import VehicleForm from './VehicleForm';
 import BookingConfirmation from './BookingConfirmation';
 import { useBookingContext } from '../../contexts/BookingContext';
-import { shadow1, TEXTS } from '../../utils/constants';
+import { shadow1 } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
+import { BlackButton } from '../common/buttons';
 
 interface BookingFormProps {
     onSubmit?: (data: BookingFormSchema) => void;
@@ -240,10 +241,10 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
             {/* Header */}
             <Container maxWidth="lg" sx={{ mb: 4 }}>
                 <Typography variant="h3" component="h1" textAlign="center" gutterBottom>
-                    {TEXTS.bookingTitle}
+                    Запазете час за технически преглед
                 </Typography>
                 <Typography variant="h6" color="text.secondary" textAlign="center">
-                    {TEXTS.bookingSubtitle}
+                    Изберете дата и час, който ви устройва
                 </Typography>
             </Container>
 
@@ -295,25 +296,27 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             </Box>
 
                             {activeStep === steps.length - 1 ? (
-                                <Button
+                                <BlackButton
                                     variant="contained"
                                     onClick={handleSubmit}
                                     disabled={canProceed || loading || !isCompleteFormData(formData)}
                                     startIcon={<Check />}
                                     size="large"
+                                    sx={{ px: 4 }}
                                 >
                                     {loading ? 'Запазване...' : 'Потвърди'}
-                                </Button>
+                                </BlackButton>
                             ) : (
-                                <Button
+                                <BlackButton
                                     variant="contained"
                                     onClick={handleNext}
                                     disabled={!canProceed || loading}
                                     endIcon={<ArrowForward />}
                                     size="large"
+                                    sx={{ px: 4 }}
                                 >
                                     Напред
-                                </Button>
+                                </BlackButton>
                             )}
                         </Stack>
 

@@ -1,8 +1,7 @@
-export const shadow1 = 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px';
-export const shadow2 =
-    'rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px';
-
-export const shadow3 = 'rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px';
+// Havenly-style soft shadows
+export const shadow1 = '0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)';
+export const shadow2 = '0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03)';
+export const shadow3 = '0 2px 4px rgba(0, 0, 0, 0.08)';
 
 export const BUSINESS_HOURS = {
     START: '08:30',
@@ -51,99 +50,6 @@ export const VEHICLE_TYPES = {
 } as const;
 
 export type VehicleType = keyof typeof VEHICLE_TYPES;
-
-export const TEXTS = {
-    // Header
-    siteName: 'Ауто Бош Сервиз Бургас',
-    siteTagline: 'ГОДИШНИ ТЕХНИЧЕСКИ ПРЕГЛЕДИ',
-
-    // Navigation
-    services: 'Услуги',
-    pricing: 'Цени',
-    contact: 'Контакти',
-    bookAppointment: 'Запази час',
-
-    // Booking form
-    bookingTitle: 'Запазете час за технически преглед',
-    bookingSubtitle: 'Изберете дата и час, който ви устройва',
-
-    // Form fields
-    registrationPlate: 'Регистрационен номер',
-    registrationPlateRequired: 'Регистрационният номер е задължителен',
-    phoneNumber: 'Телефонен номер',
-    phoneNumberRequired: 'Телефонният номер е задължителен',
-    email: 'Имейл адрес',
-    emailOptional: 'Имейл адрес (по желание)',
-    customerName: 'Име и фамилия',
-    customerNameRequired: 'Името е задължително',
-    vehicleType: 'Тип превозно средство',
-    vehicleTypeRequired: 'Моля изберете тип превозно средство',
-    vehicleBrand: 'Марка',
-    vehicleBrandOptional: 'Марка (по желание)',
-    is4x4: '4x4',
-
-    // Calendar
-    availableTimes: 'Свободни часове',
-    selectDate: 'Изберете дата',
-    selectTime: 'Изберете час',
-
-    // Booking confirmation
-    confirmBooking: 'Потвърди записването',
-    bookingConfirmed: 'Записването е потвърдено!',
-    bookingDetails: 'Прегледай и потвърди',
-    totalPrice: 'Обща цена',
-    onlineDiscount: 'Отстъпка при онлайн записване',
-    finalPrice: 'Крайна цена',
-
-    // Admin
-    adminLogin: 'Вход',
-    adminDashboard: 'Администраторски панел',
-    appointments: 'Записвания',
-    login: 'Вход',
-    logout: 'Изход',
-    cancel: 'Отказ',
-
-    // Status
-    confirmed: 'Потвърден',
-    cancelled: 'Отказан',
-
-    // Messages
-    bookingSuccess: 'Записването е успешно! Ще получите потвърждение на имейл.',
-    bookingError: 'Възникна грешка при записването. Моля опитайте отново.',
-    loginError: 'Грешка при влизане. Проверете данните си.',
-
-    // Validation
-    invalidPhone: 'Невалиден телефонен номер',
-    invalidEmail: 'Невалиден имейл адрес',
-    invalidRegistrationPlate: 'Невалиден регистрационен номер',
-
-    // Days of week
-    days: {
-        monday: 'Понеделник',
-        tuesday: 'Вторник',
-        wednesday: 'Сряда',
-        thursday: 'Четвъртък',
-        friday: 'Петък',
-        saturday: 'Събота',
-        sunday: 'Неделя',
-    },
-
-    // Months
-    months: {
-        january: 'Януари',
-        february: 'Февруари',
-        march: 'Март',
-        april: 'Април',
-        may: 'Май',
-        june: 'Юни',
-        july: 'Юли',
-        august: 'Август',
-        september: 'Септември',
-        october: 'Октомври',
-        november: 'Ноември',
-        december: 'Декември',
-    },
-} as const;
 
 export const VEHICLE_BRANDS = [
     'AC',

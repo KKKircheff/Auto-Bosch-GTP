@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh, Delete } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
-import { shadow1, TEXTS, VEHICLE_TYPES } from '../../utils/constants';
+import { shadow1, VEHICLE_TYPES } from '../../utils/constants';
 import { deleteBooking } from '../../services/appointments';
 import { useAuth } from '../../hooks/useAuth';
 import { useSnackbar } from '../../hooks/useSnackbar';
@@ -246,29 +246,32 @@ const TimeSlotPicker = ({
         // Available slot - regular button
         return (
             <Button
-                variant={'contained'}
+                variant={isSelected ? 'contained' : 'outlined'}
                 onClick={() => isAvailable && onTimeSelect(slot.time)}
                 disabled={!isAvailable}
                 fullWidth
                 sx={{
-                    minHeight: 48,
-                    fontSize: '0.9rem',
-                    fontWeight: isSelected ? 600 : 400,
-                    borderColor: isAvailable ? 'primary.main' : 'text.disabled',
+                    minHeight: 56,
+                    fontSize: '1rem',
+                    fontWeight: isSelected ? 600 : 500,
+                    borderRadius: 3,
+                    borderWidth: 2,
+                    borderColor: isAvailable ? 'info.dark' : 'text.disabled',
                     color: isSelected
                         ? 'white'
                         : isAvailable
-                            ? 'primary.main'
+                            ? 'info.dark'
                             : 'text.disabled',
                     bgcolor: isSelected
-                        ? 'primary.main'
-                        : alpha(theme.palette.primary.light, 0.3),
+                        ? 'info.dark'
+                        : 'transparent',
                     '&:hover': {
                         bgcolor: isSelected
-                            ? 'primary.dark'
+                            ? '#1a1a1f'
                             : isAvailable
-                                ? 'primary.light'
+                                ? alpha(theme.palette.info.dark, 0.04)
                                 : 'transparent',
+                        borderColor: isAvailable ? 'info.dark' : 'text.disabled',
                     },
                     '&:disabled': {
                         borderColor: 'text.disabled',
@@ -333,7 +336,7 @@ const TimeSlotPicker = ({
                 <Box mb={3}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                         <Typography variant="h6">
-                            {TEXTS.availableTimes}
+                            Свободни часове
                         </Typography>
                         {onRefresh && (
                             <Button

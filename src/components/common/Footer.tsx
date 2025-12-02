@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Divider } from '@mui/material';
-import { TEXTS, CONTACT_INFO } from '../../utils/constants';
+import { CONTACT_INFO } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
@@ -26,17 +26,17 @@ const Footer = () => {
                     {/* Company Info */}
                     <Box textAlign={{ xs: 'center', md: 'left' }}>
                         <Typography variant="h6" gutterBottom>
-                            {TEXTS.siteName}
+                            Ауто Бош Сервиз Бургас
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {TEXTS.siteTagline}
+                            ГОДИШНИ ТЕХНИЧЕСКИ ПРЕГЛЕДИ
                         </Typography>
                     </Box>
 
                     {/* Contact Info */}
                     <Box textAlign={{ xs: 'center', md: 'right' }}>
                         <Typography variant="subtitle2" gutterBottom>
-                            {TEXTS.contact}
+                            Контакти
                         </Typography>
                         <Typography
                             variant="body2"
@@ -64,7 +64,7 @@ const Footer = () => {
                 <Divider sx={{ my: 2 }} />
 
                 <Typography variant="body2" color="text.secondary" textAlign="center" onClick={() => navigate('/admin/login')} sx={{ cursor: 'default' }}>
-                    © {new Date().getFullYear()} {TEXTS.siteName}. Всички права запазени.
+                    © {new Date().getFullYear()} Ауто Бош Сервиз Бургас. Всички права запазени.
                 </Typography>
             </Container>
         </Box>

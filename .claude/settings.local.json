@@ -7,7 +7,10 @@
       "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" status)",
       "Bash(tree:*)",
       "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/\" ls-files:*)",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "Bash(git -C \"C:/myProjects/Auto-Bosch-GTP/auto-bosch-gtp-app\" status)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

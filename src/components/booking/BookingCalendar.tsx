@@ -3,7 +3,6 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import CalendarPicker from './CalendarPicker';
 import { getNextAvailableDate } from '../../utils/dateHelpers';
 import { useBookingContext } from '../../contexts/BookingContext';
-import { TEXTS } from '../../utils/constants';
 import TimeSlotPicker from './TimeSlotPicker';
 
 interface BookingCalendarProps {
@@ -63,7 +62,7 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
         <Container maxWidth="lg" sx={{ py: 2 }}>
             <Box mb={4} textAlign="center">
                 <Typography variant="h4" component="h2" gutterBottom>
-                    {TEXTS.selectDate}
+                    Изберете дата
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     Изберете дата и час за вашия технически преглед

@@ -22,7 +22,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
-import { shadow1, TEXTS } from '../../utils/constants';
+import { shadow1 } from '../../utils/constants';
 import type { LoginCredentials } from '../../types/booking';
 
 // Validation schema
@@ -104,7 +104,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                             }}
                         />
                         <Typography variant="h4" component="h1" gutterBottom>
-                            {TEXTS.adminLogin}
+                            Вход
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             Въведете данните си за достъп до администраторския панел
@@ -197,7 +197,7 @@ const LoginForm = ({ onSuccess, className }: LoginFormProps) => {
                                 }
                                 sx={{ py: 1.5 }}
                             >
-                                {loading ? 'Влизане...' : TEXTS.login}
+                                {loading ? 'Влизане...' : 'Вход'}
                             </Button>
                         </Stack>
                     </Box>

@@ -24,7 +24,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-    TEXTS,
     VEHICLE_TYPES,
     getVehicleBrands,
     shouldShow4x4,
@@ -213,7 +212,7 @@ const VehicleForm = ({
     const availableBrands = selectedVehicleType ? getVehicleBrands(selectedVehicleType) : [];
 
     return (
-        <Paper sx={{ p: 3, boxShadow: shadow1 }} className={className}>
+        <Paper sx={{ p: 4, boxShadow: shadow1, borderRadius: 4 }} className={className}>
             <Typography variant="h6" gutterBottom>
                 Информация за превозното средство
             </Typography>
@@ -235,7 +234,7 @@ const VehicleForm = ({
                                         {...field}
                                         fullWidth
                                         color='info'
-                                        label={TEXTS.customerName}
+                                        label="Име и фамилия"
                                         required
                                         error={!!errors.customerName}
                                         helperText={errors.customerName?.message}
@@ -254,7 +253,7 @@ const VehicleForm = ({
                                         {...field}
                                         fullWidth
                                         color='info'
-                                        label={TEXTS.phoneNumber}
+                                        label="Телефонен номер"
                                         required
                                         error={!!errors.phone}
                                         helperText={errors.phone?.message}
@@ -273,7 +272,7 @@ const VehicleForm = ({
                                         {...field}
                                         color='info'
                                         fullWidth
-                                        label={TEXTS.emailOptional}
+                                        label="Имейл адрес (по желание)"
                                         type="email"
                                         error={!!errors.email}
                                         helperText={errors.email?.message}
@@ -292,7 +291,7 @@ const VehicleForm = ({
                                         {...field}
                                         color='info'
                                         fullWidth
-                                        label={TEXTS.registrationPlate}
+                                        label="Регистрационен номер"
                                         required
                                         error={!!errors.registrationPlate}
                                         helperText={errors.registrationPlate?.message}
@@ -319,11 +318,11 @@ const VehicleForm = ({
                             control={control}
                             render={({ field }) => (
                                 <FormControl fullWidth required error={!!errors.vehicleType}>
-                                    <InputLabel color='info'>{TEXTS.vehicleType}</InputLabel>
+                                    <InputLabel color='info'>Тип превозно средство</InputLabel>
                                     <Select
                                         {...field}
                                         color='info'
-                                        label={TEXTS.vehicleType}
+                                        label="Тип превозно средство"
                                         value={field.value || ''}
                                     >
                                         {Object.entries(VEHICLE_TYPES).map(([key, label]) => (
@@ -360,7 +359,7 @@ const VehicleForm = ({
                                             <TextField
                                                 color='info'
                                                 {...params}
-                                                label={TEXTS.vehicleBrandOptional}
+                                                label="Марка (по желание)"
                                                 placeholder="Изберете или въведете марка"
                                                 error={!!errors.vehicleBrand}
                                                 helperText={errors.vehicleBrand?.message}
@@ -389,7 +388,7 @@ const VehicleForm = ({
                                                 checked={field.value || false}
                                             />
                                         }
-                                        label={TEXTS.is4x4}
+                                        label="4x4"
                                     />
                                 )}
                             />
@@ -418,7 +417,16 @@ const VehicleForm = ({
 
                 {/* Price Information */}
                 {priceInfo && (
-                    <Alert severity='info' sx={{ mt: 2, bgcolor: alpha(theme.palette.warning.light, 0.3) }}>
+                    <Alert
+                        severity='success'
+                        sx={{
+                            mt: 2,
+                            bgcolor: alpha(theme.palette.success.light, 0.1),
+                            borderRadius: 3,
+                            border: '1px solid',
+                            borderColor: alpha(theme.palette.success.main, 0.2),
+                        }}
+                    >
                         <Stack spacing={1}>
                             <Typography variant="subtitle2">
                                 Информация за цената:
