@@ -17,7 +17,7 @@ import AdminDashboardPage from './pages/admin-dashboard/AdminDashboardPage';
 import { SettingsPage } from './features/admin-panel/pages/SettingsPage';
 import { MessagesPage } from './features/admin-panel/pages/MessagesPage';
 import { AppointmentsPage } from './features/admin-panel/pages/AppointmentsPage';
-import { Box, Container } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 function App() {
@@ -31,7 +31,16 @@ function App() {
                             <Container maxWidth="xl" sx={{ px: '0px !important' }}>
                                 <Header />
                             </Container>
-                            <Container maxWidth="xl" sx={{ bgcolor: 'white', minHeight: '80vh', px: 2 }}>
+                            <Stack
+                                width='100%'
+                                mx='auto'
+                                sx={{
+                                    bgcolor: 'white',
+                                    minHeight: '80vh',
+                                    px: '0px !important',
+                                    maxWidth: { xs: '100%', xl: '1920px' },
+                                }}
+                            >
                                 <main style={{ flex: 1 }}>
                                     <Routes>
                                         <Route path="/" element={<HomePage />} />
@@ -71,7 +80,7 @@ function App() {
                                         />
                                     </Routes>
                                 </main>
-                            </Container>
+                            </Stack>
                             <Container maxWidth="xl" sx={{ px: '0px !important' }}>
                                 <Footer />
                             </Container>

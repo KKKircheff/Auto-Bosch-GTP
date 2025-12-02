@@ -56,13 +56,14 @@ const RedButton = ({ children, variant = 'contained', ...otherProps }: Props) =>
     return (
         <Button
             variant={variant}
+            color='secondary'
+            {...otherProps}
             sx={{
                 borderRadius: '500px',
                 minWidth: '250px',
                 ...getColorStyles(),
                 ...otherProps.sx
             }}
-            {...otherProps}
         >
             {children}
         </Button>

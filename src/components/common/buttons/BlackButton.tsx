@@ -56,13 +56,14 @@ const BlackButton = ({ children, variant = 'contained', ...otherProps }: Props) 
     return (
         <Button
             variant={variant}
+            color='info'
+            {...otherProps}
             sx={{
                 borderRadius: '500px',
                 minWidth: '250px',
                 ...getColorStyles(),
                 ...otherProps.sx,
             }}
-            {...otherProps}
         >
             {children}
         </Button>

@@ -29,10 +29,12 @@ import {
     shouldShow4x4,
     shouldShowBrands,
     calculatePriceWithCurrencies,
+    calculatePriceWithCurrenciesFromSettings,
     shadow1,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
 import { theme } from '../../theme/theme';
+import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 
 // Create a partial schema for the vehicle form
 const vehicleFormSchema = z.object({
@@ -92,9 +94,20 @@ const VehicleForm = ({
 }: VehicleFormProps) => {
     const [searchParams] = useSearchParams();
     const vehicleTypeFromUrl = searchParams.get('vehicleType') as VehicleType | null;
+    const { settings, loading: settingsLoading } = useBusinessSettings();
 
     const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>(vehicleTypeFromUrl || 'car');
-    const [priceInfo, setPriceInfo] = useState<ReturnType<typeof calculatePriceWithCurrencies> | null>(null);
+    const [priceInfo, setPriceInfo] = useState<{
+        basePrice: number;
+        basePriceEur: number;
+        discount: number;
+        discountEur: number;
+        finalPrice: number;
+        finalPriceEur: number;
+        basePriceFormatted: string;
+        discountFormatted: string;
+        finalPriceFormatted: string;
+    } | null>(null);
 
     // Form setup with validation
     const {
@@ -149,8 +162,10 @@ const VehicleForm = ({
                 setValue('is4x4', false);
             }
 
-            // Calculate price with currencies
-            const pricing = calculatePriceWithCurrencies(vehicleType, true);
+            // Calculate price with currencies - use Firebase settings if available
+            const pricing = settings?.prices && settings?.onlineDiscount !== undefined
+                ? calculatePriceWithCurrenciesFromSettings(vehicleType, settings.prices, settings.onlineDiscount, true)
+                : calculatePriceWithCurrencies(vehicleType, true);
             setPriceInfo(pricing);
 
             // Trigger validation for the vehicle type only
@@ -159,7 +174,7 @@ const VehicleForm = ({
             setSelectedVehicleType('car');
             setPriceInfo(null);
         }
-    }, [vehicleType, setValue, trigger]);
+    }, [vehicleType, setValue, trigger, settings]);
 
     // Notify parent of form changes
     useEffect(() => {
@@ -416,7 +431,7 @@ const VehicleForm = ({
                 </Box>
 
                 {/* Price Information */}
-                {priceInfo && (
+                {priceInfo && !settingsLoading && (
                     <Alert
                         severity='success'
                         sx={{

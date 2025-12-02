@@ -22,6 +22,7 @@ import {
 } from 'date-fns';
 import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, MAX_BOOKING_WEEKS} from './constants';
 import type {CalendarDay, CalendarWeek, DaySchedule, TimeSlot} from '../types/booking';
+import type {WorkingHours, WeekDay} from '../features/admin-panel/types/settings.types';
 
 // Bulgarian month names
 export const BULGARIAN_MONTHS = [
@@ -54,24 +55,48 @@ export const BULGARIAN_DAYS_FULL = [
 ];
 
 /**
- * Get maximum allowed booking date based on MAX_BOOKING_WEEKS
+ * Convert WeekDay array to day numbers (0 = Sunday, 1 = Monday, etc.)
  */
-export const getMaxBookingDate = (): Date => {
+const weekDayToNumber = (day: WeekDay): number => {
+    const mapping: Record<WeekDay, number> = {
+        sunday: 0,
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+    };
+    return mapping[day];
+};
+
+/**
+ * Convert WeekDay array to number array
+ */
+const convertWorkingDaysToNumbers = (workingDays: WeekDay[]): number[] => {
+    return workingDays.map(weekDayToNumber);
+};
+
+/**
+ * Get maximum allowed booking date based on MAX_BOOKING_WEEKS or custom booking window
+ */
+export const getMaxBookingDate = (bookingWindowWeeks?: number): Date => {
     const today = new Date();
-    return addWeeks(today, MAX_BOOKING_WEEKS);
+    const weeks = bookingWindowWeeks ?? MAX_BOOKING_WEEKS;
+    return addWeeks(today, weeks);
 };
 
 /**
  * Check if date is within the allowed booking window
  */
-export const isWithinBookingWindow = (date: Date): boolean => {
+export const isWithinBookingWindow = (date: Date, bookingWindowWeeks?: number): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const checkDate = new Date(date);
     checkDate.setHours(0, 0, 0, 0);
 
-    const maxDate = getMaxBookingDate();
+    const maxDate = getMaxBookingDate(bookingWindowWeeks);
     maxDate.setHours(23, 59, 59, 999); // End of max day
 
     return !isBefore(checkDate, today) && !isAfter(checkDate, maxDate);
@@ -102,11 +127,12 @@ export const formatDateBulgarian = (date: Date, formatString: string = 'dd.MM.yy
 };
 
 /**
- * Check if date is a working day (Monday-Friday)
+ * Check if date is a working day (Monday-Friday by default, or custom working days)
  */
-export const isWorkingDay = (date: Date): boolean => {
+export const isWorkingDay = (date: Date, workingDays?: WeekDay[]): boolean => {
     const dayOfWeek = getDay(date);
-    return WORKING_DAYS.includes(dayOfWeek);
+    const allowedDays = workingDays ? convertWorkingDaysToNumbers(workingDays) : WORKING_DAYS;
+    return allowedDays.includes(dayOfWeek);
 };
 
 /**
@@ -123,8 +149,8 @@ export const isPastDate = (date: Date): boolean => {
 /**
  * Check if date can be booked (working day, not in past, and within booking window)
  */
-export const isBookableDate = (date: Date): boolean => {
-    return isWorkingDay(date) && !isPastDate(date) && isWithinBookingWindow(date);
+export const isBookableDate = (date: Date, workingDays?: WeekDay[], bookingWindowWeeks?: number): boolean => {
+    return isWorkingDay(date, workingDays) && !isPastDate(date) && isWithinBookingWindow(date, bookingWindowWeeks);
 };
 
 /**
@@ -133,7 +159,8 @@ export const isBookableDate = (date: Date): boolean => {
 export const generateCalendarDays = (
     date: Date,
     selectedDate?: Date,
-    appointmentCounts?: Record<string, number>
+    appointmentCounts?: Record<string, number>,
+    workingDays?: WeekDay[]
 ): CalendarDay[] => {
     const monthStart = startOfMonth(date);
     const monthEnd = endOfMonth(date);
@@ -149,7 +176,7 @@ export const generateCalendarDays = (
             isCurrentMonth: isSameMonth(day, date),
             isToday: isToday(day),
             isSelected: selectedDate ? isSameDay(day, selectedDate) : false,
-            isWorkingDay: isWorkingDay(day),
+            isWorkingDay: isWorkingDay(day, workingDays),
             isPastDate: isPastDate(day),
             hasAppointments: appointmentCounts ? (appointmentCounts[dateKey] || 0) > 0 : false,
             appointmentCount: appointmentCounts ? appointmentCounts[dateKey] || 0 : 0,
@@ -173,14 +200,21 @@ export const generateCalendarWeeks = (days: CalendarDay[]): CalendarWeek[] => {
 /**
  * Generate time slots for a day
  */
-export const generateTimeSlots = (date: Date, existingBookings: string[] = []): TimeSlot[] => {
-    if (!isBookableDate(date)) {
+export const generateTimeSlots = (
+    date: Date,
+    existingBookings: string[] = [],
+    workingHours?: WorkingHours,
+    workingDays?: WeekDay[],
+    bookingWindowWeeks?: number
+): TimeSlot[] => {
+    if (!isBookableDate(date, workingDays, bookingWindowWeeks)) {
         return [];
     }
 
     const slots: TimeSlot[] = [];
-    const startTime = parse(BUSINESS_HOURS.START, 'HH:mm', date);
-    const endTime = parse(BUSINESS_HOURS.END, 'HH:mm', date);
+    const hours = workingHours || { start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END };
+    const startTime = parse(hours.start, 'HH:mm', date);
+    const endTime = parse(hours.end, 'HH:mm', date);
 
     let currentTime = startTime;
 
@@ -212,11 +246,17 @@ export const generateTimeSlots = (date: Date, existingBookings: string[] = []): 
 /**
  * Generate day schedule with time slots
  */
-export const generateDaySchedule = (date: Date, existingBookings: string[] = []): DaySchedule => {
+export const generateDaySchedule = (
+    date: Date,
+    existingBookings: string[] = [],
+    workingHours?: WorkingHours,
+    workingDays?: WeekDay[],
+    bookingWindowWeeks?: number
+): DaySchedule => {
     return {
         date,
-        slots: generateTimeSlots(date, existingBookings),
-        isWorkingDay: isWorkingDay(date),
+        slots: generateTimeSlots(date, existingBookings, workingHours, workingDays, bookingWindowWeeks),
+        isWorkingDay: isWorkingDay(date, workingDays),
         isPastDate: isPastDate(date),
     };
 };
@@ -224,24 +264,29 @@ export const generateDaySchedule = (date: Date, existingBookings: string[] = [])
 /**
  * Get next available booking date
  */
-export const getNextAvailableDate = (): Date => {
+export const getNextAvailableDate = (
+    workingHours?: WorkingHours,
+    workingDays?: WeekDay[],
+    bookingWindowWeeks?: number
+): Date => {
     let date = new Date();
 
     // If it's currently past business hours, start from tomorrow
     const now = new Date();
-    const endTime = parse(BUSINESS_HOURS.END, 'HH:mm', now);
+    const hours = workingHours || { start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END };
+    const endTime = parse(hours.end, 'HH:mm', now);
     const currentTime = setHours(setMinutes(now, now.getMinutes()), now.getHours());
 
-    if (currentTime >= endTime || !isWorkingDay(now)) {
+    if (currentTime >= endTime || !isWorkingDay(now, workingDays)) {
         date = addDays(date, 1);
     }
 
     // Find next working day within booking window
-    while (!isBookableDate(date)) {
+    while (!isBookableDate(date, workingDays, bookingWindowWeeks)) {
         date = addDays(date, 1);
 
         // Safety check to prevent infinite loop
-        if (!isWithinBookingWindow(date)) {
+        if (!isWithinBookingWindow(date, bookingWindowWeeks)) {
             break;
         }
     }
@@ -252,9 +297,9 @@ export const getNextAvailableDate = (): Date => {
 /**
  * Get available months for booking with respect to the booking window
  */
-export const getAvailableMonths = (): {current: Date; next: Date; maxDate: Date} => {
+export const getAvailableMonths = (bookingWindowWeeks?: number): {current: Date; next: Date; maxDate: Date} => {
     const now = new Date();
-    const maxDate = getMaxBookingDate();
+    const maxDate = getMaxBookingDate(bookingWindowWeeks);
 
     return {
         current: now,
@@ -266,8 +311,8 @@ export const getAvailableMonths = (): {current: Date; next: Date; maxDate: Date}
 /**
  * Check if a month should be available for navigation
  */
-export const isMonthWithinBookingWindow = (monthDate: Date): boolean => {
-    const maxDate = getMaxBookingDate();
+export const isMonthWithinBookingWindow = (monthDate: Date, bookingWindowWeeks?: number): boolean => {
+    const maxDate = getMaxBookingDate(bookingWindowWeeks);
     const monthStart = startOfMonth(monthDate);
     const monthEnd = endOfMonth(monthDate);
 
@@ -277,9 +322,9 @@ export const isMonthWithinBookingWindow = (monthDate: Date): boolean => {
     return !isBefore(monthEnd, today) && !isAfter(monthStart, maxDate);
 };
 
-export const shouldShowSecondMonth = (currentMonth: Date): boolean => {
+export const shouldShowSecondMonth = (currentMonth: Date, bookingWindowWeeks?: number): boolean => {
     const nextMonth = addMonths(currentMonth, 1);
-    return isMonthWithinBookingWindow(nextMonth);
+    return isMonthWithinBookingWindow(nextMonth, bookingWindowWeeks);
 };
 /**
  * Format time slot for display
@@ -342,7 +387,8 @@ export const getTimeUntilAppointment = (appointmentDate: Date, appointmentTime: 
 /**
  * Get a user-friendly description of the booking window
  */
-export const getBookingWindowDescription = (): string => {
-    const maxDate = getMaxBookingDate();
-    return `до ${formatDateBulgarian(maxDate, 'dd MMMM yyyy')} (${MAX_BOOKING_WEEKS} седмици напред)`;
+export const getBookingWindowDescription = (bookingWindowWeeks?: number): string => {
+    const weeks = bookingWindowWeeks ?? MAX_BOOKING_WEEKS;
+    const maxDate = getMaxBookingDate(weeks);
+    return `до ${formatDateBulgarian(maxDate, 'dd MMMM yyyy')} (${weeks} седмици напред)`;
 };

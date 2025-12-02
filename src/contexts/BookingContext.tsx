@@ -3,6 +3,7 @@ import { useCreateBooking, useAppointmentCounts, useTimeSlots } from '../hooks/u
 import { isTimeSlotAvailable } from '../services/appointments'; // Import the correct function
 import type { BookingFormSchema, BookingFormData, TimeSlot } from '../types/booking';
 import { getNextAvailableDate } from '../utils/dateHelpers';
+import { useBusinessSettings } from '../hooks/useBusinessSettings';
 
 interface BookingContextType {
     // Current booking state
@@ -52,9 +53,14 @@ interface BookingProviderProps {
 // ...
 
 export const BookingProvider = ({ children }: BookingProviderProps) => {
+    // Get business settings from Firebase
+    const { settings } = useBusinessSettings();
+
     // Local state
     const [currentBooking, setCurrentBooking] = useState<Partial<BookingFormSchema> | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(getNextAvailableDate());
+    const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+        getNextAvailableDate(settings?.workingHours, settings?.workingDays, settings?.bookingWindowWeeks)
+    );
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isValidatingSlot, setIsValidatingSlot] = useState(false);
 

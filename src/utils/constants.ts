@@ -423,7 +423,45 @@ export const formatDualPrice = (bgnAmount: number): string => {
 
 export const calculatePriceWithCurrencies = (vehicleType: VehicleType, isOnline: boolean = true) => {
     const priceCalc = calculatePrice(vehicleType, isOnline);
-    
+
+    return {
+        basePrice: priceCalc.basePrice,
+        basePriceEur: convertBgnToEur(priceCalc.basePrice),
+        discount: priceCalc.discount,
+        discountEur: convertBgnToEur(priceCalc.discount),
+        finalPrice: priceCalc.finalPrice,
+        finalPriceEur: convertBgnToEur(priceCalc.finalPrice),
+        basePriceFormatted: formatDualPrice(priceCalc.basePrice),
+        discountFormatted: formatDualPrice(priceCalc.discount),
+        finalPriceFormatted: formatDualPrice(priceCalc.finalPrice),
+    };
+};
+
+// Dynamic pricing functions that accept custom pricing configuration
+// These are used when pricing is managed in Firebase and needs to be passed in
+export const calculatePriceFromSettings = (
+    vehicleType: VehicleType,
+    prices: Record<VehicleType, number>,
+    discount: number,
+    isOnline: boolean = true
+) => {
+    const basePrice = prices[vehicleType];
+    const discountAmount = isOnline ? discount : 0;
+    return {
+        basePrice,
+        discount: discountAmount,
+        finalPrice: basePrice - discountAmount,
+    };
+};
+
+export const calculatePriceWithCurrenciesFromSettings = (
+    vehicleType: VehicleType,
+    prices: Record<VehicleType, number>,
+    discount: number,
+    isOnline: boolean = true
+) => {
+    const priceCalc = calculatePriceFromSettings(vehicleType, prices, discount, isOnline);
+
     return {
         basePrice: priceCalc.basePrice,
         basePriceEur: convertBgnToEur(priceCalc.basePrice),
