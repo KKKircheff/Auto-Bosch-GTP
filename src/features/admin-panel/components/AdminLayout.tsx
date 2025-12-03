@@ -13,6 +13,7 @@ import {
     ListItemIcon,
     ListItemText,
     Container,
+    Stack,
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -138,13 +139,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     );
 
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        <Stack minHeight='100vh' width='100% ' bgcolor='#DDD' pb={4}>
             {/* App Bar */}
             <AppBar
                 position="fixed"
                 sx={{
                     width: { md: `calc(100% - ${drawerWidth}px)` },
-                    ml: { md: `${drawerWidth}px` },
+                    // ml: { md: `${drawerWidth}px` },
                 }}
             >
                 <Toolbar>
@@ -157,7 +158,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography
+                        variant='h6'
+                        noWrap
+                    >
                         Auto Bosch GTP - Администрация
                     </Typography>
                 </Toolbar>
@@ -200,18 +204,25 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             {/* Main Content */}
             <Box
                 component="main"
+                width='100%'
                 sx={{
                     flexGrow: 1,
-                    p: 3,
-                    width: { md: `calc(100% - ${drawerWidth}px)` },
-                    bgcolor: 'background.default',
+                    p: { xs: .5, md: 3 },
+                    // pl: { md: `calc(100% - ${drawerWidth}px)` }
+                    pl: { md: `${drawerWidth}px !important` }
                 }}
             >
                 <Toolbar /> {/* Spacer for AppBar */}
-                <Container maxWidth="xl" sx={{ mt: 2 }}>
+                <Container
+                    maxWidth="xl"
+                    sx={{
+                        mt: 2,
+                        // mr: 100
+                    }}
+                >
                     {children}
                 </Container>
             </Box>
-        </Box>
+        </Stack>
     );
 }

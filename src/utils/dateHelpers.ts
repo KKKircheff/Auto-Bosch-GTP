@@ -22,7 +22,7 @@ import {
 } from 'date-fns';
 import {WORKING_DAYS, BUSINESS_HOURS, SLOT_DURATION_MINUTES, MAX_BOOKING_WEEKS} from './constants';
 import type {CalendarDay, CalendarWeek, DaySchedule, TimeSlot} from '../types/booking';
-import type {WorkingHours, WeekDay} from '../features/admin-panel/types/settings.types';
+import type {WorkingHours, WeekDay, ClosedDay} from '../features/admin-panel/types/settings.types';
 
 // Bulgarian month names
 export const BULGARIAN_MONTHS = [
@@ -147,10 +147,46 @@ export const isPastDate = (date: Date): boolean => {
 };
 
 /**
+ * Check if date is marked as closed
+ */
+export const isClosedDay = (date: Date, closedDays?: ClosedDay[]): boolean => {
+    if (!closedDays || closedDays.length === 0) return false;
+
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    return closedDays.some(closedDay => {
+        const closedDate = new Date(closedDay.date);
+        closedDate.setHours(0, 0, 0, 0);
+        return closedDate.getTime() === checkDate.getTime();
+    });
+};
+
+/**
  * Check if date can be booked (working day, not in past, and within booking window)
  */
-export const isBookableDate = (date: Date, workingDays?: WeekDay[], bookingWindowWeeks?: number): boolean => {
-    return isWorkingDay(date, workingDays) && !isPastDate(date) && isWithinBookingWindow(date, bookingWindowWeeks);
+export const isBookableDate = (
+    date: Date,
+    workingDays?: WeekDay[],
+    bookingWindowWeeks?: number,
+    closedDays?: ClosedDay[]
+): boolean => {
+    return (
+        isWorkingDay(date, workingDays) &&
+        !isPastDate(date) &&
+        isWithinBookingWindow(date, bookingWindowWeeks) &&
+        !isClosedDay(date, closedDays)
+    );
+};
+
+/**
+ * Calculate total available time slots for a day based on business hours
+ */
+const getTotalSlotsPerDay = (): number => {
+    const startMinutes = timeToMinutes(BUSINESS_HOURS.START);
+    const endMinutes = timeToMinutes(BUSINESS_HOURS.END);
+    const totalMinutes = endMinutes - startMinutes;
+    return Math.floor(totalMinutes / SLOT_DURATION_MINUTES);
 };
 
 /**
@@ -160,7 +196,8 @@ export const generateCalendarDays = (
     date: Date,
     selectedDate?: Date,
     appointmentCounts?: Record<string, number>,
-    workingDays?: WeekDay[]
+    workingDays?: WeekDay[],
+    closedDays?: ClosedDay[]
 ): CalendarDay[] => {
     const monthStart = startOfMonth(date);
     const monthEnd = endOfMonth(date);
@@ -168,9 +205,12 @@ export const generateCalendarDays = (
     const calendarEnd = endOfWeek(monthEnd, {weekStartsOn: 1});
 
     const days = eachDayOfInterval({start: calendarStart, end: calendarEnd});
+    const totalSlotsPerDay = getTotalSlotsPerDay();
 
     return days.map((day) => {
         const dateKey = format(day, 'yyyy-MM-dd');
+        const appointmentCount = appointmentCounts ? appointmentCounts[dateKey] || 0 : 0;
+
         return {
             date: day,
             isCurrentMonth: isSameMonth(day, date),
@@ -178,8 +218,10 @@ export const generateCalendarDays = (
             isSelected: selectedDate ? isSameDay(day, selectedDate) : false,
             isWorkingDay: isWorkingDay(day, workingDays),
             isPastDate: isPastDate(day),
-            hasAppointments: appointmentCounts ? (appointmentCounts[dateKey] || 0) > 0 : false,
-            appointmentCount: appointmentCounts ? appointmentCounts[dateKey] || 0 : 0,
+            isClosedDay: isClosedDay(day, closedDays),
+            hasAppointments: appointmentCount > 0,
+            appointmentCount: appointmentCount,
+            isFullyBooked: appointmentCount >= totalSlotsPerDay,
         };
     });
 };
@@ -205,9 +247,10 @@ export const generateTimeSlots = (
     existingBookings: string[] = [],
     workingHours?: WorkingHours,
     workingDays?: WeekDay[],
-    bookingWindowWeeks?: number
+    bookingWindowWeeks?: number,
+    closedDays?: ClosedDay[]
 ): TimeSlot[] => {
-    if (!isBookableDate(date, workingDays, bookingWindowWeeks)) {
+    if (!isBookableDate(date, workingDays, bookingWindowWeeks, closedDays)) {
         return [];
     }
 
@@ -251,11 +294,12 @@ export const generateDaySchedule = (
     existingBookings: string[] = [],
     workingHours?: WorkingHours,
     workingDays?: WeekDay[],
-    bookingWindowWeeks?: number
+    bookingWindowWeeks?: number,
+    closedDays?: ClosedDay[]
 ): DaySchedule => {
     return {
         date,
-        slots: generateTimeSlots(date, existingBookings, workingHours, workingDays, bookingWindowWeeks),
+        slots: generateTimeSlots(date, existingBookings, workingHours, workingDays, bookingWindowWeeks, closedDays),
         isWorkingDay: isWorkingDay(date, workingDays),
         isPastDate: isPastDate(date),
     };
@@ -267,7 +311,8 @@ export const generateDaySchedule = (
 export const getNextAvailableDate = (
     workingHours?: WorkingHours,
     workingDays?: WeekDay[],
-    bookingWindowWeeks?: number
+    bookingWindowWeeks?: number,
+    closedDays?: ClosedDay[]
 ): Date => {
     let date = new Date();
 
@@ -282,7 +327,7 @@ export const getNextAvailableDate = (
     }
 
     // Find next working day within booking window
-    while (!isBookableDate(date, workingDays, bookingWindowWeeks)) {
+    while (!isBookableDate(date, workingDays, bookingWindowWeeks, closedDays)) {
         date = addDays(date, 1);
 
         // Safety check to prevent infinite loop

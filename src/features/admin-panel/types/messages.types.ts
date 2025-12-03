@@ -12,7 +12,7 @@ export interface Announcement {
   updatedAt: Date;
 }
 
-export type AnnouncementType = 'info' | 'warning' | 'success' | 'error';
+export type AnnouncementType = 'alert' | 'warning' | 'announcementPrimary' | 'announcementInfo';
 
 export type AnnouncementPosition = 'above-hero' | 'below-hero';
 

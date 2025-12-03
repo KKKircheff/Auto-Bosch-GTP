@@ -25,6 +25,9 @@ export async function getSettings(): Promise<BusinessSettings | null> {
     return {
       ...data,
       updatedAt: data.updatedAt?.toDate(),
+      closedDays: data.closedDays?.map((cd: any) => ({
+        date: cd.date?.toDate(),
+      })) || [],
     } as BusinessSettings;
   } catch (error) {
     console.error('Error fetching settings:', error);
@@ -60,6 +63,9 @@ export async function updateSettings(
 
     const dataToSave = {
       ...settings,
+      closedDays: settings.closedDays?.map(cd => ({
+        date: Timestamp.fromDate(cd.date),
+      })) || [],
       updatedAt: Timestamp.now(),
       updatedBy: adminUid,
     };

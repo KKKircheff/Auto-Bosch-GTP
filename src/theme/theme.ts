@@ -22,8 +22,9 @@ export const theme = createTheme({
         },
         warning: {
             main: '#FFD600',
-            light: '#fff1bb',
-            dark: '#FFD600',
+            light: '#eac400',
+            dark: '#eac400',
+            contrastText: '#0c0c12',
         },
         info: {
             main: '#3f3f41', //Gray colors for the app

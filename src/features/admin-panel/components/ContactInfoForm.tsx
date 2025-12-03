@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Box, TextField, Button, Alert, Grid } from '@mui/material';
+import { Box, TextField, Alert, Grid } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
+import { AdminButton } from '../../../components/common/buttons';
 import type { ContactInfo } from '../types/settings.types';
 
 interface ContactInfoFormProps {
@@ -131,14 +132,14 @@ export function ContactInfoForm({ contact, onSave, disabled }: ContactInfoFormPr
       </Grid>
 
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
+        <AdminButton
+          adminVariant="primary"
           startIcon={<SaveIcon />}
           onClick={handleSave}
           disabled={!hasChanges || disabled || saving}
         >
           {saving ? 'Записване...' : 'Запази контактите'}
-        </Button>
+        </AdminButton>
       </Box>
     </Box>
   );

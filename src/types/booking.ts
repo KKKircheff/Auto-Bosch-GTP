@@ -176,8 +176,8 @@ export interface LoginCredentials {
 export interface DashboardStats {
     todayAppointments: number;
     weekAppointments: number;
-    monthAppointments: number;
-    totalRevenue: number;
+    periodAppointments: number;
+    totalAppointments: number;
 }
 
 export interface AppointmentFilters {
@@ -267,8 +267,10 @@ export interface CalendarDay {
     isSelected: boolean;
     isWorkingDay: boolean;
     isPastDate: boolean;
+    isClosedDay?: boolean;
     hasAppointments: boolean;
     appointmentCount: number;
+    isFullyBooked?: boolean;
 }
 
 export interface CalendarWeek {

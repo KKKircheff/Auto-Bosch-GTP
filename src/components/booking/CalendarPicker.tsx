@@ -77,15 +77,15 @@ const CalendarPicker = ({
 
     // Generate calendar data
     const currentMonthData = useMemo(() => {
-        const days = generateCalendarDays(currentMonth, selectedDate, appointmentCounts, settings?.workingDays);
+        const days = generateCalendarDays(currentMonth, selectedDate, appointmentCounts, settings?.workingDays, settings?.closedDays);
         return generateCalendarWeeks(days);
-    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays]);
+    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays, settings?.closedDays]);
 
     const nextMonthData = useMemo(() => {
         const nextMonth = addMonths(currentMonth, 1);
-        const days = generateCalendarDays(nextMonth, selectedDate, appointmentCounts, settings?.workingDays);
+        const days = generateCalendarDays(nextMonth, selectedDate, appointmentCounts, settings?.workingDays, settings?.closedDays);
         return generateCalendarWeeks(days);
-    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays]);
+    }, [currentMonth, selectedDate, appointmentCounts, settings?.workingDays, settings?.closedDays]);
 
     // Navigation handlers
     const handlePreviousMonth = () => {
@@ -115,13 +115,13 @@ const CalendarPicker = ({
 
     // Day click handler
     const handleDayClick = (day: CalendarDay) => {
-        if (isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks) && day.isCurrentMonth) {
+        if (isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks, settings?.closedDays) && day.isCurrentMonth) {
             onDateSelect(day.date);
         }
     };
 
     const DayCell = ({ day }: { day: CalendarDay }) => {
-        const isClickable = isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks) && day.isCurrentMonth;
+        const isClickable = isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks, settings?.closedDays) && day.isCurrentMonth && !day.isFullyBooked;
         const isSelected = day.isSelected;
         const isToday = day.isToday;
 
@@ -130,6 +130,13 @@ const CalendarPicker = ({
                 variant={isSelected ? 'contained' : 'text'}
                 onClick={() => handleDayClick(day)}
                 disabled={!isClickable}
+                title={
+                    day.isClosedDay
+                        ? 'Затворен ден'
+                        : day.hasAppointments && day.isCurrentMonth
+                            ? `Резервирано (${day.appointmentCount} ${day.appointmentCount === 1 ? 'час' : 'часа'})`
+                            : undefined
+                }
                 sx={{
                     minWidth: { xs: 30, sm: 44 },
                     height: { xs: 30, sm: 44 },
@@ -144,23 +151,37 @@ const CalendarPicker = ({
                                 ? 'text.secondary'
                                 : 'text.primary'
                         : 'text.disabled',
-                    background: isSelected
-                        ? 'linear-gradient(135deg, #013a6a, #0163B3)'
-                        : isToday
-                            ? 'white'
-                            : 'transparent',
+                    background: day.hasAppointments && day.isCurrentMonth
+                        ? 'rgba(210, 20, 34, 0.12)'
+                        : day.isClosedDay
+                            ? 'rgba(211, 47, 47, 0.1)'
+                            : isSelected
+                                ? 'linear-gradient(135deg, #013a6a, #0163B3)'
+                                : isToday
+                                    ? 'white'
+                                    : 'transparent',
                     border: isToday && !isSelected ? 2 : 0,
                     borderColor: 'primary.main',
+                    textDecoration: day.isClosedDay ? 'line-through' : 'none',
+                    opacity: day.isClosedDay ? 0.5 : 1,
                     '&:hover': {
                         bgcolor: isSelected
                             ? 'primary.dark'
                             : isClickable
                                 ? 'primary.light'
-                                : 'transparent',
+                                : day.isClosedDay
+                                    ? 'rgba(211, 47, 47, 0.15)'
+                                    : day.hasAppointments
+                                        ? 'rgba(210, 20, 34, 0.15)'
+                                        : 'transparent',
                     },
                     '&:disabled': {
                         color: 'text.disabled',
-                        bgcolor: 'transparent',
+                        bgcolor: day.isClosedDay
+                            ? 'rgba(211, 47, 47, 0.1)'
+                            : day.hasAppointments
+                                ? 'rgba(210, 20, 34, 0.12)'
+                                : 'transparent',
                     },
                     position: 'relative',
                 }}

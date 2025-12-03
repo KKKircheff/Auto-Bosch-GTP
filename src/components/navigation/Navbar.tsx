@@ -11,6 +11,12 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import WarehouseOutlinedIcon from '@mui/icons-material/WarehouseOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import RedButton from '../common/buttons/RedButton';
 import { CONTACT_INFO } from '../../utils/constants';
 import { BlackButton } from '../common/buttons';
@@ -70,9 +76,13 @@ const Navbar = () => {
                             flexGrow: 1,
                             color: 'text.primary',
                             textDecoration: 'none',
-                            textAlign: 'center'
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1
                         }}
                     >
+                        <PhoneOutlinedIcon sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }} />
                         <Typography
                             fontSize={{ xs: '1rem', md: '1.5rem' }}
                             fontWeight={600}
@@ -92,6 +102,7 @@ const Navbar = () => {
                             size="medium"
                             onClick={() => navigate('/')}
                             sx={{ minWidth: '140px' }}
+                            startIcon={<HomeOutlinedIcon />}
                         >
                             Начало
                         </RedButton>
@@ -101,6 +112,7 @@ const Navbar = () => {
                             size="medium"
                             onClick={() => navigate('/booking')}
                             sx={{ minWidth: '140px' }}
+                            startIcon={<CalendarMonthOutlinedIcon />}
                         >
                             Запази час
                         </RedButton>
@@ -111,6 +123,7 @@ const Navbar = () => {
                                 size="medium"
                                 onClick={() => navigate('/admin/login')}
                                 sx={{ minWidth: '140px' }}
+                                startIcon={<PersonOutlineIcon />}
                             >
                                 Профил
                             </BlackButton>
@@ -121,8 +134,9 @@ const Navbar = () => {
                                 <BlackButton
                                     variant="contained"
                                     size="medium"
-                                    onClick={() => navigate('/admin/settings')}
+                                    onClick={() => navigate('/admin/dashboard')}
                                     sx={{ minWidth: '140px' }}
+                                    startIcon={<SettingsOutlinedIcon />}
                                 >
                                     Настройки
                                 </BlackButton>
@@ -132,6 +146,7 @@ const Navbar = () => {
                                     size="medium"
                                     onClick={handleLogout}
                                     sx={{ minWidth: '140px' }}
+                                    startIcon={<LogoutOutlinedIcon />}
                                 >
                                     Изход
                                 </BlackButton>
@@ -266,7 +281,7 @@ const Navbar = () => {
                         {user && (
                             <>
                                 <Typography
-                                    onClick={() => navigate('/admin/settings')}
+                                    onClick={() => navigate('/admin/dashboard')}
                                     sx={{ fontSize: '1.8rem', color: 'white', cursor: 'pointer' }}
                                 >
                                     Настройки

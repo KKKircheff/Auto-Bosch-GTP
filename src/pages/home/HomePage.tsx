@@ -7,6 +7,7 @@ const HomePage = () => {
         <Box px={0}>
             <AnnouncementBanner position="above-hero" />
             <HeroSection />
+            <AnnouncementBanner position="below-hero" />
             <Stack px={{ xs: 1, md: 4 }} py={12}>
                 <ServicesPricingSection />
                 <ContactSection />

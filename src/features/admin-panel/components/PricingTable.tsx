@@ -8,11 +8,11 @@ import {
   TableRow,
   TextField,
   Paper,
-  Button,
   Box,
   Alert,
 } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
+import { AdminButton } from '../../../components/common/buttons';
 import type { VehiclePrices } from '../types/settings.types';
 
 interface PricingTableProps {
@@ -141,14 +141,14 @@ export function PricingTable({ prices, onlineDiscount, onSave, disabled }: Prici
       </TableContainer>
 
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
+        <AdminButton
+          adminVariant="primary"
           startIcon={<SaveIcon />}
           onClick={handleSave}
           disabled={!hasChanges || disabled || saving}
         >
           {saving ? 'Записване...' : 'Запази цените'}
-        </Button>
+        </AdminButton>
       </Box>
     </Box>
   );

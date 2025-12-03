@@ -5,11 +5,11 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  Button,
   Alert,
   Grid,
 } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
+import { AdminButton } from '../../../components/common/buttons';
 import type { WorkingHours, WeekDay } from '../types/settings.types';
 
 interface WorkingHoursEditorProps {
@@ -176,14 +176,14 @@ export function WorkingHoursEditor({
       </Grid>
 
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
+        <AdminButton
+          adminVariant="primary"
           startIcon={<SaveIcon />}
           onClick={handleSave}
           disabled={!hasChanges || disabled || saving}
         >
           {saving ? 'Записване...' : 'Запази промените'}
-        </Button>
+        </AdminButton>
       </Box>
     </Box>
   );

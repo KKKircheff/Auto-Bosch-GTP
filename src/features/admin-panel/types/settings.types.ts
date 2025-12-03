@@ -1,5 +1,9 @@
 // Business Settings Types
 
+export interface ClosedDay {
+  date: Date;  // Will be stored as Firestore Timestamp
+}
+
 export interface BusinessSettings {
   prices: VehiclePrices;
   onlineDiscount: number;
@@ -7,6 +11,7 @@ export interface BusinessSettings {
   workingDays: WeekDay[];
   bookingWindowWeeks: number;
   contact: ContactInfo;
+  closedDays: ClosedDay[];
   updatedAt?: Date;
   updatedBy?: string;
 }
@@ -59,6 +64,7 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   },
   workingDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
   bookingWindowWeeks: 8,
+  closedDays: [],
   contact: {
     phone: '+359 XXX XXX XXX',
     email: 'info@autobosch.bg',

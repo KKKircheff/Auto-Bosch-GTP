@@ -1,11 +1,12 @@
 import { Card, CardContent, Stack, Typography, Skeleton, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { BlackButton, RedButton } from '../../../components/common/buttons';
+import { RedButton } from '../../../components/common/buttons';
 import { shadow2 } from '../../../utils/constants';
 import TitleLight from '../../../components/common/typography/TitleLight.component';
 import MainTitle from '../../../components/common/typography/MainTitle.component';
 import { useBusinessSettings } from '../../../hooks/useBusinessSettings';
 import type { WeekDay } from '../../../features/admin-panel/types/settings.types';
+import YellowButton from '../../../components/common/buttons/YellowButton';
 
 export const HeroSection = () => {
     const navigate = useNavigate();
@@ -31,6 +32,14 @@ export const HeroSection = () => {
         saturday: 'Събота',
         sunday: 'Неделя',
     };
+
+    // Define correct day order
+    const weekDayOrder: WeekDay[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    // Sort working days by weekday order
+    const sortedWorkingDays = settings?.workingDays
+        ? [...settings.workingDays].sort((a, b) => weekDayOrder.indexOf(a) - weekDayOrder.indexOf(b))
+        : [];
 
     return (
         <Stack
@@ -135,8 +144,9 @@ export const HeroSection = () => {
                             Запази час
                         </RedButton>
 
-                        <BlackButton
+                        <YellowButton
                             variant="outlined"
+                            // variant="contained"
                             size="medium"
                             onClick={handleScrollToContact}
                             sx={{
@@ -145,7 +155,7 @@ export const HeroSection = () => {
                             }}
                         >
                             Виж на картата
-                        </BlackButton>
+                        </YellowButton>
                     </Stack>
 
                     <Box sx={{ mt: 3 }} textAlign={'right'}>
@@ -166,7 +176,7 @@ export const HeroSection = () => {
                                 <Skeleton variant="text" width="80%" sx={{ mx: 'auto', bgcolor: 'rgba(0, 0, 0, 0.1)' }} />
                             </>
                         ) : (
-                            settings?.workingDays.map((day) => (
+                            sortedWorkingDays.map((day) => (
                                 <Typography
                                     key={day}
                                     variant="subtitle1"
@@ -175,7 +185,7 @@ export const HeroSection = () => {
                                         fontWeight: 400,
                                     }}
                                 >
-                                    {weekDayToBulgarian[day]}: {settings.workingHours.start} - {settings.workingHours.end}
+                                    {weekDayToBulgarian[day]}: {settings?.workingHours.start} - {settings?.workingHours.end}
                                 </Typography>
                             ))
                         )}

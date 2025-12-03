@@ -7,9 +7,6 @@ import {
     Divider,
     Grid,
     Chip,
-    Alert,
-    Card,
-    CardContent,
     alpha,
     Container,
 } from '@mui/material';
@@ -19,8 +16,6 @@ import {
     Person,
     Phone,
     Email,
-    DirectionsCar,
-    Receipt,
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
@@ -74,34 +69,34 @@ const BookingConfirmation = ({
                 <GradientCard title="Дата и час на прегледа" titleVariant="blue">
                     <Stack spacing={3}>
                         <Grid container spacing={2}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Event sx={{ color: 'text.secondary' }} />
-                                        <Box>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Дата
-                                            </Typography>
-                                            <Typography variant="h6">
-                                                {formatDateBulgarian(formData.appointmentDate, 'EEEE, dd MMMM yyyy')}
-                                            </Typography>
-                                        </Box>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <Event sx={{ color: 'text.secondary' }} />
+                                    <Box>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Дата
+                                        </Typography>
+                                        <Typography variant="h6">
+                                            {formatDateBulgarian(formData.appointmentDate, 'EEEE, dd MMMM yyyy')}
+                                        </Typography>
                                     </Box>
-                                </Grid>
-
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <AccessTime sx={{ color: 'text.secondary' }} />
-                                        <Box>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Час
-                                            </Typography>
-                                            <Typography variant="h6">
-                                                {formData.appointmentTime}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </Grid>
+                                </Box>
                             </Grid>
+
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <AccessTime sx={{ color: 'text.secondary' }} />
+                                    <Box>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Час
+                                        </Typography>
+                                        <Typography variant="h6">
+                                            {formData.appointmentTime}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        </Grid>
 
                         {onEdit && (
                             <Button
@@ -120,50 +115,50 @@ const BookingConfirmation = ({
                 <GradientCard title="Данни на клиента" titleVariant="blue">
                     <Stack spacing={3}>
                         <Grid container spacing={2}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Person sx={{ color: 'text.secondary' }} />
-                                        <Box>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Име и фамилия
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {formData.customerName}
-                                            </Typography>
-                                        </Box>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <Person sx={{ color: 'text.secondary' }} />
+                                    <Box>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Име и фамилия
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {formData.customerName}
+                                        </Typography>
                                     </Box>
-                                </Grid>
-
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Phone sx={{ color: 'text.secondary' }} />
-                                        <Box>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Телефон
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {formData.phone}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </Grid>
-
-                                {formData.email && (
-                                    <Grid size={{ xs: 12 }}>
-                                        <Box display="flex" alignItems="center" gap={2}>
-                                            <Email sx={{ color: 'text.secondary' }} />
-                                            <Box>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Имейл
-                                                </Typography>
-                                                <Typography variant="body1">
-                                                    {formData.email}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    </Grid>
-                                )}
+                                </Box>
                             </Grid>
+
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    <Phone sx={{ color: 'text.secondary' }} />
+                                    <Box>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Телефон
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {formData.phone}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+
+                            {formData.email && (
+                                <Grid size={{ xs: 12 }}>
+                                    <Box display="flex" alignItems="center" gap={2}>
+                                        <Email sx={{ color: 'text.secondary' }} />
+                                        <Box>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Имейл
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                {formData.email}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </Grid>
+                            )}
+                        </Grid>
 
                         {onEdit && (
                             <Button
@@ -182,42 +177,42 @@ const BookingConfirmation = ({
                 <GradientCard title="Превозно средство" titleVariant="blue">
                     <Stack spacing={3}>
                         <Grid container spacing={2}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box>
-                                        <Typography variant="body2" color="text.secondary" pb={1.5}>
-                                            Регистрационен номер
-                                        </Typography>
-                                        <Chip
-                                            label={formData.registrationPlate}
-                                            variant="outlined"
-                                            size="medium"
-                                            sx={{ fontWeight: 'bold', fontSize: '1rem', borderRadius: 1, }}
-                                        />
-                                    </Box>
-                                </Grid>
-
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <Box>
-                                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                                            Тип и марка
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {formatVehicleDetails()}
-                                        </Typography>
-                                    </Box>
-                                </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Box>
+                                    <Typography variant="body2" color="text.secondary" pb={1.5}>
+                                        Регистрационен номер
+                                    </Typography>
+                                    <Chip
+                                        label={formData.registrationPlate}
+                                        variant="outlined"
+                                        size="medium"
+                                        sx={{ fontWeight: 'bold', fontSize: '1rem', borderRadius: 1, }}
+                                    />
+                                </Box>
                             </Grid>
 
-                            {formData.notes && (
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <Box>
                                     <Typography variant="body2" color="text.secondary" gutterBottom>
-                                        Бележки
+                                        Тип и марка
                                     </Typography>
                                     <Typography variant="body1">
-                                        {formData.notes}
+                                        {formatVehicleDetails()}
                                     </Typography>
                                 </Box>
-                            )}
+                            </Grid>
+                        </Grid>
+
+                        {formData.notes && (
+                            <Box>
+                                <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    Бележки
+                                </Typography>
+                                <Typography variant="body1">
+                                    {formData.notes}
+                                </Typography>
+                            </Box>
+                        )}
 
                         {onEdit && (
                             <Button
@@ -241,36 +236,36 @@ const BookingConfirmation = ({
                     >
                         <Stack spacing={2}>
 
-                                <Stack spacing={1}>
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Typography variant="body1">
-                                            Базова цена:
-                                        </Typography>
-                                        <Typography variant="body1" fontWeight={600}>
-                                            {priceInfo.basePriceFormatted}
-                                        </Typography>
-                                    </Box>
+                            <Stack spacing={1}>
+                                <Box display="flex" justifyContent="space-between">
+                                    <Typography variant="body1">
+                                        Базова цена:
+                                    </Typography>
+                                    <Typography variant="body1" fontWeight={600}>
+                                        {priceInfo.basePriceFormatted}
+                                    </Typography>
+                                </Box>
 
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Typography variant="body1" color="success.dark">
-                                            Отстъпка при онлайн записване:
-                                        </Typography>
-                                        <Typography variant="body1" color="success.dark" fontWeight={600}>
-                                            -{priceInfo.discountFormatted}
-                                        </Typography>
-                                    </Box>
+                                <Box display="flex" justifyContent="space-between">
+                                    <Typography variant="body1" color="success.dark">
+                                        Отстъпка при онлайн записване:
+                                    </Typography>
+                                    <Typography variant="body1" color="success.dark" fontWeight={600}>
+                                        -{priceInfo.discountFormatted}
+                                    </Typography>
+                                </Box>
 
-                                    <Divider />
+                                <Divider />
 
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Typography variant="h6" color="primary.dark">
-                                            Крайна цена:
-                                        </Typography>
-                                        <Typography variant="h6" color="primary.dark" fontWeight={700}>
-                                            {priceInfo.finalPriceFormatted}
-                                        </Typography>
-                                    </Box>
-                                </Stack>
+                                <Box display="flex" justifyContent="space-between">
+                                    <Typography variant="h6" color="primary.dark">
+                                        Крайна цена:
+                                    </Typography>
+                                    <Typography variant="h6" color="primary.dark" fontWeight={700}>
+                                        {priceInfo.finalPriceFormatted}
+                                    </Typography>
+                                </Box>
+                            </Stack>
                         </Stack>
                     </GradientCard>
                 )}
@@ -288,44 +283,44 @@ const BookingConfirmation = ({
                 {/* Contact Information */}
                 <GradientCard title="Контакти за връзка" titleVariant="red" bgcolor="grey.50">
                     <Grid container spacing={2}>
-                            <Grid size={{ xs: 12, sm: 4 }}>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <Phone sx={{ color: 'text.secondary' }} />
-                                    <Box>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Телефон
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {CONTACT_INFO.phone}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Grid>
-
-                            <Grid size={{ xs: 12, sm: 4 }}>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <Email sx={{ color: 'text.secondary' }} />
-                                    <Box>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Имейл
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {CONTACT_INFO.email}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Grid>
-
-                            <Grid size={{ xs: 12, sm: 4 }}>
+                        <Grid size={{ xs: 12, sm: 4 }}>
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Phone sx={{ color: 'text.secondary' }} />
                                 <Box>
                                     <Typography variant="body2" color="text.secondary">
-                                        Адрес
+                                        Телефон
                                     </Typography>
                                     <Typography variant="body1">
-                                        {CONTACT_INFO.address}
+                                        {CONTACT_INFO.phone}
                                     </Typography>
                                 </Box>
-                            </Grid>
+                            </Box>
+                        </Grid>
+
+                        <Grid size={{ xs: 12, sm: 4 }}>
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Email sx={{ color: 'text.secondary' }} />
+                                <Box>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Имейл
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        {CONTACT_INFO.email}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Grid>
+
+                        <Grid size={{ xs: 12, sm: 4 }}>
+                            <Box>
+                                <Typography variant="body2" color="text.secondary">
+                                    Адрес
+                                </Typography>
+                                <Typography variant="body1">
+                                    {CONTACT_INFO.address}
+                                </Typography>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </GradientCard>
 

@@ -12,6 +12,7 @@ import {
     runTransaction,
     Transaction,
     getDoc,
+    getCountFromServer,
 } from 'firebase/firestore';
 import {format} from 'date-fns';
 import {db} from './firebase';
@@ -534,40 +535,79 @@ export const deleteBooking = async (bookingId: string): Promise<ApiResponse<void
 };
 
 /**
+ * Get total count of confirmed bookings using aggregation (efficient)
+ * Uses getCountFromServer to avoid downloading all documents
+ */
+export const getTotalConfirmedBookingsCount = async (): Promise<number> => {
+    try {
+        const q = query(
+            collection(db, APPOINTMENTS_COLLECTION),
+            where('status', '==', 'confirmed')
+        );
+        const snapshot = await getCountFromServer(q);
+        return snapshot.data().count;
+    } catch (error) {
+        console.error('Error getting total bookings count:', error);
+        return 0;
+    }
+};
+
+/**
  * Get dashboard statistics
  */
 export const getDashboardStats = async (): Promise<
     ApiResponse<{
         todayAppointments: number;
         weekAppointments: number;
-        monthAppointments: number;
-        totalRevenue: number;
+        periodAppointments: number;
+        totalAppointments: number;
     }>
 > => {
     try {
         const today = new Date();
-        const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        today.setHours(0, 0, 0, 0);
 
-        const [todayResult, weekResult, monthResult] = await Promise.all([
-            getBookingsForDate(today),
-            getBookings(startOfWeek, today),
-            getBookings(startOfMonth, today),
+        // End of today
+        const endOfToday = new Date(today);
+        endOfToday.setHours(23, 59, 59, 999);
+
+        // End of current week (Sunday)
+        const endOfWeek = new Date(today);
+        const daysUntilSunday = 7 - today.getDay();
+        endOfWeek.setDate(today.getDate() + daysUntilSunday);
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        // Fetch booking window configuration from admin settings
+        let bookingWindowWeeks = 8; // Default fallback
+        try {
+            const settingsDoc = await getDoc(doc(db, 'settings', 'business-config'));
+            if (settingsDoc.exists()) {
+                bookingWindowWeeks = settingsDoc.data().bookingWindowWeeks || 8;
+            }
+        } catch (settingsError) {
+            console.warn('Could not fetch booking window settings, using default:', settingsError);
+        }
+
+        // Calculate end of booking period
+        const endOfPeriod = new Date(today);
+        endOfPeriod.setDate(today.getDate() + (bookingWindowWeeks * 7));
+        endOfPeriod.setHours(23, 59, 59, 999);
+
+        // Execute all queries in parallel for performance
+        const [todayResult, weekResult, periodResult, totalCount] = await Promise.all([
+            getBookingsForDate(today),                    // Already filters by 'confirmed'
+            getBookings(today, endOfWeek, 'confirmed'),
+            getBookings(today, endOfPeriod, 'confirmed'),
+            getTotalConfirmedBookingsCount(),
         ]);
-
-        const todayAppointments = todayResult.data?.length || 0;
-        const weekAppointments = weekResult.data?.length || 0;
-        const monthAppointments = monthResult.data?.length || 0;
-        const totalRevenue = monthResult.data?.reduce((sum, booking) => sum + booking.price, 0) || 0;
 
         return {
             success: true,
             data: {
-                todayAppointments,
-                weekAppointments,
-                monthAppointments,
-                totalRevenue,
+                todayAppointments: todayResult.data?.length || 0,
+                weekAppointments: weekResult.data?.length || 0,
+                periodAppointments: periodResult.data?.length || 0,
+                totalAppointments: totalCount,
             },
         };
     } catch (error) {
@@ -578,8 +618,8 @@ export const getDashboardStats = async (): Promise<
             data: {
                 todayAppointments: 0,
                 weekAppointments: 0,
-                monthAppointments: 0,
-                totalRevenue: 0,
+                periodAppointments: 0,
+                totalAppointments: 0,
             },
         };
     }

@@ -51,6 +51,10 @@ const GradientCard = ({
                     <Typography
                         variant="h6"
                         sx={{
+                            fontSize: {
+                                xs: theme.typography.body1.fontSize,
+                                md: theme.typography.h6.fontSize,
+                            },
                             color: 'white',
                             fontWeight: 600,
                             textAlign: 'center',

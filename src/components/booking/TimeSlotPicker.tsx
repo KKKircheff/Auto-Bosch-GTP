@@ -15,11 +15,12 @@ import {
     Stack,
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh, Delete } from '@mui/icons-material';
-import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
+import { formatDateBulgarian, isBookableDate, isClosedDay } from '../../utils/dateHelpers';
 import { VEHICLE_TYPES } from '../../utils/constants';
 import { deleteBooking } from '../../services/appointments';
 import { useAuth } from '../../hooks/useAuth';
 import { useSnackbar } from '../../hooks/useSnackbar';
+import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import DeleteBookingDialog from './DeleteBookingDialog';
 import type { TimeSlot } from '../../types/booking';
 import { theme } from '../../theme/theme';
@@ -50,6 +51,7 @@ const TimeSlotPicker = ({
     className,
 }: TimeSlotPickerProps) => {
     const { user } = useAuth();
+    const { settings } = useBusinessSettings();
     const { snackbar, hideSnackbar, showSuccess, showError } = useSnackbar();
     const [deleteDialog, setDeleteDialog] = useState<{
         open: boolean;
@@ -125,6 +127,16 @@ const TimeSlotPicker = ({
                 <Typography variant="body1" color="text.secondary">
                     Търсене на първата свободна дата...
                 </Typography>
+            </Paper>
+        );
+    }
+
+    if (selectedDate && settings?.closedDays && isClosedDay(selectedDate, settings.closedDays)) {
+        return (
+            <Paper elevation={2} sx={{ p: 3 }} className={className}>
+                <Alert severity="info">
+                    Избраният ден е затворен. Моля изберете друг ден.
+                </Alert>
             </Paper>
         );
     }

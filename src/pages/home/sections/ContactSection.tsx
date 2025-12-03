@@ -1,4 +1,4 @@
-import { Box, Typography, Skeleton, Grid } from '@mui/material';
+import { Box, Typography, Skeleton, Grid, Stack } from '@mui/material';
 import { CONTACT_INFO, shadow1 } from '../../../utils/constants';
 import { useBusinessSettings } from '../../../hooks/useBusinessSettings';
 import SectionTitle from '../../../components/common/typography/SectionTitle.component';
@@ -17,7 +17,7 @@ export const ContactSection = () => {
                 Контакти и местопложение
             </SectionTitle>
 
-            <Grid container spacing={{ xs: 0, md: 4 }} maxWidth={'xl'} mx='auto'>
+            <Grid container spacing={{ xs: 4, md: 4 }} maxWidth={'xl'} mx='auto'>
                 {/* LEFT COLUMN: Map */}
                 <Grid size={{ xs: 12, md: 9 }}>
                     {loading ? (
@@ -50,15 +50,13 @@ export const ContactSection = () => {
                     )}
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 3 }} bgcolor={'info.dark'} borderRadius={1}>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
+                <Grid size={{ xs: 12, md: 3 }} bgcolor={'info.dark'} borderRadius={1} >
+                    <Stack
                         justifyContent="center"
-                        gap={3}
+                        spacing={3}
                         height="100%"
                         px={{ xs: 0, md: 4 }}
-                        pt={{ xs: 4, md: 0 }}
+                        py={{ xs: 4 }}
                         textAlign={{ xs: 'center', md: 'center' }}
                     >
                         {loading ? (
@@ -116,7 +114,7 @@ export const ContactSection = () => {
                                 </Box>
                             </>
                         )}
-                    </Box>
+                    </Stack>
                 </Grid>
             </Grid>
         </Box>

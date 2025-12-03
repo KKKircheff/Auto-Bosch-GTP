@@ -10,8 +10,8 @@ import {
 interface DashboardStats {
   todayAppointments: number;
   weekAppointments: number;
-  monthAppointments: number;
-  totalRevenue: number;
+  periodAppointments: number;
+  totalAppointments: number;
 }
 
 interface UseAppointmentsReturn {
