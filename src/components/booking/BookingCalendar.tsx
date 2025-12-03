@@ -60,7 +60,7 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
     };
 
     return (
-        <Container maxWidth="lg" sx={{ py: 2 }}>
+        <Container maxWidth="xl" sx={{ py: 2 }}>
             <Box mb={4} textAlign="center">
                 <SectionTitle pb={3}>
                     Изберете дата
@@ -71,7 +71,7 @@ const BookingCalendar = ({ onDateTimeSelect, onTimeSlotSelect }: BookingCalendar
             </Box>
 
             <Stack direction='column'
-                gap={4}
+                gap={8}
                 alignItems="start"
                 width={'100%'}
             >

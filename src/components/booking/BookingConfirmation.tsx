@@ -24,9 +24,10 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO, shadow1 } from '../../utils/constants';
+import { VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
+import { GradientCard } from '../common/cards';
 
 interface BookingConfirmationProps {
     formData: BookingFormSchema;
@@ -70,15 +71,9 @@ const BookingConfirmation = ({
                 </Box>
 
                 {/* Appointment Details */}
-                <Card sx={{ boxShadow: shadow1 }}>
-                    <CardContent>
-                        <Stack spacing={3}>
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <Event color="primary" />
-                                <Typography variant="h6">Дата и час на прегледа</Typography>
-                            </Box>
-
-                            <Grid container spacing={2}>
+                <GradientCard title="Дата и час на прегледа" titleVariant="blue">
+                    <Stack spacing={3}>
+                        <Grid container spacing={2}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <Box display="flex" alignItems="center" gap={2}>
                                         <Event sx={{ color: 'text.secondary' }} />
@@ -108,30 +103,23 @@ const BookingConfirmation = ({
                                 </Grid>
                             </Grid>
 
-                            {onEdit && (
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    onClick={() => onEdit(0)}
-                                    sx={{ alignSelf: 'flex-start' }}
-                                >
-                                    Редактирай дата и час
-                                </Button>
-                            )}
-                        </Stack>
-                    </CardContent>
-                </Card>
+                        {onEdit && (
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => onEdit(0)}
+                                sx={{ alignSelf: 'flex-start' }}
+                            >
+                                Редактирай дата и час
+                            </Button>
+                        )}
+                    </Stack>
+                </GradientCard>
 
                 {/* Customer Details */}
-                <Card sx={{ boxShadow: shadow1 }}>
-                    <CardContent>
-                        <Stack spacing={3}>
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <Person color="primary" />
-                                <Typography variant="h6">Данни на клиента</Typography>
-                            </Box>
-
-                            <Grid container spacing={2}>
+                <GradientCard title="Данни на клиента" titleVariant="blue">
+                    <Stack spacing={3}>
+                        <Grid container spacing={2}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <Box display="flex" alignItems="center" gap={2}>
                                         <Person sx={{ color: 'text.secondary' }} />
@@ -177,30 +165,23 @@ const BookingConfirmation = ({
                                 )}
                             </Grid>
 
-                            {onEdit && (
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    onClick={() => onEdit(1)}
-                                    sx={{ alignSelf: 'flex-start' }}
-                                >
-                                    Редактирай данни
-                                </Button>
-                            )}
-                        </Stack>
-                    </CardContent>
-                </Card>
+                        {onEdit && (
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => onEdit(1)}
+                                sx={{ alignSelf: 'flex-start' }}
+                            >
+                                Редактирай данни
+                            </Button>
+                        )}
+                    </Stack>
+                </GradientCard>
 
                 {/* Vehicle Details */}
-                <Card sx={{ boxShadow: shadow1 }}>
-                    <CardContent>
-                        <Stack spacing={3}>
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <DirectionsCar color="primary" />
-                                <Typography variant="h6">Превозно средство</Typography>
-                            </Box>
-
-                            <Grid container spacing={2}>
+                <GradientCard title="Превозно средство" titleVariant="blue">
+                    <Stack spacing={3}>
+                        <Grid container spacing={2}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <Box>
                                         <Typography variant="body2" color="text.secondary" pb={1.5}>
@@ -238,31 +219,27 @@ const BookingConfirmation = ({
                                 </Box>
                             )}
 
-                            {onEdit && (
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    onClick={() => onEdit(1)}
-                                    sx={{ alignSelf: 'flex-start' }}
-                                >
-                                    Редактирай превозно средство
-                                </Button>
-                            )}
-                        </Stack>
-                    </CardContent>
-                </Card>
+                        {onEdit && (
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => onEdit(1)}
+                                sx={{ alignSelf: 'flex-start' }}
+                            >
+                                Редактирай превозно средство
+                            </Button>
+                        )}
+                    </Stack>
+                </GradientCard>
 
                 {/* Price Summary */}
                 {priceInfo && (
-                    <Card sx={{ bgcolor: alpha(theme.palette.primary.light, 0.2), boxShadow: shadow1 }}>
-                        <CardContent>
-                            <Stack spacing={2}>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <Receipt color="primary" />
-                                    <Typography variant="h6" color="primary.dark">
-                                        Обобщение на цената
-                                    </Typography>
-                                </Box>
+                    <GradientCard
+                        title="Обобщение на цената"
+                        titleVariant="blue"
+                        bgcolor={alpha(theme.palette.primary.light, 0.2)}
+                    >
+                        <Stack spacing={2}>
 
                                 <Stack spacing={1}>
                                     <Box display="flex" justifyContent="space-between">
@@ -294,31 +271,23 @@ const BookingConfirmation = ({
                                         </Typography>
                                     </Box>
                                 </Stack>
-                            </Stack>
-                        </CardContent>
-                    </Card>
+                        </Stack>
+                    </GradientCard>
                 )}
 
                 {/* Important Information */}
-                <Alert severity="warning" sx={{ bgcolor: theme.palette.warning.light, boxShadow: shadow1 }}>
-                    <Typography variant="subtitle2" gutterBottom>
-                        Важна информация:
-                    </Typography>
+                <GradientCard title="Важна информация" titleVariant="red" bgcolor={theme.palette.warning.light}>
                     <ul style={{ margin: 0, paddingLeft: 20 }}>
                         <li>Моля пристигнете 10 минути преди назначения час</li>
                         <li>Носете със себе си документи за превозното средство</li>
                         <li>За отмяна или промяна се свържете с нас на {CONTACT_INFO.phone}</li>
                         <li>Плащането се извършва в автосервиза след прегледа</li>
                     </ul>
-                </Alert>
+                </GradientCard>
 
                 {/* Contact Information */}
-                <Card sx={{ bgcolor: 'grey.50', boxShadow: shadow1 }}>
-                    <CardContent>
-                        <Typography variant="h6" gutterBottom>
-                            Контакти за връзка
-                        </Typography>
-                        <Grid container spacing={2}>
+                <GradientCard title="Контакти за връзка" titleVariant="red" bgcolor="grey.50">
+                    <Grid container spacing={2}>
                             <Grid size={{ xs: 12, sm: 4 }}>
                                 <Box display="flex" alignItems="center" gap={1}>
                                     <Phone sx={{ color: 'text.secondary' }} />
@@ -357,9 +326,8 @@ const BookingConfirmation = ({
                                     </Typography>
                                 </Box>
                             </Grid>
-                        </Grid>
-                    </CardContent>
-                </Card>
+                    </Grid>
+                </GradientCard>
 
                 {/* Submit Button */}
                 <Box textAlign="center" pt={2}>

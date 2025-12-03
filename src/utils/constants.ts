@@ -1,5 +1,6 @@
 // Havenly-style soft shadows
-export const shadow1 = '0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)';
+// export const shadow1 = '0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4)';
+export const shadow1 = 'rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px';
 export const shadow2 = '0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03)';
 export const shadow3 = '0 2px 4px rgba(0, 0, 0, 0.08)';
 
@@ -408,7 +409,7 @@ export const convertBgnToEur = (bgnAmount: number): number => {
 };
 
 export const convertEurToBgn = (eurAmount: number): number => {
-    return Math.round((eurAmount * EUR_TO_BGN_RATE) * 100) / 100;
+    return Math.round(eurAmount * EUR_TO_BGN_RATE * 100) / 100;
 };
 
 export const formatPrice = (amount: number, currency: 'BGN' | 'EUR' = 'BGN'): string => {

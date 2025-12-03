@@ -22,8 +22,8 @@ import {
     isMonthWithinBookingWindow,
 } from '../../utils/dateHelpers';
 import { type CalendarDay, type CalendarWeek } from '../../types/booking'
-import { shadow1 } from '../../utils/constants';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
+import { GradientCard } from '../common/cards';
 
 interface CalendarPickerProps {
     selectedDate?: Date;
@@ -144,8 +144,8 @@ const CalendarPicker = ({
                                 ? 'text.secondary'
                                 : 'text.primary'
                         : 'text.disabled',
-                    bgcolor: isSelected
-                        ? 'primary.main'
+                    background: isSelected
+                        ? 'linear-gradient(135deg, #013a6a, #0163B3)'
                         : isToday
                             ? 'white'
                             : 'transparent',
@@ -191,21 +191,11 @@ const CalendarPicker = ({
         monthDate: Date;
         title: string;
     }) => (
-        <Stack
-            sx={{
-                boxShadow: shadow1,
-                p: { xs: 2, sm: 3 },
-                borderRadius: 2,
-                minHeight: { xs: 250, sm: 350 }
-            }}
+        <GradientCard
+            title={title}
+            titleVariant="red"
+            sx={{ minHeight: { xs: 250, sm: 350 } }}
         >
-            {/* Month header */}
-            <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
-                <Typography variant="h6" component="h3" fontWeight="600">
-                    {title}
-                </Typography>
-            </Box>
-
             <Stack direction='row' spacing={1} mb={1} width={'100%'} justifyContent={'space-around'}>
                 {BULGARIAN_DAYS_SHORT.map((day) => (
                     <Typography
@@ -230,7 +220,7 @@ const CalendarPicker = ({
                     </Stack>
                 ))}
             </Stack>
-        </Stack>
+        </GradientCard>
     );
 
     return (
@@ -247,6 +237,21 @@ const CalendarPicker = ({
                     onClick={handlePreviousMonth}
                     disabled={!canGoPrevious}
                     size={isMobile ? "large" : "medium"}
+                    sx={{
+                        background: !canGoPrevious
+                            ? 'transparent'
+                            : 'linear-gradient(135deg, #750b13, #d21422)',
+                        color: 'white',
+                        '&:hover': {
+                            background: !canGoPrevious
+                                ? 'transparent'
+                                : 'linear-gradient(135deg, #5a0910, #b01119)',
+                        },
+                        '&:disabled': {
+                            background: 'transparent',
+                            color: 'action.disabled',
+                        },
+                    }}
                 >
                     <ChevronLeft />
                 </IconButton>
@@ -262,17 +267,25 @@ const CalendarPicker = ({
                     onClick={handleNextMonth}
                     disabled={!canGoNext}
                     size={isMobile ? "large" : "medium"}
+                    sx={{
+                        background: !canGoNext
+                            ? 'transparent'
+                            : 'linear-gradient(135deg, #750b13, #d21422)',
+                        color: 'white',
+                        '&:hover': {
+                            background: !canGoNext
+                                ? 'transparent'
+                                : 'linear-gradient(135deg, #5a0910, #b01119)',
+                        },
+                        '&:disabled': {
+                            background: 'transparent',
+                            color: 'action.disabled',
+                        },
+                    }}
                 >
                     <ChevronRight />
                 </IconButton>
             </Box>
-
-            {/* Booking window info */}
-            {/* <Box textAlign="center" mb={2}>
-                <Typography variant="caption" color="text.secondary">
-                    Можете да записвате {getBookingWindowDescription()}
-                </Typography>
-            </Box> */}
 
             {/* Calendar content */}
             {isMobile ? (

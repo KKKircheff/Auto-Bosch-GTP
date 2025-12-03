@@ -30,11 +30,11 @@ import {
     shouldShowBrands,
     calculatePriceWithCurrencies,
     calculatePriceWithCurrenciesFromSettings,
-    shadow1,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
 import { theme } from '../../theme/theme';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
+import { GradientCard } from '../common/cards';
 
 // Create a partial schema for the vehicle form
 const vehicleFormSchema = z.object({
@@ -227,11 +227,7 @@ const VehicleForm = ({
     const availableBrands = selectedVehicleType ? getVehicleBrands(selectedVehicleType) : [];
 
     return (
-        <Paper sx={{ p: 4, boxShadow: shadow1, borderRadius: 4 }} className={className}>
-            <Typography variant="h6" gutterBottom>
-                Информация за превозното средство
-            </Typography>
-
+        <GradientCard title="Данни за МПС и клиент" titleVariant="red" className={className}>
             <Stack spacing={3}>
                 {/* Customer Information */}
                 <Box>
@@ -437,7 +433,7 @@ const VehicleForm = ({
                         sx={{
                             mt: 2,
                             bgcolor: alpha(theme.palette.success.light, 0.1),
-                            borderRadius: 3,
+                            borderRadius: 1,
                             border: '1px solid',
                             borderColor: alpha(theme.palette.success.main, 0.2),
                         }}
@@ -494,7 +490,7 @@ const VehicleForm = ({
                     </Alert>
                 )}
             </Stack>
-        </Paper>
+        </GradientCard>
     );
 };
 

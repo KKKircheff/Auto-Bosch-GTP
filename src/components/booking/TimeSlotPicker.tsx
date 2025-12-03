@@ -16,13 +16,15 @@ import {
 } from '@mui/material';
 import { AccessTime, CheckCircle, Refresh, Delete } from '@mui/icons-material';
 import { formatDateBulgarian, isBookableDate } from '../../utils/dateHelpers';
-import { shadow1, VEHICLE_TYPES } from '../../utils/constants';
+import { VEHICLE_TYPES } from '../../utils/constants';
 import { deleteBooking } from '../../services/appointments';
 import { useAuth } from '../../hooks/useAuth';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import DeleteBookingDialog from './DeleteBookingDialog';
 import type { TimeSlot } from '../../types/booking';
 import { theme } from '../../theme/theme';
+import { GradientCard } from '../common/cards';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
 interface TimeSlotPickerProps {
     selectedDate: Date | null;
@@ -164,12 +166,14 @@ const TimeSlotPicker = ({
 
     if (loading) {
         return (
-            <Paper elevation={2} sx={{ p: 3, textAlign: 'center', boxShadow: shadow1, borderRadius: 2, minWidth: '100%', minHeight: '60vh' }} className={className}>
-                <CircularProgress size={40} sx={{ mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
-                    Зареждане на свободни часове...
-                </Typography>
-            </Paper>
+            <GradientCard title="Налични часове" titleVariant="red" sx={{ minWidth: '100%', minHeight: '60vh' }} className={className}>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" py={8}>
+                    <CircularProgress size={40} sx={{ mb: 2 }} />
+                    <Typography variant="body1" color="text.secondary">
+                        Зареждане на свободни часове...
+                    </Typography>
+                </Box>
+            </GradientCard>
         );
     }
 
@@ -255,23 +259,24 @@ const TimeSlotPicker = ({
                     fontSize: '1rem',
                     fontWeight: isSelected ? 600 : 500,
                     borderRadius: 3,
-                    borderWidth: 2,
-                    borderColor: isAvailable ? 'info.dark' : 'text.disabled',
+                    borderWidth: 1.7,
+                    borderColor: isAvailable ? 'primary.main' : 'text.disabled',
                     color: isSelected
-                        ? 'white'
+                        ? 'warning.main'
                         : isAvailable
-                            ? 'info.dark'
+                            ? 'primary.main'
                             : 'text.disabled',
                     bgcolor: isSelected
-                        ? 'info.dark'
+                        ? 'primary.main'
                         : 'transparent',
                     '&:hover': {
                         bgcolor: isSelected
-                            ? '#1a1a1f'
+                            ? 'primary.dark'
                             : isAvailable
-                                ? alpha(theme.palette.info.dark, 0.04)
+                                ? alpha(theme.palette.primary.main, 0.04)
                                 : 'transparent',
-                        borderColor: isAvailable ? 'info.dark' : 'text.disabled',
+                        borderColor: isAvailable ? 'primary.dark' : 'text.disabled',
+                        borderWidth: 2,
                     },
                     '&:disabled': {
                         borderColor: 'text.disabled',
@@ -299,23 +304,24 @@ const TimeSlotPicker = ({
         const availableInGroup = slots.filter(slot => slot.available).length;
 
         return (
-            <Box mb={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="center" justifyContent="space-between" mb={2}>
-                    <Box display="flex" alignItems="center" gap={1}>
+            <Box mb={4}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="center" justifyContent="space-between" mb={2.5}>
+                    <Box display="flex" alignItems="center" gap={1.5}>
                         {icon}
-                        <Typography variant="subtitle1" fontWeight="600">
+                        <Typography variant="h6" fontWeight="600" color="text.primary">
                             {title}
                         </Typography>
                     </Box>
                     <Chip
                         label={`${availableInGroup}/${slots.length} свободни`}
-                        size="small"
-                        color={availableInGroup > 0 ? 'success' : 'default'}
-                        variant="outlined"
+                        size="medium"
+                        color={availableInGroup > 0 ? 'primary' : 'default'}
+                        variant='outlined'
+                        sx={{ fontWeight: 600 }}
                     />
                 </Stack>
 
-                <Grid container spacing={1.5}>
+                <Grid container spacing={2}>
                     {slots.map((slot) => (
                         <Grid size={{ xs: 6, sm: 4, md: 3 }} key={slot.time}>
                             <TimeSlotButton slot={slot} />
@@ -328,55 +334,65 @@ const TimeSlotPicker = ({
 
     return (
         <>
-            <Paper
-                sx={{ p: 3, boxShadow: shadow1, borderRadius: 2 }}
+            <GradientCard
+                title={`Налични часове за ${formatDateBulgarian(selectedDate, 'dd MMMM yyyy')}`}
+                titleVariant="red"
                 className={className}
             >
                 {/* Header */}
                 <Box mb={3}>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                        <Typography variant="h6">
-                            Свободни часове
-                        </Typography>
-                        {onRefresh && (
-                            <Button
-                                size="small"
-                                onClick={onRefresh}
-                                startIcon={<Refresh />}
-                                disabled={loading}
-                            >
-                                Обнови
-                            </Button>
-                        )}
-                    </Box>
-
-                    <Typography variant="body2" color="text.secondary" mb={2}>
-                        {formatDateBulgarian(selectedDate, 'EEEE, dd MMMM yyyy')}
-                    </Typography>
-
                     {/* Availability summary */}
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} justifyContent="space-between" alignItems="center">
-                        <Typography variant="body2" color="text.secondary">
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="space-between" alignItems="center" mb={2}>
+                        <Typography variant="body1" color="text.secondary" fontWeight={500}>
                             {availableCount} от {totalCount} часа са свободни
                         </Typography>
 
-                        {selectedTime && (
-                            <Chip
-                                label={`Избран час: ${selectedTime}`}
-                                color="primary"
-                                size="small"
-                                icon={<CheckCircle />}
-                            />
-                        )}
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            {selectedTime && (
+                                <Chip
+                                    label={`Избран час: ${selectedTime}`}
+                                    color="primary"
+                                    size="medium"
+                                    icon={<CheckCircle />}
+                                    sx={{ fontWeight: 600 }}
+                                />
+                            )}
+                            {onRefresh && (
+                                <Button
+                                    size="small"
+                                    onClick={onRefresh}
+                                    startIcon={<Refresh />}
+                                    disabled={loading}
+                                    variant="outlined"
+                                    color="primary"
+                                    sx={{ py: .5, px: 2 }}
+                                >
+                                    Обнови
+                                </Button>
+                            )}
+                        </Stack>
                     </Stack>
 
                     {/* Admin indicator */}
                     {user && (
-                        <Alert severity="info" sx={{ mt: 2 }}>
-                            <Typography variant="body2">
+                        <Stack
+                            direction={'row'}
+                            bgcolor={'primary.main'}
+                            alignItems={'center'}
+                            spacing={1}
+                            sx={{
+                                my: 6,
+                                p: 1.2,
+                                borderRadius: .5
+                            }}
+                        >
+                            <Typography variant="body2" color='primary.contrastText'>
+                                <AdminPanelSettingsOutlinedIcon />
+                            </Typography>
+                            <Typography variant="body2" color='primary.contrastText'>
                                 Администраторски режим: Можете да изтривате записвания с иконата за изтриване
                             </Typography>
-                        </Alert>
+                        </Stack>
                     )}
                 </Box>
 
@@ -403,36 +419,36 @@ const TimeSlotPicker = ({
                 )}
 
                 {/* Legend */}
-                <Box mt={3} pt={2} borderTop={1} borderColor="divider">
-                    <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                <Box mt={4} pt={3} borderTop={1} borderColor="divider">
+                    <Typography variant="body2" color="text.primary" display="block" mb={2} fontWeight={600}>
                         Легенда:
                     </Typography>
-                    <Box display="flex" flexWrap="wrap" gap={2}>
+                    <Box display="flex" flexWrap="wrap" gap={3}>
                         <Box display="flex" alignItems="center" gap={1}>
-                            <CheckCircle sx={{ fontSize: 16, color: 'primary.main' }} />
-                            <Typography variant="caption" color="text.secondary">
+                            <CheckCircle sx={{ fontSize: 18, color: 'primary.main' }} />
+                            <Typography variant="body2" color="text.secondary">
                                 Избран час
                             </Typography>
                         </Box>
 
                         <Box display="flex" alignItems="center" gap={1}>
-                            <AccessTime sx={{ fontSize: 16, color: 'primary.main' }} />
-                            <Typography variant="caption" color="text.secondary">
+                            <AccessTime sx={{ fontSize: 18, color: 'primary.main' }} />
+                            <Typography variant="body2" color="text.secondary">
                                 Свободен час
                             </Typography>
                         </Box>
 
                         <Box display="flex" alignItems="center" gap={1}>
-                            <AccessTime sx={{ fontSize: 16, color: 'text.disabled' }} />
-                            <Typography variant="caption" color="text.secondary">
+                            <AccessTime sx={{ fontSize: 18, color: 'text.disabled' }} />
+                            <Typography variant="body2" color="text.secondary">
                                 Зает час
                             </Typography>
                         </Box>
 
                         {user && (
                             <Box display="flex" alignItems="center" gap={1}>
-                                <Delete sx={{ fontSize: 16, color: 'error.main' }} />
-                                <Typography variant="caption" color="text.secondary">
+                                <Delete sx={{ fontSize: 18, color: 'error.main' }} />
+                                <Typography variant="body2" color="text.secondary">
                                     Изтрий записването (админ)
                                 </Typography>
                             </Box>
@@ -444,17 +460,19 @@ const TimeSlotPicker = ({
                 {selectedTime && (
                     <Box
                         mt={3}
-                        p={2}
+                        p={2.5}
                         bgcolor={alpha(theme.palette.primary.light, .3)}
-                        borderRadius={1}
+                        borderRadius={2}
                         textAlign="center"
+                        border={1}
+                        borderColor="primary.light"
                     >
-                        <Typography variant="subtitle2" color="primary.dark">
+                        <Typography variant="subtitle1" color="primary.dark" fontWeight={600}>
                             ✓ Избрахте час: {selectedTime} на {formatDateBulgarian(selectedDate, 'dd.MM.yyyy')}
                         </Typography>
                     </Box>
                 )}
-            </Paper>
+            </GradientCard>
 
             {/* Delete Confirmation Dialog */}
             <DeleteBookingDialog
