@@ -5,10 +5,29 @@
         <!-- Preconnect to Google Fonts for faster DNS resolution -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <!-- Load Montserrat font with required weights -->
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <!-- Load Montserrat font with required weights (non-blocking) -->
+        <link
+            rel="preload"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+            media="print"
+            onload="this.media='all'"
+        />
+        <noscript>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+            />
+        </noscript>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <!-- Preload LCP image for faster rendering -->
+        <link rel="preload" as="image" href="/images/hero-2.webp" fetchpriority="high" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Ауто Бош Сервиз за годишни технически прегледи в Бургас. Професионални услуги за автомобили, автобуси, мотоциклети и други превозни средства. Запазете час онлайн с отстъпка 10 лв." />
         <title>Ауто Бош Сервиз ГТП Бургас</title>
     </head>
     <body>
