@@ -1,5 +1,6 @@
 import { Stack, type StackProps } from "@mui/material"
 import type { ReactNode } from "react"
+import { shadow4 } from "../../../utils/constants"
 
 type Props = {
     children: ReactNode
@@ -16,6 +17,7 @@ const LayoutContainer = ({ children, ...otherProps }: Props) => {
                 minHeight: '80vh',
                 px: '0px !important',
                 maxWidth: { xs: '100%', xl: '1920px' },
+                boxShadow: shadow4,
                 ...otherProps.sx
             }}
         >

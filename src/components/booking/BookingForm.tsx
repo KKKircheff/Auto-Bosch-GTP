@@ -290,7 +290,7 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             {isMobile ? <ArrowBack /> : 'Назад'}
                         </PrimaryButton>
 
-                        <Box textAlign="center" display={{ xs: 'none', sm: 'block' }}>
+                        <Box textAlign="center" display={{ xs: 'block', sm: 'block' }}>
                             <Typography variant="body2" color="text.secondary">
                                 Стъпка {activeStep + 1} от {steps.length}
                             </Typography>

@@ -43,3 +43,5 @@ export function MessagesPage() {
         </AdminLayout>
     );
 }
+
+export default MessagesPage;

@@ -27,6 +27,7 @@ import type {
 } from '../types/booking';
 import {calculatePrice, type VehicleType} from '../utils/constants';
 import type { ClosedDay } from '../features/admin-panel/types/settings.types';
+import {generateTimeSlots} from '../utils/dateHelpers';
 
 const APPOINTMENTS_COLLECTION = 'appointments';
 
@@ -203,7 +204,6 @@ export const getAvailableTimeSlots = async (
     closedDays?: ClosedDay[]
 ): Promise<ApiResponse<TimeSlot[]>> => {
     try {
-        const {generateTimeSlots} = await import('../utils/dateHelpers');
         const allSlots = generateTimeSlots(date, [], workingHours, workingDays as any, bookingWindowWeeks, closedDays);
 
         const startOfDay = new Date(date);

@@ -8,6 +8,7 @@ import {
 } from '../services/appointments';
 import type {BookingFormData, TimeSlot} from '../types/booking';
 import {useBusinessSettings} from './useBusinessSettings';
+import {isWorkingDay} from '../utils/dateHelpers';
 
 // Hook for creating bookings with enhanced validation
 export const useCreateBooking = () => {
@@ -327,7 +328,6 @@ export const useBookingValidation = () => {
             }
 
             // Check if date is a working day using business settings
-            const {isWorkingDay} = await import('../utils/dateHelpers');
             if (!isWorkingDay(data.appointmentDate, settings?.workingDays)) {
                 errors.push('Избраната дата не е работен ден.');
             }

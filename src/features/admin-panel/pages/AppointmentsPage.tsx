@@ -75,3 +75,5 @@ export function AppointmentsPage() {
         </AdminLayout>
     );
 }
+
+export default AppointmentsPage;

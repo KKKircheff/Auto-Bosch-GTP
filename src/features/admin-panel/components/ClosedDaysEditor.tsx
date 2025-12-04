@@ -28,17 +28,17 @@ interface ClosedDaysEditorProps {
 }
 
 const STRINGS = {
-    title: 'Добавяне на затворен ден',
+    title: 'Добавяне на неработен ден',
     addButton: 'Добави ден',
     deleteButton: 'Изтрий',
     saveButton: 'Запази',
-    closedDaysLabel: 'Затворени дни:',
-    noClosedDays: 'Няма маркирани затворени дни',
+    closedDaysLabel: 'Неработни дни:',
+    noClosedDays: 'Няма маркирани неработни дни',
     appointmentsWarning: '({count} часа)',
-    errorPastDate: 'Не може да маркирате минал ден като затворен',
-    errorDuplicate: 'Този ден вече е маркиран като затворен',
+    errorPastDate: 'Не може да маркирате минал ден като неработен',
+    errorDuplicate: 'Този ден вече е маркиран като неработен',
     errorOutOfRange: 'Датата е извън разрешения период за записване',
-    successSaved: 'Затворените дни са записани успешно!',
+    successSaved: 'Неработните дни са записани успешно!',
     selectDateLabel: 'Изберете дата',
 };
 
@@ -195,14 +195,14 @@ export function ClosedDaysEditor({ closedDays, onSave, disabled }: ClosedDaysEdi
             </Paper>
 
             <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle2" gutterBottom>
+                <Typography variant="subtitle2" gutterBottom pb={1.5}>
                     {STRINGS.closedDaysLabel}
                 </Typography>
                 {sortedClosedDays.length === 0 ? (
                     <Alert severity="info">{STRINGS.noClosedDays}</Alert>
                 ) : (
-                    <Paper variant="outlined">
-                        <List disablePadding>
+                    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+                        <List disablePadding >
                             {sortedClosedDays.map((closedDay, index) => {
                                 const originalIndex = editedClosedDays.findIndex(cd => cd === closedDay);
                                 const date = new Date(closedDay.date);
@@ -213,6 +213,7 @@ export function ClosedDaysEditor({ closedDays, onSave, disabled }: ClosedDaysEdi
                                     <ListItem
                                         key={originalIndex}
                                         divider={index < sortedClosedDays.length - 1}
+
                                         secondaryAction={
                                             <IconButton
                                                 edge="end"
@@ -226,7 +227,8 @@ export function ClosedDaysEditor({ closedDays, onSave, disabled }: ClosedDaysEdi
                                         }
                                         sx={{
                                             opacity: isPast ? 0.6 : 1,
-                                            bgcolor: isPast ? 'action.hover' : 'transparent',
+                                            // bgcolor: isPast ? 'action.hover' : 'transparent',
+                                            bgcolor: isPast ? 'background.default' : 'rgba(255, 0, 0, 0.03)',
                                         }}
                                     >
                                         <ListItemText

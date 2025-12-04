@@ -47,13 +47,13 @@ export const HeroSection = () => {
             sx={{
                 position: 'relative',
                 width: '100%',
-                minHeight: { xs: '91dvh', md: '75vw', xl: '1200px' },
+                minHeight: { xs: '91dvh', md: '75vw', xl: '92vh' },
                 backgroundImage: 'url(/images/hero-2.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 alignItems: { xs: 'center', md: 'flex-start' },
-                justifyContent: { xs: 'center', md: 'flex-start' },
+                justifyContent: { xs: 'flex-end', md: 'space-between' },
                 py: 2,
                 '&::before': {
                     content: '""',
@@ -66,18 +66,17 @@ export const HeroSection = () => {
                     zIndex: 0,
                 },
             }}
+        >            <Stack
+            spacing={{ xs: 2, md: 4 }}
+            sx={{
+                position: 'relative',
+                zIndex: 1,
+                textAlign: { xs: 'center', md: 'left' },
+                borderRadius: 2,
+                maxWidth: { xs: '100%', md: '1200px' },
+                pb: 6
+            }}
         >
-            <Stack
-                spacing={{ xs: 2, md: 4 }}
-                sx={{
-                    position: 'relative',
-                    zIndex: 1,
-                    textAlign: { xs: 'center', md: 'left' },
-                    borderRadius: 2,
-                    maxWidth: { xs: '100%', md: '1200px' },
-                    pb: 6
-                }}
-            >
                 <Stack spacing={0}>
                     <MainTitle
                         sx={{
@@ -102,6 +101,7 @@ export const HeroSection = () => {
                         alignSelf: { xs: 'center', md: 'flex-start' },
                         color: 'info.contrastText',
                         fontWeight: 500,
+                        lineHeight: { md: 1.5 },
                         maxWidth: { xs: '600px', md: '400px' },
                     }}
                 >
@@ -111,12 +111,13 @@ export const HeroSection = () => {
 
             <Card
                 sx={{
-                    position: 'relative',
+                    position: { md: 'absolute' },
+                    bottom: { md: '5%' },
                     zIndex: 2,
                     maxWidth: { xs: '100%', sm: '500px', md: '550px' },
                     width: '100%',
                     alignSelf: { xs: 'center', md: 'flex-end' },
-                    justifySelf: 'center',
+                    justifySelf: { xs: 'flex-end' },
                     backgroundColor: 'rgba(255, 255, 255, 0.25)',
                     backdropFilter: 'blur(10px)',
                     boxShadow: shadow2,

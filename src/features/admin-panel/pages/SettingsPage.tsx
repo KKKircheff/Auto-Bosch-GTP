@@ -108,3 +108,5 @@ export function SettingsPage() {
         </AdminLayout>
     );
 }
+
+export default SettingsPage;

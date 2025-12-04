@@ -268,6 +268,7 @@ const TimeSlotPicker = ({
                 fullWidth
                 sx={{
                     minHeight: 56,
+                    minWidth: '60px',
                     fontSize: '1rem',
                     fontWeight: isSelected ? 600 : 500,
                     borderRadius: 3,
@@ -359,7 +360,7 @@ const TimeSlotPicker = ({
                             {availableCount} от {totalCount} часа са свободни
                         </Typography>
 
-                        <Stack direction="row" spacing={1} alignItems="center">
+                        <Stack direction={{ xs: "column", sm: 'row' }} spacing={1} alignItems="center">
                             {selectedTime && (
                                 <Chip
                                     label={`Избран час: ${selectedTime}`}

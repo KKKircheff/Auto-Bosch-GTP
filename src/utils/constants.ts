@@ -3,6 +3,7 @@
 export const shadow1 = 'rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px';
 export const shadow2 = '0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03)';
 export const shadow3 = '0 2px 4px rgba(0, 0, 0, 0.08)';
+export const shadow4 = 'rgba(0, 0, 0, 0.10) 0px 14px 28px, rgba(0, 0, 0, 0.10) 0px 10px 10px';
 
 export const BUSINESS_HOURS = {
     START: '08:30',
