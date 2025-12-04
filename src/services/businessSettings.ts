@@ -22,10 +22,14 @@ export async function getBusinessSettings(): Promise<BusinessSettings | null> {
 
     const data = docSnap.data();
 
-    // Convert Firestore Timestamp to Date
+    // Convert Firestore Timestamp to Date for updatedAt and closedDays
     return {
       ...data,
       updatedAt: data.updatedAt?.toDate(),
+      closedDays: data.closedDays?.map((closedDay: any) => ({
+        ...closedDay,
+        date: closedDay.date?.toDate?.() || closedDay.date,
+      })) || [],
     } as BusinessSettings;
   } catch (error) {
     console.error('Error fetching business settings:', error);

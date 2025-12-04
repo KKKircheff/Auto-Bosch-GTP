@@ -23,6 +23,7 @@ import { VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO } from '../..
 import type { BookingFormSchema } from '../../types/booking';
 import { theme } from '../../theme/theme';
 import { GradientCard } from '../common/cards';
+import { RedButton } from '../common/buttons';
 
 interface BookingConfirmationProps {
     formData: BookingFormSchema;
@@ -271,7 +272,7 @@ const BookingConfirmation = ({
                 )}
 
                 {/* Important Information */}
-                <GradientCard title="Важна информация" titleVariant="red" bgcolor={theme.palette.warning.light}>
+                <GradientCard title="Важна информация" titleVariant="blue" bgcolor={theme.palette.warning.light}>
                     <ul style={{ margin: 0, paddingLeft: 20 }}>
                         <li>Моля пристигнете 10 минути преди назначения час</li>
                         <li>Носете със себе си документи за превозното средство</li>
@@ -281,7 +282,7 @@ const BookingConfirmation = ({
                 </GradientCard>
 
                 {/* Contact Information */}
-                <GradientCard title="Контакти за връзка" titleVariant="red" bgcolor="grey.50">
+                <GradientCard title="Контакти за връзка" titleVariant="blue" bgcolor="grey.50">
                     <Grid container spacing={2}>
                         <Grid size={{ xs: 12, sm: 4 }}>
                             <Box display="flex" alignItems="center" gap={1}>
@@ -326,21 +327,14 @@ const BookingConfirmation = ({
 
                 {/* Submit Button */}
                 <Box textAlign="center" pt={2}>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={onSubmit}
+                    <RedButton
+                        size='large'
                         disabled={loading}
+                        onClick={onSubmit}
                         startIcon={<CheckCircle />}
-                        sx={{
-                            px: 4,
-                            py: 2,
-                            fontSize: '1.1rem',
-                            fontWeight: 600,
-                        }}
                     >
                         {loading ? 'Записването се обработва...' : 'Потвърди записването'}
-                    </Button>
+                    </RedButton>
 
                     <Typography variant="body2" color="text.secondary" mt={2}>
                         С натискане на бутона потвърждавате записването си

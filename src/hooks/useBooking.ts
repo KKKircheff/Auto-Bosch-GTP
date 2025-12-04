@@ -99,7 +99,8 @@ export const useTimeSlots = (selectedDate: Date | null) => {
                 date,
                 businessSettings?.workingHours,
                 businessSettings?.workingDays,
-                businessSettings?.bookingWindowWeeks
+                businessSettings?.bookingWindowWeeks,
+                businessSettings?.closedDays
             );
 
             // Double-check we're still on the same date

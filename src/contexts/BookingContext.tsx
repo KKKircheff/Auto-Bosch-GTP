@@ -59,7 +59,7 @@ export const BookingProvider = ({ children }: BookingProviderProps) => {
     // Local state
     const [currentBooking, setCurrentBooking] = useState<Partial<BookingFormSchema> | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
-        getNextAvailableDate(settings?.workingHours, settings?.workingDays, settings?.bookingWindowWeeks)
+        getNextAvailableDate(settings?.workingHours, settings?.workingDays, settings?.bookingWindowWeeks, settings?.closedDays)
     );
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isValidatingSlot, setIsValidatingSlot] = useState(false);

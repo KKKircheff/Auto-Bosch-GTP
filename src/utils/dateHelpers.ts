@@ -1,4 +1,3 @@
-// src/utils/dateHelpers.ts
 import {
     format,
     startOfMonth,
@@ -44,15 +43,7 @@ export const BULGARIAN_MONTHS = [
 export const BULGARIAN_DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 
 // Bulgarian day names (full)
-export const BULGARIAN_DAYS_FULL = [
-    'Неделя',
-    'Понеделник',
-    'Вторник',
-    'Сряда',
-    'Четвъртък',
-    'Петък',
-    'Събота',
-];
+export const BULGARIAN_DAYS_FULL = ['Неделя', 'Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота'];
 
 /**
  * Convert WeekDay array to day numbers (0 = Sunday, 1 = Monday, etc.)
@@ -155,7 +146,7 @@ export const isClosedDay = (date: Date, closedDays?: ClosedDay[]): boolean => {
     const checkDate = new Date(date);
     checkDate.setHours(0, 0, 0, 0);
 
-    return closedDays.some(closedDay => {
+    return closedDays.some((closedDay) => {
         const closedDate = new Date(closedDay.date);
         closedDate.setHours(0, 0, 0, 0);
         return closedDate.getTime() === checkDate.getTime();
@@ -255,7 +246,7 @@ export const generateTimeSlots = (
     }
 
     const slots: TimeSlot[] = [];
-    const hours = workingHours || { start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END };
+    const hours = workingHours || {start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END};
     const startTime = parse(hours.start, 'HH:mm', date);
     const endTime = parse(hours.end, 'HH:mm', date);
 
@@ -318,7 +309,7 @@ export const getNextAvailableDate = (
 
     // If it's currently past business hours, start from tomorrow
     const now = new Date();
-    const hours = workingHours || { start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END };
+    const hours = workingHours || {start: BUSINESS_HOURS.START, end: BUSINESS_HOURS.END};
     const endTime = parse(hours.end, 'HH:mm', now);
     const currentTime = setHours(setMinutes(now, now.getMinutes()), now.getHours());
 

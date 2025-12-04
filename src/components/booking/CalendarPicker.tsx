@@ -124,18 +124,21 @@ const CalendarPicker = ({
         const isClickable = isBookableDate(day.date, settings?.workingDays, settings?.bookingWindowWeeks, settings?.closedDays) && day.isCurrentMonth && !day.isFullyBooked;
         const isSelected = day.isSelected;
         const isToday = day.isToday;
+        const isDisabled = !isClickable;
 
         return (
             <Button
-                variant={isSelected ? 'contained' : 'text'}
+                variant={isSelected && !day.isClosedDay ? 'contained' : 'text'}
                 onClick={() => handleDayClick(day)}
-                disabled={!isClickable}
+                disabled={isDisabled}
                 title={
                     day.isClosedDay
                         ? 'Затворен ден'
-                        : day.hasAppointments && day.isCurrentMonth
-                            ? `Резервирано (${day.appointmentCount} ${day.appointmentCount === 1 ? 'час' : 'часа'})`
-                            : undefined
+                        : day.isFullyBooked
+                            ? 'Няма свободни часове'
+                            : day.hasAppointments && day.isCurrentMonth
+                                ? `Резервирано (${day.appointmentCount} ${day.appointmentCount === 1 ? 'час' : 'часа'})`
+                                : undefined
                 }
                 sx={{
                     minWidth: { xs: 30, sm: 44 },
@@ -143,34 +146,37 @@ const CalendarPicker = ({
                     borderRadius: '50%',
                     p: 0,
                     fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                    fontWeight: isToday ? 'bold' : 'normal',
-                    color: day.isCurrentMonth
-                        ? isSelected
-                            ? 'white'
-                            : isToday
-                                ? 'text.secondary'
-                                : 'text.primary'
-                        : 'text.disabled',
-                    background: day.hasAppointments && day.isCurrentMonth
-                        ? 'rgba(210, 20, 34, 0.12)'
-                        : day.isClosedDay
-                            ? 'rgba(211, 47, 47, 0.1)'
+                    fontWeight: isToday && !day.isClosedDay ? 'bold' : 'normal',
+                    color: day.isClosedDay
+                        ? 'text.disabled'
+                        : !day.isCurrentMonth
+                            ? 'text.disabled'
+                            : isSelected
+                                ? 'white'
+                                : isToday
+                                    ? 'text.secondary'
+                                    : 'text.primary',
+                    background: day.isClosedDay
+                        ? 'rgba(158, 158, 158, 0.2)'
+                        : day.hasAppointments && day.isCurrentMonth
+                            ? 'rgba(210, 20, 34, 0.12)'
                             : isSelected
                                 ? 'linear-gradient(135deg, #013a6a, #0163B3)'
                                 : isToday
                                     ? 'white'
                                     : 'transparent',
-                    border: isToday && !isSelected ? 2 : 0,
+                    border: isToday && !isSelected && !day.isClosedDay ? 2 : 0,
                     borderColor: 'primary.main',
-                    textDecoration: day.isClosedDay ? 'line-through' : 'none',
-                    opacity: day.isClosedDay ? 0.5 : 1,
+                    // textDecoration: day.isClosedDay ? 'line-through' : 'none',
+                    opacity: day.isClosedDay || !day.isCurrentMonth ? 0.4 : 1,
+                    cursor: isDisabled ? 'not-allowed' : 'pointer',
                     '&:hover': {
-                        bgcolor: isSelected
-                            ? 'primary.dark'
-                            : isClickable
-                                ? 'primary.light'
-                                : day.isClosedDay
-                                    ? 'rgba(211, 47, 47, 0.15)'
+                        bgcolor: day.isClosedDay
+                            ? 'rgba(158, 158, 158, 0.2)'
+                            : isSelected
+                                ? 'primary.dark'
+                                : isClickable
+                                    ? 'primary.light'
                                     : day.hasAppointments
                                         ? 'rgba(210, 20, 34, 0.15)'
                                         : 'transparent',
@@ -178,16 +184,21 @@ const CalendarPicker = ({
                     '&:disabled': {
                         color: 'text.disabled',
                         bgcolor: day.isClosedDay
-                            ? 'rgba(211, 47, 47, 0.1)'
+                            ? 'rgba(158, 158, 158, 0.2)'
                             : day.hasAppointments
                                 ? 'rgba(210, 20, 34, 0.12)'
                                 : 'transparent',
+                        cursor: 'not-allowed',
+                    },
+                    '&.Mui-disabled': {
+                        color: 'text.disabled',
+                        opacity: day.isClosedDay || !day.isCurrentMonth ? 0.4 : 0.6,
                     },
                     position: 'relative',
                 }}
             >
                 {day.date.getDate()}
-                {day.hasAppointments && (
+                {day.hasAppointments && !day.isClosedDay && (
                     <Box
                         sx={{
                             position: 'absolute',
@@ -325,12 +336,6 @@ const CalendarPicker = ({
                         title={formatDateBulgarian(currentMonth, 'MMMM yyyy')}
                     />
 
-                    {/* Mobile navigation hint */}
-                    {/* <Box display="flex" justifyContent="center" alignItems="center" mt={2} gap={1}>
-                        <Typography variant="caption" color="text.secondary">
-                            Използвайте стрелките или плъзнете за навигация
-                        </Typography>
-                    </Box> */}
                 </Box>
             ) : (
                 // Desktop: Two months side by side (always show both for consistency)

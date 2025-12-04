@@ -283,8 +283,8 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                             startIcon={!isMobile ? <ArrowBack /> : undefined}
                             size="large"
                             sx={{
-                                minWidth: isMobile ? '48px' : '250px',
-                                px: isMobile ? 1 : 4,
+                                minWidth: { sx: '48px', md: '250px' },
+                                px: { sx: 1, md: 4 },
                             }}
                         >
                             {isMobile ? <ArrowBack /> : 'Назад'}
@@ -304,8 +304,8 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                                 startIcon={!isMobile ? <Check /> : undefined}
                                 size="large"
                                 sx={{
-                                    minWidth: isMobile ? '48px' : '250px',
-                                    px: isMobile ? 1 : 4,
+                                    minWidth: { sx: '48px', md: '250px' },
+                                    px: { sx: 1, md: 4 },
                                 }}
                             >
                                 {isMobile ? <Check /> : (loading ? 'Запазване...' : 'Потвърди')}
@@ -318,8 +318,8 @@ const BookingForm = ({ onSubmit, loading = false, error }: BookingFormProps) => 
                                 endIcon={!isMobile ? <ArrowForward /> : undefined}
                                 size="large"
                                 sx={{
-                                    minWidth: isMobile ? '48px' : '250px',
-                                    px: isMobile ? 1 : 4,
+                                    minWidth: { sx: '48px', md: '250px' },
+                                    px: { sx: 1, md: 4 },
                                 }}
                             >
                                 {isMobile ? <ArrowForward /> : 'Напред'}
