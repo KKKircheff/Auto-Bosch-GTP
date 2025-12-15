@@ -158,10 +158,10 @@ const CalendarPicker = ({
                                     : 'text.primary',
                     background: day.isClosedDay
                         ? 'rgba(158, 158, 158, 0.2)'
-                        : day.hasAppointments && day.isCurrentMonth
-                            ? 'rgba(210, 20, 34, 0.12)'
-                            : isSelected
-                                ? 'linear-gradient(135deg, #013a6a, #0163B3)'
+                        : isSelected
+                            ? 'linear-gradient(135deg, #013a6a, #0163B3)'
+                            : day.hasAppointments && day.isCurrentMonth
+                                ? 'rgba(210, 20, 34, 0.12)'
                                 : isToday
                                     ? 'white'
                                     : 'transparent',
@@ -174,7 +174,7 @@ const CalendarPicker = ({
                         bgcolor: day.isClosedDay
                             ? 'rgba(158, 158, 158, 0.2)'
                             : isSelected
-                                ? 'primary.dark'
+                                ? 'primary.light'
                                 : isClickable
                                     ? 'primary.light'
                                     : day.hasAppointments
@@ -207,7 +207,7 @@ const CalendarPicker = ({
                             width: 6,
                             height: 6,
                             borderRadius: '50%',
-                            bgcolor: isSelected ? 'white' : 'error.main',
+                            bgcolor: isSelected ? 'error.main' : 'error.main',
                         }}
                     />
                 )}

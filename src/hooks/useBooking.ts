@@ -79,7 +79,7 @@ export const useTimeSlots = (selectedDate: Date | null) => {
     const [error, setError] = useState<string>('');
 
     // Fetch business settings to pass to time slot generation
-    const { settings } = useBusinessSettings();
+    const {settings} = useBusinessSettings();
 
     // Use ref to track the current date to avoid stale closures
     const currentDateRef = useRef<Date | null>(selectedDate);
@@ -95,7 +95,6 @@ export const useTimeSlots = (selectedDate: Date | null) => {
         setError('');
 
         try {
-            console.log('Fetching time slots for:', date.toISOString());
             const result = await getAvailableTimeSlots(
                 date,
                 businessSettings?.workingHours,
@@ -108,7 +107,6 @@ export const useTimeSlots = (selectedDate: Date | null) => {
             if (currentDateRef.current?.getTime() === date.getTime()) {
                 if (result.success && result.data) {
                     setTimeSlots(result.data);
-                    console.log('Time slots updated:', result.data.length);
                 } else {
                     setError(result.error || 'Възникна грешка при зареждане на свободните часове.');
                     setTimeSlots([]);
@@ -181,7 +179,6 @@ export const useAppointmentCounts = () => {
         setError('');
 
         try {
-            console.log('Fetching appointment counts...');
             // Get counts for the next 3 months
             const startDate = new Date();
             const endDate = new Date();
@@ -192,7 +189,6 @@ export const useAppointmentCounts = () => {
             if (result.success && result.data) {
                 setCounts(result.data);
                 lastFetchRef.current = now;
-                console.log('Appointment counts updated:', Object.keys(result.data).length, 'dates');
             } else {
                 setError(result.error || 'Възникна грешка при зареждане на броя записвания.');
                 setCounts({});
@@ -213,7 +209,6 @@ export const useAppointmentCounts = () => {
     }, []); // Empty dependency array - only run on mount
 
     const refetch = useCallback(() => {
-        console.log('Manually refetching appointment counts...');
         fetchAppointmentCounts(true);
     }, [fetchAppointmentCounts]);
 
@@ -310,7 +305,7 @@ export const useTimeSlotAvailability = () => {
 // Hook for booking validation with enhanced checks
 export const useBookingValidation = () => {
     const {validateTimeSlot} = useTimeSlotValidation();
-    const { settings } = useBusinessSettings();
+    const {settings} = useBusinessSettings();
 
     const validateBooking = useCallback(
         async (

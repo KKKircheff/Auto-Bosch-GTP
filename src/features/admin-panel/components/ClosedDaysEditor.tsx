@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     Box,
     List,
@@ -52,6 +52,11 @@ export function ClosedDaysEditor({ closedDays, onSave, disabled }: ClosedDaysEdi
 
     const bookingWindowWeeks = settings?.bookingWindowWeeks || 8;
     const maxDate = getMaxBookingDate(bookingWindowWeeks);
+
+    // Sync local state with props when they change (e.g., after saving)
+    useEffect(() => {
+        setEditedClosedDays(closedDays);
+    }, [closedDays]);
 
     const validateClosedDay = (date: Date): string | null => {
         if (isPastDate(date)) {
