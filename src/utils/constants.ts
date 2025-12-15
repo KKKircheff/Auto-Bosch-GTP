@@ -22,15 +22,16 @@ export const CONTACT_INFO = {
     country: 'България',
 } as const;
 
+// All prices in EUR (Euro)
 export const PRICING = {
-    car: 90,
-    bus: 110,
-    motorcycle: 60,
-    taxi: 60,
-    caravan: 60,
-    trailer: 60,
-    lpg: 100,
-    onlineDiscount: 10,
+    car: 46,
+    bus: 56,
+    motorcycle: 31,
+    taxi: 31,
+    caravan: 31,
+    trailer: 31,
+    lpg: 51,
+    onlineDiscount: 5,
 } as const;
 
 // Currency conversion rate (1 EUR = 1.95583 BGN)
@@ -413,14 +414,14 @@ export const convertEurToBgn = (eurAmount: number): number => {
     return Math.round(eurAmount * EUR_TO_BGN_RATE * 100) / 100;
 };
 
-export const formatPrice = (amount: number, currency: 'BGN' | 'EUR' = 'BGN'): string => {
+export const formatPrice = (amount: number, currency: 'BGN' | 'EUR' = 'EUR'): string => {
     const symbol = CURRENCY_SYMBOLS[currency];
     return `${amount.toFixed(2)} ${symbol}`;
 };
 
-export const formatDualPrice = (bgnAmount: number): string => {
-    const eurAmount = convertBgnToEur(bgnAmount);
-    return `${formatPrice(bgnAmount, 'BGN')} (${formatPrice(eurAmount, 'EUR')})`;
+export const formatDualPrice = (eurAmount: number): string => {
+    const bgnAmount = convertEurToBgn(eurAmount);
+    return `${formatPrice(eurAmount, 'EUR')} (${formatPrice(bgnAmount, 'BGN')})`;
 };
 
 export const calculatePriceWithCurrencies = (vehicleType: VehicleType, isOnline: boolean = true) => {
@@ -428,11 +429,11 @@ export const calculatePriceWithCurrencies = (vehicleType: VehicleType, isOnline:
 
     return {
         basePrice: priceCalc.basePrice,
-        basePriceEur: convertBgnToEur(priceCalc.basePrice),
+        basePriceBgn: convertEurToBgn(priceCalc.basePrice),
         discount: priceCalc.discount,
-        discountEur: convertBgnToEur(priceCalc.discount),
+        discountBgn: convertEurToBgn(priceCalc.discount),
         finalPrice: priceCalc.finalPrice,
-        finalPriceEur: convertBgnToEur(priceCalc.finalPrice),
+        finalPriceBgn: convertEurToBgn(priceCalc.finalPrice),
         basePriceFormatted: formatDualPrice(priceCalc.basePrice),
         discountFormatted: formatDualPrice(priceCalc.discount),
         finalPriceFormatted: formatDualPrice(priceCalc.finalPrice),
@@ -466,11 +467,11 @@ export const calculatePriceWithCurrenciesFromSettings = (
 
     return {
         basePrice: priceCalc.basePrice,
-        basePriceEur: convertBgnToEur(priceCalc.basePrice),
+        basePriceBgn: convertEurToBgn(priceCalc.basePrice),
         discount: priceCalc.discount,
-        discountEur: convertBgnToEur(priceCalc.discount),
+        discountBgn: convertEurToBgn(priceCalc.discount),
         finalPrice: priceCalc.finalPrice,
-        finalPriceEur: convertBgnToEur(priceCalc.finalPrice),
+        finalPriceBgn: convertEurToBgn(priceCalc.finalPrice),
         basePriceFormatted: formatDualPrice(priceCalc.basePrice),
         discountFormatted: formatDualPrice(priceCalc.discount),
         finalPriceFormatted: formatDualPrice(priceCalc.finalPrice),

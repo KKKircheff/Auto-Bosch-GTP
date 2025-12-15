@@ -16,6 +16,7 @@ export interface BusinessSettings {
   updatedBy?: string;
 }
 
+/** Prices in EUR (Euro) */
 export interface VehiclePrices {
   car: number;
   bus: number;
@@ -46,18 +47,18 @@ export interface ContactInfo {
   address: string;
 }
 
-// Default settings to use as fallback
+// Default settings to use as fallback (prices in EUR)
 export const DEFAULT_SETTINGS: BusinessSettings = {
   prices: {
-    car: 90,
-    bus: 110,
-    motorcycle: 60,
-    taxi: 60,
-    caravan: 60,
-    trailer: 60,
-    lpg: 100,
+    car: 46,
+    bus: 56,
+    motorcycle: 31,
+    taxi: 31,
+    caravan: 31,
+    trailer: 31,
+    lpg: 51,
   },
-  onlineDiscount: 10,
+  onlineDiscount: 5,
   workingHours: {
     start: '08:30',
     end: '17:30',

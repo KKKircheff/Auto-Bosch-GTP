@@ -14,6 +14,7 @@ import {
 import { Save as SaveIcon } from '@mui/icons-material';
 import { AdminButton } from '../../../components/common/buttons';
 import type { VehiclePrices } from '../types/settings.types';
+import { convertEurToBgn } from '../../../utils/constants';
 
 interface PricingTableProps {
   prices: VehiclePrices;
@@ -89,32 +90,43 @@ export function PricingTable({ prices, onlineDiscount, onSave, disabled }: Prici
           <TableHead>
             <TableRow>
               <TableCell>Вид превозно средство</TableCell>
-              <TableCell align="right">Цена (лв)</TableCell>
-              <TableCell align="right">С онлайн отстъпка (лв)</TableCell>
+              <TableCell align="right">Цена (€)</TableCell>
+              <TableCell align="right">Цена (лв - изчислено)</TableCell>
+              <TableCell align="right">С онлайн отстъпка</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(Object.keys(vehicleLabels) as Array<keyof VehiclePrices>).map((vehicle) => (
-              <TableRow key={vehicle}>
-                <TableCell>{vehicleLabels[vehicle]}</TableCell>
-                <TableCell align="right">
-                  <TextField
-                    type="number"
-                    value={editedPrices[vehicle]}
-                    onChange={(e) => handlePriceChange(vehicle, e.target.value)}
-                    disabled={disabled || saving}
-                    size="small"
-                    sx={{ width: 100 }}
-                    slotProps={{ htmlInput: { min: 0, step: 1 } }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Box sx={{ color: 'success.main', fontWeight: 'medium' }}>
-                    {editedPrices[vehicle] - editedDiscount} лв
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+            {(Object.keys(vehicleLabels) as Array<keyof VehiclePrices>).map((vehicle) => {
+              const priceInBgn = convertEurToBgn(editedPrices[vehicle]);
+              const finalPriceEur = editedPrices[vehicle] - editedDiscount;
+
+              return (
+                <TableRow key={vehicle}>
+                  <TableCell>{vehicleLabels[vehicle]}</TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      type="number"
+                      value={editedPrices[vehicle]}
+                      onChange={(e) => handlePriceChange(vehicle, e.target.value)}
+                      disabled={disabled || saving}
+                      size="small"
+                      sx={{ width: 100 }}
+                      slotProps={{ htmlInput: { min: 0, step: 1 } }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                      {priceInBgn.toFixed(2)} лв
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Box sx={{ color: 'success.main', fontWeight: 'medium' }}>
+                      {finalPriceEur.toFixed(2)} € ({convertEurToBgn(finalPriceEur).toFixed(2)} лв)
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
             <TableRow>
               <TableCell>
                 <strong>Онлайн отстъпка</strong>
@@ -129,6 +141,11 @@ export function PricingTable({ prices, onlineDiscount, onSave, disabled }: Prici
                   sx={{ width: 100 }}
                   slotProps={{ htmlInput: { min: 0, step: 1 } }}
                 />
+              </TableCell>
+              <TableCell align="right">
+                <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                  {convertEurToBgn(editedDiscount).toFixed(2)} лв
+                </Box>
               </TableCell>
               <TableCell align="right">
                 <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>

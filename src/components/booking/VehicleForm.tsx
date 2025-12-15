@@ -98,11 +98,11 @@ const VehicleForm = ({
     const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>(vehicleTypeFromUrl || 'car');
     const [priceInfo, setPriceInfo] = useState<{
         basePrice: number;
-        basePriceEur: number;
+        basePriceBgn: number;
         discount: number;
-        discountEur: number;
+        discountBgn: number;
         finalPrice: number;
-        finalPriceEur: number;
+        finalPriceBgn: number;
         basePriceFormatted: string;
         discountFormatted: string;
         finalPriceFormatted: string;

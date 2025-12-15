@@ -29,7 +29,7 @@ import {
     Cancel as CancelIcon,
 } from '@mui/icons-material';
 import type { Booking, BookingStatus } from '../../../types/booking';
-import { VEHICLE_TYPES } from '../../../utils/constants';
+import { VEHICLE_TYPES, convertEurToBgn } from '../../../utils/constants';
 import { format } from 'date-fns';
 import { bg } from 'date-fns/locale';
 import { AppointmentEditModal } from './AppointmentEditModal';
@@ -201,7 +201,10 @@ export function AppointmentsList({
                                     </TableCell>
                                     <TableCell>{VEHICLE_TYPES[appointment.vehicleType]}</TableCell>
                                     <TableCell align="right">
-                                        <strong>{appointment.price} лв</strong>
+                                        <strong>{appointment.price.toFixed(2)} €</strong>
+                                        <Typography variant="caption" display="block" color="text.secondary">
+                                            ({convertEurToBgn(appointment.price).toFixed(2)} лв)
+                                        </Typography>
                                     </TableCell>
                                     <TableCell>{getStatusChip(appointment.status)}</TableCell>
                                     <TableCell align="right">
