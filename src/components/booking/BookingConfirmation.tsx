@@ -9,6 +9,7 @@ import {
     Chip,
     alpha,
     Container,
+    Alert,
 } from '@mui/material';
 import {
     Event,
@@ -19,8 +20,9 @@ import {
     CheckCircle,
 } from '@mui/icons-material';
 import { formatDateBulgarian } from '../../utils/dateHelpers';
-import { VEHICLE_TYPES, calculatePriceWithCurrencies, CONTACT_INFO } from '../../utils/constants';
+import { VEHICLE_TYPES, calculatePriceWithCurrenciesFromSettings, CONTACT_INFO } from '../../utils/constants';
 import type { BookingFormSchema } from '../../types/booking';
+import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import { theme } from '../../theme/theme';
 import { GradientCard } from '../common/cards';
 import { RedButton } from '../common/buttons';
@@ -38,7 +40,12 @@ const BookingConfirmation = ({
     onEdit,
     loading = false,
 }: BookingConfirmationProps) => {
-    const priceInfo = formData.vehicleType ? calculatePriceWithCurrencies(formData.vehicleType, true) : null;
+    const { settings, loading: settingsLoading, error } = useBusinessSettings();
+
+    // Only calculate price if settings are available - no fallback
+    const priceInfo = formData.vehicleType && settings?.prices && settings?.onlineDiscount !== undefined
+        ? calculatePriceWithCurrenciesFromSettings(formData.vehicleType, settings.prices, settings.onlineDiscount, true)
+        : null;
 
     // Format vehicle details
     const formatVehicleDetails = () => {
@@ -65,6 +72,13 @@ const BookingConfirmation = ({
                         Моля прегледайте данните преди потвърждение
                     </Typography>
                 </Box>
+
+                {/* Error Message */}
+                {error && !settingsLoading && (
+                    <Alert severity="warning">
+                        Няма връзка със сървъра. Моля, опитайте отново след малко.
+                    </Alert>
+                )}
 
                 {/* Appointment Details */}
                 <GradientCard title="Дата и час на прегледа" titleVariant="blue">
@@ -229,7 +243,7 @@ const BookingConfirmation = ({
                 </GradientCard>
 
                 {/* Price Summary */}
-                {priceInfo && (
+                {priceInfo && !settingsLoading && (
                     <GradientCard
                         title="Обобщение на цената"
                         titleVariant="blue"

@@ -39,15 +39,15 @@ export async function getBusinessSettings(): Promise<BusinessSettings | null> {
 
 /**
  * Fetch settings with fallback to default constants
- * This ensures the app always has settings to work with
- * Used by public-facing components for guaranteed data availability
+ * Now throws error when Firebase is unavailable - no automatic fallback to stale prices
+ * This ensures users see 'N/A' instead of outdated hardcoded prices
  */
 export async function getBusinessSettingsWithFallback(): Promise<BusinessSettings> {
-  try {
-    const settings = await getBusinessSettings();
-    return settings || DEFAULT_SETTINGS;
-  } catch (error) {
-    console.warn('Error fetching business settings, using defaults:', error);
-    return DEFAULT_SETTINGS;
+  const settings = await getBusinessSettings();
+
+  if (!settings) {
+    throw new Error('Firebase settings not available');
   }
+
+  return settings;
 }

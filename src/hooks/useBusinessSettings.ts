@@ -28,8 +28,9 @@ export function useBusinessSettings(): UseBusinessSettingsReturn {
       const data = await getBusinessSettingsWithFallback();
       setSettings(data);
     } catch (err) {
-      // Silent error handling - set error but settings will have defaults
+      // Error handling - set error and leave settings as null (no fallback)
       setError(err instanceof Error ? err.message : 'Failed to load settings');
+      setSettings(null); // Explicitly set to null - no fallback prices
       console.warn('Error loading business settings:', err);
     } finally {
       setLoading(false);

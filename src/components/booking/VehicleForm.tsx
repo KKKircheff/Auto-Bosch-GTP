@@ -27,7 +27,6 @@ import {
     getVehicleBrands,
     shouldShow4x4,
     shouldShowBrands,
-    calculatePriceWithCurrencies,
     calculatePriceWithCurrenciesFromSettings,
 } from '../../utils/constants';
 import { type BookingFormSchema, type VehicleType } from '../../types/booking';
@@ -93,7 +92,7 @@ const VehicleForm = ({
 }: VehicleFormProps) => {
     const [searchParams] = useSearchParams();
     const vehicleTypeFromUrl = searchParams.get('vehicleType') as VehicleType | null;
-    const { settings, loading: settingsLoading } = useBusinessSettings();
+    const { settings, loading: settingsLoading, error } = useBusinessSettings();
 
     const [selectedVehicleType, setSelectedVehicleType] = useState<VehicleType | 'car'>(vehicleTypeFromUrl || 'car');
     const [priceInfo, setPriceInfo] = useState<{
@@ -161,10 +160,10 @@ const VehicleForm = ({
                 setValue('is4x4', false);
             }
 
-            // Calculate price with currencies - use Firebase settings if available
+            // Calculate price with currencies - only if Firebase settings available (no fallback)
             const pricing = settings?.prices && settings?.onlineDiscount !== undefined
                 ? calculatePriceWithCurrenciesFromSettings(vehicleType, settings.prices, settings.onlineDiscount, true)
-                : calculatePriceWithCurrencies(vehicleType, true);
+                : null;
             setPriceInfo(pricing);
 
             // Trigger validation for the vehicle type only
@@ -424,6 +423,13 @@ const VehicleForm = ({
                         />
                     </Stack>
                 </Box>
+
+                {/* Error Message */}
+                {error && !settingsLoading && (
+                    <Alert severity="warning" sx={{ mt: 2 }}>
+                        Няма връзка със сървъра. Моля, опитайте отново след малко.
+                    </Alert>
+                )}
 
                 {/* Price Information */}
                 {priceInfo && !settingsLoading && (
