@@ -56,7 +56,7 @@ const Footer = () => {
                             <Typography
                                 variant="body2"
                                 color='primary.contrastText'
-                                onClick={() => window.open('https://maps.app.goo.gl/g15n75P7BaCqae3u7', '_blank', 'noopener,noreferrer')}
+                                onClick={() => window.open('https://maps.app.goo.gl/FP9hJ9nogriGGwFT7', '_blank', 'noopener,noreferrer')}
                                 sx={{
                                     cursor: 'pointer',
                                 }}

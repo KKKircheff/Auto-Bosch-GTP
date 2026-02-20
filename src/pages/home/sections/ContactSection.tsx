@@ -3,7 +3,7 @@ import { CONTACT_INFO, shadow1 } from '../../../utils/constants';
 import { useBusinessSettings } from '../../../hooks/useBusinessSettings';
 import SectionTitle from '../../../components/common/typography/SectionTitle.component';
 
-const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4904.485344925861!2d27.434494677289493!3d42.525684024620034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40a6ebd5247ca91b%3A0x4a80df83e9ca9738!2sAUTO-BOSCH-SERVICE!5e1!3m2!1sbg!2sbg!4v1764685293777!5m2!1sbg!2sbg";
+const MAPS_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.3777396844653!2d27.4373567!3d42.52603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40a69300779a0417%3A0x995ba0f3243eb053!2z0JPQvtC00LjRiNC90Lgg0KLQtdGF0L3QuNGH0LXRgdC60Lgg0J_RgNC10LPQu9C10LTQuCBBVVRPIEJPU0NIIEdUUA!5e0!3m2!1sen!2snl!4v1771585587238!5m2!1sen!2snl";
 
 export const ContactSection = () => {
     const { settings, loading } = useBusinessSettings();
@@ -75,7 +75,7 @@ export const ContactSection = () => {
                                     <Typography
                                         variant="body1"
                                         color="info.contrastText"
-                                        onClick={() => window.open('https://maps.app.goo.gl/g15n75P7BaCqae3u7', '_blank', 'noopener,noreferrer')}
+                                        onClick={() => window.open('https://maps.app.goo.gl/FP9hJ9nogriGGwFT7', '_blank', 'noopener,noreferrer')}
                                         sx={{
                                             cursor: 'pointer',
                                             '&:hover': { color: 'info.contrastText' },

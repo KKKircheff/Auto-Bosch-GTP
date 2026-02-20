@@ -24,13 +24,13 @@ export const CONTACT_INFO = {
 
 // All prices in EUR (Euro)
 export const PRICING = {
-    car: 46,
-    bus: 56,
-    motorcycle: 31,
-    taxi: 31,
-    caravan: 31,
-    trailer: 31,
-    lpg: 51,
+    car: 50,
+    bus: 60,
+    motorcycle: 35,
+    taxi: 35,
+    caravan: 35,
+    trailer: 35,
+    lpg: 55,
     onlineDiscount: 5,
 } as const;
 

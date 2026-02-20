@@ -1,7 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from './firebase';
-import type { BusinessSettings } from '../features/admin-panel/types/settings.types';
-import { DEFAULT_SETTINGS } from '../features/admin-panel/types/settings.types';
+import {doc, getDoc} from 'firebase/firestore';
+import {db} from './firebase';
+import type {BusinessSettings} from '../features/admin-panel/types/settings.types';
+// import { DEFAULT_SETTINGS } from '../features/admin-panel/types/settings.types';
 
 const SETTINGS_COLLECTION = 'settings';
 const SETTINGS_DOCUMENT = 'business-config';
@@ -12,29 +12,30 @@ const SETTINGS_DOCUMENT = 'business-config';
  * This is a public read-only service for fetching settings (no auth required)
  */
 export async function getBusinessSettings(): Promise<BusinessSettings | null> {
-  try {
-    const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOCUMENT);
-    const docSnap = await getDoc(docRef);
+    try {
+        const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOCUMENT);
+        const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
-      return null;
+        if (!docSnap.exists()) {
+            return null;
+        }
+
+        const data = docSnap.data();
+
+        // Convert Firestore Timestamp to Date for updatedAt and closedDays
+        return {
+            ...data,
+            updatedAt: data.updatedAt?.toDate(),
+            closedDays:
+                data.closedDays?.map((closedDay: any) => ({
+                    ...closedDay,
+                    date: closedDay.date?.toDate?.() || closedDay.date,
+                })) || [],
+        } as BusinessSettings;
+    } catch (error) {
+        console.error('Error fetching business settings:', error);
+        return null;
     }
-
-    const data = docSnap.data();
-
-    // Convert Firestore Timestamp to Date for updatedAt and closedDays
-    return {
-      ...data,
-      updatedAt: data.updatedAt?.toDate(),
-      closedDays: data.closedDays?.map((closedDay: any) => ({
-        ...closedDay,
-        date: closedDay.date?.toDate?.() || closedDay.date,
-      })) || [],
-    } as BusinessSettings;
-  } catch (error) {
-    console.error('Error fetching business settings:', error);
-    return null;
-  }
 }
 
 /**
@@ -43,11 +44,11 @@ export async function getBusinessSettings(): Promise<BusinessSettings | null> {
  * This ensures users see 'N/A' instead of outdated hardcoded prices
  */
 export async function getBusinessSettingsWithFallback(): Promise<BusinessSettings> {
-  const settings = await getBusinessSettings();
+    const settings = await getBusinessSettings();
 
-  if (!settings) {
-    throw new Error('Firebase settings not available');
-  }
+    if (!settings) {
+        throw new Error('Firebase settings not available');
+    }
 
-  return settings;
+    return settings;
 }

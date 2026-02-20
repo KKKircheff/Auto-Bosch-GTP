@@ -50,13 +50,13 @@ export interface ContactInfo {
 // Default settings to use as fallback (prices in EUR)
 export const DEFAULT_SETTINGS: BusinessSettings = {
   prices: {
-    car: 46,
-    bus: 56,
-    motorcycle: 31,
-    taxi: 31,
-    caravan: 31,
-    trailer: 31,
-    lpg: 51,
+    car: 50,
+    bus: 60,
+    motorcycle: 35,
+    taxi: 35,
+    caravan: 35,
+    trailer: 35,
+    lpg: 55,
   },
   onlineDiscount: 5,
   workingHours: {
